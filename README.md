@@ -11,6 +11,6 @@
 
 ## Commands
 
-- Code linting with `npm run lint:code`
+- Code linting with `npm run lint`
 
 - Building project and make it ready for deployment with `npm run build`.
