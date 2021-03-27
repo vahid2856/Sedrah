@@ -15,7 +15,7 @@ import AlertDialog from '@components/dialog-box';
 
 const Tree: FC = () => {
   const [treeData, setTreeData] = useState<Array<TreeItem>>([
-    { id: 3, title: 'Peter Olofsson' },
+    { id: 3, title: 'Peter Olofsson', subtitle: 'aasasd' },
     { id: 5, title: 'Karl Johansson' },
   ]);
   const [selectedNodes, setSelectedNodes] = useState<Array<TreeItem>>([]);
@@ -24,6 +24,8 @@ const Tree: FC = () => {
     selectedNodePathToRemove,
     setSelectedNodePathToRemove,
   ] = useState<Array<number | string> | null>(null);
+  const [isAddFormVisible, setIsAddFormVisible] = useState(false);
+  const [parentPathToAdd, setParentPathToAdd] = useState<string | number>('');
 
   const nodeContentRenderer: typeof NodeRenderer = (nodeData) => {
     return NodeRenderer({ ...nodeData });
@@ -35,7 +37,11 @@ const Tree: FC = () => {
     setIsRemoveAlertVisible((prevState) => !prevState);
   };
 
-  const handleRemoveAlert = () => {
+  const toggleAddForm = () => {
+    setIsAddFormVisible((prevState) => !prevState);
+  };
+
+  const handleRemoveNode = () => {
     if (selectedNodePathToRemove) {
       setTreeData((state) =>
         removeNodeAtPath({
@@ -48,27 +54,35 @@ const Tree: FC = () => {
     }
   };
 
+  const handleAddNode = () => {
+    if (parentPathToAdd) {
+      setTreeData(
+        (prevTreeData) =>
+          addNodeUnderParent({
+            treeData: prevTreeData,
+            parentKey: parentPathToAdd,
+            expandParent: true,
+            getNodeKey,
+            newNode: {
+              title: `ssssssssssss`,
+              id: (Math.random() * 100).toFixed(0),
+            },
+          }).treeData,
+      );
+    }
+    toggleAddForm();
+  };
+
   const renderNodeButtons = (node: TreeItem, path: Array<string | number>) => {
     return [
       <Button
         key="add"
         variant="contained"
         color="primary"
-        onClick={() =>
-          setTreeData(
-            (prevTreeData) =>
-              addNodeUnderParent({
-                treeData: prevTreeData,
-                parentKey: path[path.length - 1],
-                expandParent: true,
-                getNodeKey,
-                newNode: {
-                  title: `ssssssssssss`,
-                  id: (Math.random() * 100).toFixed(0),
-                },
-              }).treeData,
-          )
-        }
+        onClick={() => {
+          setParentPathToAdd(path[path.length - 1]);
+          setIsAddFormVisible(true);
+        }}
       >
         Add Child
       </Button>,
@@ -155,6 +169,7 @@ const Tree: FC = () => {
       <div style={{ height: 500 }}>
         <SortableTree
           rowDirection="rtl"
+          rowHeight={200}
           treeData={treeData}
           nodeContentRenderer={nodeContentRenderer}
           generateNodeProps={({ node, path }) => ({
@@ -170,8 +185,17 @@ const Tree: FC = () => {
         content="Are you sure to remove the nodes?"
         okText="Yes"
         cancelText="No"
-        onOK={handleRemoveAlert}
+        onOK={handleRemoveNode}
         onCancel={toggleRemoveAlert}
+      />
+      <AlertDialog
+        open={isAddFormVisible}
+        title="Add New Node"
+        content={<>add node form</>}
+        okText="Yes"
+        cancelText="No"
+        onOK={handleAddNode}
+        onCancel={toggleAddForm}
       />
     </>
   );
