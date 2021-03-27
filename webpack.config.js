@@ -42,6 +42,20 @@ module.exports = (_env, argv) => {
             },
           ],
         },
+        // {
+        //   test: /\.s[ac]ss$/i,
+        //   exclude: /node_modules/,
+        //   use: [
+        //     "style-loader",
+        //     "css-loader",
+        //     "sass-loader",
+        //     "postcss-loader"
+        //   ],
+        // },
+        {
+          test: /\.css$/i,
+          use: ["style-loader", "css-loader"],
+        },
         {
           test: /\.(jpe?g|png|gif|eot|ttf|woff|woff2)$/i,
           loader: 'file-loader',
