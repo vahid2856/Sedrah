@@ -10,22 +10,31 @@ import { GetNodeKeyFunction } from 'react-sortable-tree/utils/tree-data-utils';
 
 import NodeRenderer from '@components/node-renderer';
 import Button from '@material-ui/core/Button';
-import { Checkbox, TextField } from '@material-ui/core';
+import { Checkbox } from '@material-ui/core';
 import AlertDialog from '@components/dialog-box';
+import AddNodeForm from '@components/add-node-form';
+import EditNodeForm from '@components/edit-node-form';
+
+export interface NodeData {
+  title: string;
+  description: string;
+  age: number;
+}
 
 const Tree: FC = () => {
   const [treeData, setTreeData] = useState<Array<TreeItem>>([
     { id: 3, title: 'Peter Olofsson', subtitle: 'aasasd' },
-    { id: 5, title: 'Karl Johansson' },
+    { id: 5, title: 'Karl Johansson', subtitle: 'aasasd' },
   ]);
   const [selectedNodes, setSelectedNodes] = useState<Array<TreeItem>>([]);
   const [isRemoveAlertVisible, setIsRemoveAlertVisible] = useState(false);
-  const [
-    selectedNodePathToRemove,
-    setSelectedNodePathToRemove,
-  ] = useState<Array<number | string> | null>(null);
+  const [selectedNodePath, setSelectedNodePath] = useState<Array<
+    number | string
+  > | null>(null);
+  const [selectedNode, setSelectedNode] = useState<NodeData | null>(null);
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
   const [parentPathToAdd, setParentPathToAdd] = useState<string | number>('');
+  const [isEditFormVisible, setIsEditFormVisible] = useState(false);
 
   const nodeContentRenderer: typeof NodeRenderer = (nodeData) => {
     return NodeRenderer({ ...nodeData });
@@ -41,40 +50,78 @@ const Tree: FC = () => {
     setIsAddFormVisible((prevState) => !prevState);
   };
 
+  const toggleEditForm = () => {
+    setIsEditFormVisible((prevState) => !prevState);
+  };
+
   const handleRemoveNode = () => {
-    if (selectedNodePathToRemove) {
+    if (selectedNodePath) {
       setTreeData((state) =>
         removeNodeAtPath({
           treeData: state,
-          path: selectedNodePathToRemove,
+          path: selectedNodePath,
           getNodeKey,
         }),
       );
       toggleRemoveAlert();
+      setSelectedNode(null);
+      setSelectedNodePath(null);
     }
   };
 
-  const handleAddNode = () => {
-    if (parentPathToAdd) {
-      setTreeData(
-        (prevTreeData) =>
-          addNodeUnderParent({
-            treeData: prevTreeData,
-            parentKey: parentPathToAdd,
-            expandParent: true,
-            getNodeKey,
-            newNode: {
-              title: `ssssssssssss`,
-              id: (Math.random() * 100).toFixed(0),
+  const handleAddNode = (newNodeData: NodeData) => {
+    setTreeData(
+      (prevTreeData) =>
+        addNodeUnderParent({
+          treeData: prevTreeData,
+          parentKey: parentPathToAdd,
+          expandParent: true,
+          getNodeKey,
+          newNode: {
+            title: newNodeData.title,
+            subtitle: newNodeData.description,
+          },
+        }).treeData,
+    );
+    toggleAddForm();
+  };
+
+  const handleUpdateNode = (newNodeData: NodeData) => {
+    if (selectedNodePath) {
+      setTreeData((state) =>
+        changeNodeAtPath({
+          treeData: state,
+          path: selectedNodePath,
+          getNodeKey,
+          newNode: {
+            ...selectedNode,
+            ...{
+              title: newNodeData.title,
+              subtitle: newNodeData.description,
             },
-          }).treeData,
+          },
+        }),
       );
     }
     toggleAddForm();
+    setSelectedNode(null);
+    setSelectedNodePath(null);
   };
 
   const renderNodeButtons = (node: TreeItem, path: Array<string | number>) => {
     return [
+      <Button
+        key="update"
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          setSelectedNode({ title: node.title, description: node.subtitle });
+          setSelectedNodePath(path);
+          setIsAddFormVisible(true);
+        }}
+      >
+        update Child
+      </Button>,
       <Button
         key="add"
         variant="contained"
@@ -91,7 +138,7 @@ const Tree: FC = () => {
         variant="contained"
         color="primary"
         onClick={() => {
-          setSelectedNodePathToRemove(path);
+          setSelectedNodePath(path);
           setIsRemoveAlertVisible(true);
         }}
       >
@@ -126,29 +173,6 @@ const Tree: FC = () => {
     ];
   };
 
-  const renderNodeTitle = (node: TreeItem, path: Array<string | number>) => {
-    return (
-      <TextField
-        variant="outlined"
-        size="small"
-        placeholder="node title"
-        value={node?.title?.toString()}
-        onChange={(event) => {
-          const title = event.target.value;
-
-          setTreeData((state) =>
-            changeNodeAtPath({
-              treeData: state,
-              path,
-              getNodeKey,
-              newNode: { ...node, title },
-            }),
-          );
-        }}
-      />
-    );
-  };
-
   return (
     <>
       <Button
@@ -174,7 +198,6 @@ const Tree: FC = () => {
           nodeContentRenderer={nodeContentRenderer}
           generateNodeProps={({ node, path }) => ({
             buttons: renderNodeButtons(node, path),
-            title: renderNodeTitle(node, path),
           })}
           onChange={(treeData) => setTreeData(treeData)}
         />
@@ -191,12 +214,24 @@ const Tree: FC = () => {
       <AlertDialog
         open={isAddFormVisible}
         title="Add New Node"
-        content={<>add node form</>}
-        okText="Yes"
-        cancelText="No"
-        onOK={handleAddNode}
+        content={<AddNodeForm onAddNode={handleAddNode} />}
+        cancelText="Cancel"
         onCancel={toggleAddForm}
       />
+      {Boolean(selectedNode) && (
+        <AlertDialog
+          open={isEditFormVisible}
+          title="Edit Node"
+          content={
+            <EditNodeForm
+              initialValues={selectedNode}
+              onUpdateNode={handleUpdateNode}
+            />
+          }
+          cancelText="Cancel"
+          onCancel={toggleEditForm}
+        />
+      )}
     </>
   );
 };
