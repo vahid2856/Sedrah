@@ -15,8 +15,9 @@ import AlertDialog from '@components/dialog-box';
 
 const Tree: FC = () => {
   const [treeData, setTreeData] = useState<Array<TreeItem>>([
-    { id: 3, title: 'Peter Olofsson', subtitle: 'aasasd' },
-    { id: 5, title: 'Karl Johansson' },
+    { id: 3, title: 'معارف', subtitle: '' },
+    { id: 5, title: 'منظومه', subtitle: '' },
+    { id: 7, title: 'فیلم سازی' },
   ]);
   const [selectedNodes, setSelectedNodes] = useState<Array<TreeItem>>([]);
   const [isRemoveAlertVisible, setIsRemoveAlertVisible] = useState(false);
@@ -64,8 +65,8 @@ const Tree: FC = () => {
             expandParent: true,
             getNodeKey,
             newNode: {
-              title: `ssssssssssss`,
-              id: (Math.random() * 100).toFixed(0),
+              title: `زیر‌مجموعه جدید`,
+              id: (Math.random() * 100+1).toFixed(0),
             },
           }).treeData,
       );
@@ -84,7 +85,7 @@ const Tree: FC = () => {
           setIsAddFormVisible(true);
         }}
       >
-        Add Child
+        افزودن زیرمجموعه
       </Button>,
       <Button
         key="remove"
@@ -95,7 +96,7 @@ const Tree: FC = () => {
           setIsRemoveAlertVisible(true);
         }}
       >
-        Remove
+        حذف
       </Button>,
       <Checkbox
         key="select checkbox"
@@ -157,14 +158,14 @@ const Tree: FC = () => {
         disabled={selectedNodes.length === 0}
         onClick={() => alert(JSON.stringify(selectedNodes))}
       >
-        alert selected
+        نمایش انتخاب‌ها
       </Button>
       <Button
         variant="contained"
         color="primary"
         onClick={() => alert(JSON.stringify(treeData))}
       >
-        Save
+        ذخیره تغییرات
       </Button>
       <div style={{ height: 500 }}>
         <SortableTree
