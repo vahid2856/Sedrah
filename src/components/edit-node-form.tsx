@@ -1,4 +1,4 @@
-import { FC, FormEvent, useState } from 'react';
+import { FC, FormEvent, useEffect, useState } from 'react';
 import { Button, Grid, TextField } from '@material-ui/core';
 
 import { TreeItem } from 'react-sortable-tree';
@@ -14,17 +14,22 @@ type FormErrors = {
 
 const EditNodeForm: FC<AddNodeFormProps> = (props) => {
   const { initialValues, onUpdateNode } = props;
-  const [formValues, setFormValues] = useState<TreeItem>(
-    initialValues || {
-      title: '',
-      subtitle: '',
-    },
-  );
+  const [formValues, setFormValues] = useState<TreeItem>({
+    title: '',
+    subtitle: '',
+    age: 1,
+  });
   const [formErrors, setFormErrors] = useState<FormErrors>({
     title: '',
     subtitle: '',
     age: '',
   });
+
+  useEffect(() => {
+    if (initialValues) {
+      setFormValues(initialValues);
+    }
+  }, [initialValues]);
 
   const handleFieldChange = (
     fieldName: keyof TreeItem,
