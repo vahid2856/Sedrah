@@ -1,34 +1,33 @@
 import { FC, FormEvent, useState } from 'react';
+import { TreeItem } from 'react-sortable-tree';
 import { Button, Grid, TextField } from '@material-ui/core';
 
-import { NodeData } from '@components/tree';
-
 interface AddNodeFormProps {
-  onAddNode: (formValues: NodeData) => void;
+  onAddNode: (formValues: TreeItem) => void;
 }
 
 type FormErrors = {
-  [key in keyof NodeData]: string;
+  [key in keyof TreeItem]: string;
 };
 
 const AddNodeForm: FC<AddNodeFormProps> = (props) => {
   const { onAddNode } = props;
-  const [formValues, setFormValues] = useState<NodeData>({
+  const [formValues, setFormValues] = useState<TreeItem>({
     title: '',
-    description: '',
+    subtitle: '',
     age: 1,
   });
   const [formErrors, setFormErrors] = useState<FormErrors>({
     title: '',
-    description: '',
+    subtitle: '',
     age: '',
   });
 
   const handleFieldChange = (
-    fieldName: keyof NodeData,
-    fieldValue: NodeData[keyof NodeData],
+    fieldName: keyof TreeItem,
+    fieldValue: TreeItem[keyof TreeItem],
   ) => {
-    setFormErrors({ title: '', description: '', age: '' });
+    setFormErrors({ title: '', subtitle: '', age: '' });
     setFormValues((prevState) => ({ ...prevState, [fieldName]: fieldValue }));
   };
 
@@ -63,13 +62,13 @@ const AddNodeForm: FC<AddNodeFormProps> = (props) => {
         <Grid item xs={6}>
           <TextField
             type="text"
-            label="description"
+            label="subtitle"
             variant="outlined"
             size="small"
-            error={Boolean(formErrors.description)}
-            helperText={formErrors.description}
-            value={formValues.description}
-            onChange={(e) => handleFieldChange('description', e.target.value)}
+            error={Boolean(formErrors.subtitle)}
+            helperText={formErrors.subtitle}
+            value={formValues.subtitle}
+            onChange={(e) => handleFieldChange('subtitle', e.target.value)}
           />
         </Grid>
         <Grid item xs={6}>

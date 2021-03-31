@@ -23,15 +23,15 @@ export interface NodeData {
 
 const Tree: FC = () => {
   const [treeData, setTreeData] = useState<Array<TreeItem>>([
-    { id: 3, title: 'Peter Olofsson', subtitle: 'aasasd' },
-    { id: 5, title: 'Karl Johansson', subtitle: 'aasasd' },
+    { id: 3, title: 'Peter Olofsson', subtitle: 'aasasd', age: 5 },
+    { id: 5, title: 'Karl Johansson', subtitle: 'aasasd', age: 5 },
   ]);
   const [selectedNodes, setSelectedNodes] = useState<Array<TreeItem>>([]);
   const [isRemoveAlertVisible, setIsRemoveAlertVisible] = useState(false);
   const [selectedNodePath, setSelectedNodePath] = useState<Array<
     number | string
   > | null>(null);
-  const [selectedNode, setSelectedNode] = useState<NodeData | null>(null);
+  const [selectedNode, setSelectedNode] = useState<TreeItem | null>(null);
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
   const [parentPathToAdd, setParentPathToAdd] = useState<string | number>('');
   const [isEditFormVisible, setIsEditFormVisible] = useState(false);
@@ -69,7 +69,7 @@ const Tree: FC = () => {
     }
   };
 
-  const handleAddNode = (newNodeData: NodeData) => {
+  const handleAddNode = (newNodeData: TreeItem) => {
     setTreeData(
       (prevTreeData) =>
         addNodeUnderParent({
@@ -79,14 +79,14 @@ const Tree: FC = () => {
           getNodeKey,
           newNode: {
             title: newNodeData.title,
-            subtitle: newNodeData.description,
+            subtitle: newNodeData.subtitle,
           },
         }).treeData,
     );
     toggleAddForm();
   };
 
-  const handleUpdateNode = (newNodeData: NodeData) => {
+  const handleUpdateNode = (newNodeData: TreeItem) => {
     if (selectedNodePath) {
       setTreeData((state) =>
         changeNodeAtPath({
@@ -97,13 +97,13 @@ const Tree: FC = () => {
             ...selectedNode,
             ...{
               title: newNodeData.title,
-              subtitle: newNodeData.description,
+              subtitle: newNodeData.subtitle,
             },
           },
         }),
       );
     }
-    toggleAddForm();
+    toggleEditForm();
     setSelectedNode(null);
     setSelectedNodePath(null);
   };
@@ -115,9 +115,9 @@ const Tree: FC = () => {
         variant="contained"
         color="primary"
         onClick={() => {
-          setSelectedNode({ title: node.title, description: node.subtitle });
+          setSelectedNode(node);
           setSelectedNodePath(path);
-          setIsAddFormVisible(true);
+          setIsEditFormVisible(true);
         }}
       >
         update Child

@@ -1,37 +1,36 @@
 import { FC, FormEvent, useState } from 'react';
 import { Button, Grid, TextField } from '@material-ui/core';
 
-import { NodeData } from '@components/tree';
+import { TreeItem } from 'react-sortable-tree';
 
 interface AddNodeFormProps {
-  initialValues: NodeData | null;
-  onUpdateNode: (formValues: NodeData) => void;
+  initialValues: TreeItem | null;
+  onUpdateNode: (formValues: TreeItem) => void;
 }
 
 type FormErrors = {
-  [key in keyof NodeData]: string;
+  [key in keyof TreeItem]: string;
 };
 
 const EditNodeForm: FC<AddNodeFormProps> = (props) => {
   const { initialValues, onUpdateNode } = props;
-  const [formValues, setFormValues] = useState<NodeData>({
-    title: initialValues?.title || '',
-    description: initialValues?.description || '',
-    age: initialValues?.age || 1,
-  });
+  const [formValues, setFormValues] = useState<TreeItem>(
+    initialValues || {
+      title: '',
+      subtitle: '',
+    },
+  );
   const [formErrors, setFormErrors] = useState<FormErrors>({
     title: '',
-    description: '',
+    subtitle: '',
     age: '',
   });
 
-  console.log(formValues, initialValues);
-
   const handleFieldChange = (
-    fieldName: keyof NodeData,
-    fieldValue: NodeData[keyof NodeData],
+    fieldName: keyof TreeItem,
+    fieldValue: TreeItem[keyof TreeItem],
   ) => {
-    setFormErrors({ title: '', description: '', age: '' });
+    setFormErrors({ title: '', subtitle: '', age: '' });
     setFormValues((prevState) => ({ ...prevState, [fieldName]: fieldValue }));
   };
 
@@ -66,13 +65,13 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
         <Grid item xs={6}>
           <TextField
             type="text"
-            label="description"
+            label="subtitle"
             variant="outlined"
             size="small"
-            error={Boolean(formErrors.description)}
-            helperText={formErrors.description}
-            value={formValues.description}
-            onChange={(e) => handleFieldChange('description', e.target.value)}
+            error={Boolean(formErrors.subtitle)}
+            helperText={formErrors.subtitle}
+            value={formValues.subtitle}
+            onChange={(e) => handleFieldChange('subtitle', e.target.value)}
           />
         </Grid>
         <Grid item xs={6}>
