@@ -35,6 +35,11 @@ const AddNodeForm: FC<AddNodeFormProps> = (props) => {
     e.preventDefault();
     if (formValues.title !== '') {
       onAddNode(formValues);
+      setFormValues({
+        title: '',
+        subtitle: '',
+        age: 1,
+      });
     } else {
       setFormErrors((prevState) => ({
         ...prevState,
