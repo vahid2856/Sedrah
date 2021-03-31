@@ -10,16 +10,10 @@ import { GetNodeKeyFunction } from 'react-sortable-tree/utils/tree-data-utils';
 
 import NodeRenderer from '@components/node-renderer';
 import Button from '@material-ui/core/Button';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox, TextField } from '@material-ui/core';
 import AlertDialog from '@components/dialog-box';
 import AddNodeForm from '@components/add-node-form';
 import EditNodeForm from '@components/edit-node-form';
-
-export interface NodeData {
-  title: string;
-  description: string;
-  age: number;
-}
 
 const Tree: FC = () => {
   const [treeData, setTreeData] = useState<Array<TreeItem>>([
@@ -35,6 +29,9 @@ const Tree: FC = () => {
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
   const [parentPathToAdd, setParentPathToAdd] = useState<string | number>('');
   const [isEditFormVisible, setIsEditFormVisible] = useState(false);
+  const [searchString, setSearchString] = useState('');
+  const [searchFocusIndex, setSearchFocusIndex] = useState(0);
+  const [searchFoundCount, setSearchFoundCount] = useState(0);
 
   const nodeContentRenderer: typeof NodeRenderer = (nodeData) => {
     return NodeRenderer({ ...nodeData });
@@ -107,6 +104,20 @@ const Tree: FC = () => {
     setSelectedNode(null);
     setSelectedNodePath(null);
   };
+
+  const selectPrevMatch = () =>
+    setSearchFocusIndex((prevSearchFocusIndex) =>
+      prevSearchFocusIndex !== null
+        ? (searchFoundCount + prevSearchFocusIndex - 1) % searchFoundCount
+        : searchFoundCount - 1,
+    );
+
+  const selectNextMatch = () =>
+    setSearchFocusIndex((prevSearchFocusIndex) =>
+      prevSearchFocusIndex !== null
+        ? (prevSearchFocusIndex + 1) % searchFoundCount
+        : 0,
+    );
 
   const renderNodeButtons = (node: TreeItem, path: Array<string | number>) => {
     return [
@@ -190,11 +201,40 @@ const Tree: FC = () => {
       >
         Save
       </Button>
+      <TextField
+        type="text"
+        label="search"
+        variant="outlined"
+        size="small"
+        value={searchString}
+        onChange={(e) => setSearchString(e.target.value)}
+      />
+      <Button variant="contained" color="primary" onClick={selectPrevMatch}>
+        &lt;
+      </Button>
+      <Button variant="contained" color="primary" onClick={selectNextMatch}>
+        &gt;
+      </Button>
+      <span>
+        &nbsp;
+        {searchFoundCount > 0 ? searchFocusIndex + 1 : 0}
+        &nbsp;/&nbsp;
+        {searchFoundCount || 0}
+      </span>
       <div style={{ height: 500 }}>
         <SortableTree
           rowDirection="rtl"
+          onlyExpandSearchedNodes
           rowHeight={200}
           treeData={treeData}
+          searchQuery={searchString}
+          searchFocusOffset={searchFocusIndex}
+          searchFinishCallback={(matches) => {
+            setSearchFoundCount(matches.length);
+            setSearchFocusIndex(
+              matches.length > 0 ? searchFocusIndex % matches.length : 0,
+            );
+          }}
           nodeContentRenderer={nodeContentRenderer}
           generateNodeProps={({ node, path }) => ({
             buttons: renderNodeButtons(node, path),
