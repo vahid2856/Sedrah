@@ -15,17 +15,21 @@ import AlertDialog from '@components/dialog-box';
 import AddNodeForm from '@components/add-node-form';
 import EditNodeForm from '@components/edit-node-form';
 
+export interface SedrahNodeData extends TreeItem {
+  age: number;
+}
+
 const Tree: FC = () => {
   const [treeData, setTreeData] = useState<Array<TreeItem>>([
     { id: 3, title: 'Peter Olofsson', subtitle: 'aasasd', age: 5 },
     { id: 5, title: 'Karl Johansson', subtitle: 'aasasd', age: 5 },
   ]);
-  const [selectedNodes, setSelectedNodes] = useState<Array<TreeItem>>([]);
+  const [selectedNodes, setSelectedNodes] = useState<Array<SedrahNodeData>>([]);
   const [isRemoveAlertVisible, setIsRemoveAlertVisible] = useState(false);
   const [selectedNodePath, setSelectedNodePath] = useState<Array<
     number | string
   > | null>(null);
-  const [selectedNode, setSelectedNode] = useState<TreeItem | null>(null);
+  const [selectedNode, setSelectedNode] = useState<SedrahNodeData | null>(null);
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
   const [parentPathToAdd, setParentPathToAdd] = useState<string | number>('');
   const [isEditFormVisible, setIsEditFormVisible] = useState(false);
@@ -66,7 +70,7 @@ const Tree: FC = () => {
     }
   };
 
-  const handleAddNode = (newNodeData: TreeItem) => {
+  const handleAddNode = (newNodeData: SedrahNodeData) => {
     setTreeData(
       (prevTreeData) =>
         addNodeUnderParent({
@@ -84,7 +88,7 @@ const Tree: FC = () => {
     toggleAddForm();
   };
 
-  const handleUpdateNode = (newNodeData: TreeItem) => {
+  const handleUpdateNode = (newNodeData: SedrahNodeData) => {
     if (selectedNodePath) {
       setTreeData((state) =>
         changeNodeAtPath({
@@ -93,10 +97,7 @@ const Tree: FC = () => {
           getNodeKey,
           newNode: {
             ...selectedNode,
-            ...{
-              title: newNodeData.title,
-              subtitle: newNodeData.subtitle,
-            },
+            ...newNodeData,
           },
         }),
       );
@@ -120,7 +121,10 @@ const Tree: FC = () => {
         : 0,
     );
 
-  const renderNodeButtons = (node: TreeItem, path: Array<string | number>) => {
+  const renderNodeButtons = (
+    node: SedrahNodeData,
+    path: Array<string | number>,
+  ) => {
     return [
       <Button
         key="update"
@@ -238,7 +242,7 @@ const Tree: FC = () => {
           }}
           nodeContentRenderer={nodeContentRenderer}
           generateNodeProps={({ node, path }) => ({
-            buttons: renderNodeButtons(node, path),
+            buttons: renderNodeButtons(node as SedrahNodeData, path),
           })}
           onChange={(treeData) => setTreeData(treeData)}
         />

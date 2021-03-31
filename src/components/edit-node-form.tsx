@@ -1,20 +1,20 @@
 import { FC, FormEvent, useEffect, useState } from 'react';
 import { Button, Grid, TextField } from '@material-ui/core';
 
-import { TreeItem } from 'react-sortable-tree';
+import { SedrahNodeData } from '@components/tree';
 
 interface AddNodeFormProps {
-  initialValues: TreeItem | null;
-  onUpdateNode: (formValues: TreeItem) => void;
+  initialValues: SedrahNodeData | null;
+  onUpdateNode: (formValues: SedrahNodeData) => void;
 }
 
 type FormErrors = {
-  [key in keyof TreeItem]: string;
+  [key in keyof SedrahNodeData]: string;
 };
 
 const EditNodeForm: FC<AddNodeFormProps> = (props) => {
   const { initialValues, onUpdateNode } = props;
-  const [formValues, setFormValues] = useState<TreeItem>({
+  const [formValues, setFormValues] = useState<SedrahNodeData>({
     title: '',
     subtitle: '',
     age: 1,
@@ -32,8 +32,8 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
   }, [initialValues]);
 
   const handleFieldChange = (
-    fieldName: keyof TreeItem,
-    fieldValue: TreeItem[keyof TreeItem],
+    fieldName: keyof SedrahNodeData,
+    fieldValue: string | number,
   ) => {
     setFormErrors({ title: '', subtitle: '', age: '' });
     setFormValues((prevState) => ({ ...prevState, [fieldName]: fieldValue }));
