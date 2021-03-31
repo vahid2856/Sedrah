@@ -77,6 +77,7 @@ const Tree: FC = () => {
           newNode: {
             title: newNodeData.title,
             subtitle: newNodeData.subtitle,
+            age: newNodeData.age,
           },
         }).treeData,
     );
@@ -258,20 +259,18 @@ const Tree: FC = () => {
         cancelText="Cancel"
         onCancel={toggleAddForm}
       />
-      {Boolean(selectedNode) && (
-        <AlertDialog
-          open={isEditFormVisible}
-          title="Edit Node"
-          content={
-            <EditNodeForm
-              initialValues={selectedNode}
-              onUpdateNode={handleUpdateNode}
-            />
-          }
-          cancelText="Cancel"
-          onCancel={toggleEditForm}
-        />
-      )}
+      <AlertDialog
+        open={isEditFormVisible}
+        title="Edit Node"
+        content={
+          <EditNodeForm
+            initialValues={selectedNode}
+            onUpdateNode={handleUpdateNode}
+          />
+        }
+        cancelText="Cancel"
+        onCancel={toggleEditForm}
+      />
     </>
   );
 };
