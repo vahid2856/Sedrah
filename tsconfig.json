@@ -24,7 +24,8 @@
     "noImplicitReturns": true,
     "importHelpers": true,
     "paths": {
-      "@components/*": ["components/*"]
+      "@components/*": ["components/*"],
+      "@configs/*": ["configs/*"]
     }
   },
   "include": [
