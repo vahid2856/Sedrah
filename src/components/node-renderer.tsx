@@ -1,7 +1,9 @@
 import { FC } from 'react';
 import { isDescendant } from 'react-sortable-tree';
-
 import { NodeRendererProps } from 'react-sortable-tree';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardHeader from '@material-ui/core/CardHeader';
 
 function classnames(...classes: Array<unknown>) {
   // Use Boolean constructor as a filter callback
@@ -137,53 +139,12 @@ const NodeRenderer: FC<NodeRendererProps> = (props) => {
           >
             {handle}
 
-            <div
-              className={classnames(
-                'rst__rowContents',
-                !canDrag && 'rst__rowContentsDragDisabled',
-                rowDirectionClass,
-              )}
-            >
-              <div className={classnames('rst__rowLabel', rowDirectionClass)}>
-                <span
-                  className={classnames(
-                    'rst__rowTitle',
-                    node.subtitle && 'rst__rowTitleWithSubtitle',
-                  )}
-                >
-                  {typeof nodeTitle === 'function'
-                    ? nodeTitle({
-                        node,
-                        path,
-                        treeIndex,
-                      })
-                    : nodeTitle}
-                </span>
-
-                {nodeSubtitle && (
-                  <span className="rst__rowSubtitle">
-                    {typeof nodeSubtitle === 'function'
-                      ? nodeSubtitle({
-                          node,
-                          path,
-                          treeIndex,
-                        })
-                      : nodeSubtitle}
-                  </span>
-                )}
-              </div>
-
-              <div className="rst__rowToolbar">
-                {buttons.map((btn, index) => (
-                  <div
-                    key={index} // eslint-disable-line react/no-array-index-key
-                    className="rst__toolbarButton"
-                  >
-                    {btn}
-                  </div>
-                ))}
-              </div>
-            </div>
+            <Card raised={isSearchMatch}>
+              <CardHeader title={nodeTitle} subheader={nodeSubtitle} />
+              <CardActions disableSpacing>
+                {buttons.map((btn) => btn)}
+              </CardActions>
+            </Card>
           </div>,
         )}
       </div>

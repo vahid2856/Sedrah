@@ -7,10 +7,24 @@ import SortableTree, {
 } from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
 import { GetNodeKeyFunction } from 'react-sortable-tree/utils/tree-data-utils';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Grid from '@material-ui/core/Grid';
+import Checkbox from '@material-ui/core/Checkbox';
+import InputBase from '@material-ui/core/InputBase';
+import Paper from '@material-ui/core/Paper';
+
+import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import SearchIcon from '@material-ui/icons/Search';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 
 import NodeRenderer from '@components/node-renderer';
-import Button from '@material-ui/core/Button';
-import { Checkbox, TextField } from '@material-ui/core';
 import AlertDialog from '@components/dialog-box';
 import AddNodeForm from '@components/add-node-form';
 import EditNodeForm from '@components/edit-node-form';
@@ -19,10 +33,67 @@ export interface SedrahNodeData extends TreeItem {
   age: number;
 }
 
+import {
+  fade,
+  makeStyles,
+  Theme,
+  createStyles,
+} from '@material-ui/core/styles';
+import { ButtonGroup } from '@material-ui/core';
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    contentWrapper: {
+      display: 'flex',
+      flexGrow: 1,
+      padding: theme.spacing(2),
+      margin: theme.spacing(2),
+    },
+    mainContent: {
+      padding: theme.spacing(2),
+      height: `calc(100vh - ${128}px)`,
+    },
+
+    search: {
+      position: 'relative',
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: fade(theme.palette.common.white, 0.15),
+      '&:hover': {
+        backgroundColor: fade(theme.palette.common.white, 0.25),
+      },
+      marginLeft: theme.spacing(3),
+      width: 'auto',
+    },
+    searchIcon: {
+      padding: theme.spacing(0, 2),
+      height: '100%',
+      position: 'absolute',
+      pointerEvents: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    inputRoot: {
+      color: 'inherit',
+    },
+    inputInput: {
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        width: '20ch',
+      },
+    },
+  }),
+);
+
 const Tree: FC = () => {
+  const classes = useStyles();
+
   const [treeData, setTreeData] = useState<Array<TreeItem>>([
-    { id: 3, title: 'Peter Olofsson', subtitle: 'aasasd', age: 5 },
-    { id: 5, title: 'Karl Johansson', subtitle: 'aasasd', age: 5 },
+    { id: 3, title: 'جدایی', subtitle: 'اصغر فرهادی', age: 5 },
+    { id: 5, title: 'خانه دوست کجاست', subtitle: 'عباس کیارستمی', age: 5 },
   ]);
   const [selectedNodes, setSelectedNodes] = useState<Array<SedrahNodeData>>([]);
   const [isRemoveAlertVisible, setIsRemoveAlertVisible] = useState(false);
@@ -126,40 +197,6 @@ const Tree: FC = () => {
     path: Array<string | number>,
   ) => {
     return [
-      <Button
-        key="update"
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          setSelectedNode(node);
-          setSelectedNodePath(path);
-          setIsEditFormVisible(true);
-        }}
-      >
-        update Child
-      </Button>,
-      <Button
-        key="add"
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          setParentPathToAdd(path[path.length - 1]);
-          setIsAddFormVisible(true);
-        }}
-      >
-        Add Child
-      </Button>,
-      <Button
-        key="remove"
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          setSelectedNodePath(path);
-          setIsRemoveAlertVisible(true);
-        }}
-      >
-        Remove
-      </Button>,
       <Checkbox
         key="select checkbox"
         size="small"
@@ -186,93 +223,154 @@ const Tree: FC = () => {
           });
         }}
       />,
+      <IconButton
+        key="update"
+        onClick={() => {
+          setSelectedNode(node);
+          setSelectedNodePath(path);
+          setIsEditFormVisible(true);
+        }}
+      >
+        <EditIcon />
+      </IconButton>,
+      <IconButton
+        key="add"
+        onClick={() => {
+          setParentPathToAdd(path[path.length - 1]);
+          setIsAddFormVisible(true);
+        }}
+      >
+        <AddIcon />
+      </IconButton>,
+      <IconButton
+        key="remove"
+        onClick={() => {
+          setSelectedNodePath(path);
+          setIsRemoveAlertVisible(true);
+        }}
+      >
+        <DeleteIcon />
+      </IconButton>,
     ];
   };
 
   return (
     <>
-      <Button
-        variant="contained"
-        color="primary"
-        disabled={selectedNodes.length === 0}
-        onClick={() => alert(JSON.stringify(selectedNodes))}
-      >
-        alert selected
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => alert(JSON.stringify(treeData))}
-      >
-        Save
-      </Button>
-      <TextField
-        type="text"
-        label="search"
-        variant="outlined"
-        size="small"
-        value={searchString}
-        onChange={(e) => setSearchString(e.target.value)}
-      />
-      <Button variant="contained" color="primary" onClick={selectPrevMatch}>
-        &lt;
-      </Button>
-      <Button variant="contained" color="primary" onClick={selectNextMatch}>
-        &gt;
-      </Button>
-      <span>
-        &nbsp;
-        {searchFoundCount > 0 ? searchFocusIndex + 1 : 0}
-        &nbsp;/&nbsp;
-        {searchFoundCount || 0}
-      </span>
-      <div style={{ height: 500 }}>
-        <SortableTree
-          rowDirection="rtl"
-          onlyExpandSearchedNodes
-          rowHeight={200}
-          treeData={treeData}
-          searchQuery={searchString}
-          searchFocusOffset={searchFocusIndex}
-          searchFinishCallback={(matches) => {
-            setSearchFoundCount(matches.length);
-            setSearchFocusIndex(
-              matches.length > 0 ? searchFocusIndex % matches.length : 0,
-            );
-          }}
-          nodeContentRenderer={nodeContentRenderer}
-          generateNodeProps={({ node, path }) => ({
-            buttons: renderNodeButtons(node as SedrahNodeData, path),
-          })}
-          onChange={(treeData) => setTreeData(treeData)}
-        />
-      </div>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6">Sedrah</Typography>
+          <div
+            style={{
+              flexGrow: 1,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                placeholder="جستجو..."
+                value={searchString}
+                onChange={(e) => setSearchString(e.target.value)}
+              />
+            </div>
+            <IconButton onClick={selectNextMatch}>
+              <NavigateNextIcon />
+            </IconButton>
+            <IconButton onClick={selectPrevMatch}>
+              <NavigateBeforeIcon />
+            </IconButton>
+            <span>
+              &nbsp;
+              {searchFoundCount > 0 ? searchFocusIndex + 1 : 0}
+              &nbsp;/&nbsp;
+              {searchFoundCount || 0}
+            </span>
+          </div>
+          <ButtonGroup>
+            <Button
+              variant="contained"
+              color="secondary"
+              disabled={selectedNodes.length === 0}
+              onClick={() => alert(JSON.stringify(selectedNodes))}
+            >
+              خروجی منتخب
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => alert(JSON.stringify(treeData))}
+            >
+              خروجی
+            </Button>
+          </ButtonGroup>
+        </Toolbar>
+      </AppBar>
+      <Paper className={classes.contentWrapper} elevation={10}>
+        <Grid container spacing={2} direction="column">
+          <Grid item>
+            <Paper
+              className={classes.mainContent}
+              elevation={10}
+              variant="outlined"
+              square
+            >
+              <SortableTree
+                rowDirection="rtl"
+                onlyExpandSearchedNodes
+                rowHeight={175}
+                treeData={treeData}
+                searchQuery={searchString}
+                searchFocusOffset={searchFocusIndex}
+                searchFinishCallback={(matches) => {
+                  setSearchFoundCount(matches.length);
+                  setSearchFocusIndex(
+                    matches.length > 0 ? searchFocusIndex % matches.length : 0,
+                  );
+                }}
+                nodeContentRenderer={nodeContentRenderer}
+                generateNodeProps={({ node, path }) => ({
+                  buttons: renderNodeButtons(node as SedrahNodeData, path),
+                })}
+                onChange={(treeData) => setTreeData(treeData)}
+              />
+            </Paper>
+          </Grid>
+        </Grid>
+      </Paper>
       <AlertDialog
         open={isRemoveAlertVisible}
-        title="Remove Nodes"
-        content="Are you sure to remove the nodes?"
-        okText="Yes"
-        cancelText="No"
+        title="حذف گره"
+        content="آیا از حذف این گره مطمئن هستید؟"
+        okText="بله"
+        cancelText="خیر"
         onOK={handleRemoveNode}
         onCancel={toggleRemoveAlert}
       />
       <AlertDialog
         open={isAddFormVisible}
-        title="Add New Node"
+        title="افزودن گره جدید"
         content={<AddNodeForm onAddNode={handleAddNode} />}
-        cancelText="Cancel"
+        cancelText="انصراف"
         onCancel={toggleAddForm}
       />
       <AlertDialog
         open={isEditFormVisible}
-        title="Edit Node"
+        title="ویرایش گره"
         content={
           <EditNodeForm
             initialValues={selectedNode}
             onUpdateNode={handleUpdateNode}
           />
         }
-        cancelText="Cancel"
+        cancelText="انصراف"
         onCancel={toggleEditForm}
       />
     </>
