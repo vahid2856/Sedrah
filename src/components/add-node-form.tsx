@@ -55,7 +55,7 @@ const AddNodeForm: FC<AddNodeFormProps> = (props) => {
           <TextField
             type="text"
             required
-            label="title"
+            label="تیتر اصلی"
             variant="outlined"
             size="small"
             error={Boolean(formErrors.title)}
@@ -67,7 +67,7 @@ const AddNodeForm: FC<AddNodeFormProps> = (props) => {
         <Grid item xs={6}>
           <TextField
             type="text"
-            label="subtitle"
+            label="تیتر فرعی"
             variant="outlined"
             size="small"
             error={Boolean(formErrors.subtitle)}
@@ -79,7 +79,7 @@ const AddNodeForm: FC<AddNodeFormProps> = (props) => {
         <Grid item xs={6}>
           <TextField
             type="number"
-            label="age"
+            label="سن"
             variant="outlined"
             size="small"
             error={Boolean(formErrors.age)}
@@ -91,7 +91,7 @@ const AddNodeForm: FC<AddNodeFormProps> = (props) => {
         <Grid container spacing={2} justify="flex-end">
           <Grid item>
             <Button type="submit" color="primary" variant="contained">
-              Save
+              افزودن
             </Button>
           </Grid>
         </Grid>
