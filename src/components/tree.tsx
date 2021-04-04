@@ -52,7 +52,6 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       height: `calc(100vh - ${128}px)`,
     },
-
     search: {
       position: 'relative',
       borderRadius: theme.shape.borderRadius,
@@ -205,9 +204,6 @@ const Tree: FC = () => {
         )}
         onChange={() => {
           setSelectedNodes((prevState) => {
-            // TODO: fix this TS issue
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             const newState = [...prevState];
 
             const wasSelectedNodeIndex = prevState.findIndex(
