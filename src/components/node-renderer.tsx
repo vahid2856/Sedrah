@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { isDescendant } from 'react-sortable-tree';
+import { isDescendant, NodeData } from 'react-sortable-tree';
 import { NodeRendererProps } from 'react-sortable-tree';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -17,9 +17,11 @@ function classnames(...classes: Array<unknown>) {
   return classes.filter(Boolean).join(' ');
 }
 
-const NodeRenderer: FC<NodeRendererProps> = (props) => {
-  // TODO: fix this TS issue
-  // eslint-disable-next-line @typescript-eslint/unbound-method
+interface SedrahNodeRendererProps extends NodeRendererProps {
+  toggleChildrenVisibility?: (data: NodeData) => void;
+}
+
+const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
   const {
     isSearchMatch = false,
     isSearchFocus = false,
