@@ -23,11 +23,13 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import SearchIcon from '@material-ui/icons/Search';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
-import NodeRenderer from '@components/node-renderer';
+import NodeRendererComponent from '@components/node-renderer';
 import AlertDialog from '@components/dialog-box';
 import AddNodeForm from '@components/add-node-form';
 import EditNodeForm from '@components/edit-node-form';
+import ImportInitialTree from '@components/import-tree';
 
 export interface SedrahNodeData extends TreeItem {
   age: number;
@@ -39,7 +41,7 @@ import {
   Theme,
   createStyles,
 } from '@material-ui/core/styles';
-import { ButtonGroup } from '@material-ui/core';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     contentWrapper: {
@@ -84,16 +86,18 @@ const useStyles = makeStyles((theme: Theme) =>
         width: '20ch',
       },
     },
+    mainButtons: {
+      '& button': {
+        margin: theme.spacing(0, 1),
+      },
+    },
   }),
 );
 
 const Tree: FC = () => {
   const classes = useStyles();
 
-  const [treeData, setTreeData] = useState<Array<TreeItem>>([
-    { id: 3, title: 'جدایی', subtitle: 'اصغر فرهادی', age: 5 },
-    { id: 5, title: 'خانه دوست کجاست', subtitle: 'عباس کیارستمی', age: 5 },
-  ]);
+  const [treeData, setTreeData] = useState<Array<TreeItem>>([]);
   const [selectedNodes, setSelectedNodes] = useState<Array<SedrahNodeData>>([]);
   const [isRemoveAlertVisible, setIsRemoveAlertVisible] = useState(false);
   const [selectedNodePath, setSelectedNodePath] = useState<Array<
@@ -106,10 +110,6 @@ const Tree: FC = () => {
   const [searchString, setSearchString] = useState('');
   const [searchFocusIndex, setSearchFocusIndex] = useState(0);
   const [searchFoundCount, setSearchFoundCount] = useState(0);
-
-  const nodeContentRenderer: typeof NodeRenderer = (nodeData) => {
-    return NodeRenderer({ ...nodeData });
-  };
 
   const getNodeKey: GetNodeKeyFunction = ({ treeIndex }) => treeIndex;
 
@@ -190,6 +190,17 @@ const Tree: FC = () => {
         ? (prevSearchFocusIndex + 1) % searchFoundCount
         : 0,
     );
+
+  const handleExportToFile = () => {
+    const link = document.createElement('a');
+    const treeString =
+      'data:text/json;charset=utf-8,' +
+      encodeURIComponent(JSON.stringify(treeData));
+    link.setAttribute('href', treeString);
+    link.setAttribute('download', 'tree.json');
+    document.body.appendChild(link);
+    link.click();
+  };
 
   const renderNodeButtons = (
     node: SedrahNodeData,
@@ -277,10 +288,10 @@ const Tree: FC = () => {
                 onChange={(e) => setSearchString(e.target.value)}
               />
             </div>
-            <IconButton onClick={selectNextMatch}>
+            <IconButton color="inherit" onClick={selectNextMatch}>
               <NavigateNextIcon />
             </IconButton>
-            <IconButton onClick={selectPrevMatch}>
+            <IconButton color="inherit" onClick={selectPrevMatch}>
               <NavigateBeforeIcon />
             </IconButton>
             <span>
@@ -290,23 +301,26 @@ const Tree: FC = () => {
               {searchFoundCount || 0}
             </span>
           </div>
-          <ButtonGroup>
+          <div className={classes.mainButtons}>
             <Button
               variant="contained"
               color="secondary"
               disabled={selectedNodes.length === 0}
               onClick={() => alert(JSON.stringify(selectedNodes))}
             >
-              خروجی منتخب
+              نمایش منتخب
             </Button>
+            <ImportInitialTree onImport={setTreeData} />
             <Button
               variant="contained"
               color="secondary"
-              onClick={() => alert(JSON.stringify(treeData))}
+              onClick={handleExportToFile}
+              disabled={treeData.length === 0}
+              startIcon={<OpenInNewIcon />}
             >
-              خروجی
+              خروجی نهایی
             </Button>
-          </ButtonGroup>
+          </div>
         </Toolbar>
       </AppBar>
       <Paper className={classes.contentWrapper} elevation={10}>
@@ -331,7 +345,10 @@ const Tree: FC = () => {
                     matches.length > 0 ? searchFocusIndex % matches.length : 0,
                   );
                 }}
-                nodeContentRenderer={nodeContentRenderer}
+                nodeContentRenderer={NodeRendererComponent}
+                placeholderRenderer={() => (
+                  <ImportInitialTree onImport={setTreeData} />
+                )}
                 generateNodeProps={({ node, path }) => ({
                   buttons: renderNodeButtons(node as SedrahNodeData, path),
                 })}
