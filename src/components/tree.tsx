@@ -24,6 +24,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 
 import NodeRendererComponent from '@components/node-renderer';
 import AlertDialog from '@components/dialog-box';
@@ -53,6 +55,12 @@ const useStyles = makeStyles((theme: Theme) =>
     mainContent: {
       padding: theme.spacing(2),
       height: `calc(100vh - ${128}px)`,
+    },
+    searchBar: {
+      flexGrow: 1,
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
     },
     search: {
       position: 'relative',
@@ -98,6 +106,7 @@ const Tree: FC = () => {
   const classes = useStyles();
 
   const [treeData, setTreeData] = useState<Array<TreeItem>>([]);
+  const [treeZoom, setTreeZoom] = useState(1);
   const [selectedNodes, setSelectedNodes] = useState<Array<SedrahNodeData>>([]);
   const [isRemoveAlertVisible, setIsRemoveAlertVisible] = useState(false);
   const [selectedNodePath, setSelectedNodePath] = useState<Array<
@@ -191,6 +200,28 @@ const Tree: FC = () => {
         : 0,
     );
 
+  const handleZoomButtons = (zoomType: 'in' | 'out') => {
+    setTreeZoom((prevState) => {
+      const bottomLimit = 0.25;
+      const topLimit = 3;
+
+      if (zoomType === 'in') {
+        if (prevState === topLimit) {
+          return prevState;
+        }
+        return prevState + 0.25;
+      }
+      if (zoomType === 'out') {
+        if (prevState === bottomLimit) {
+          return prevState;
+        }
+        return prevState - 0.25;
+      }
+
+      return 1;
+    });
+  };
+
   const handleExportToFile = () => {
     const link = document.createElement('a');
     const treeString =
@@ -266,14 +297,7 @@ const Tree: FC = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6">Sedrah</Typography>
-          <div
-            style={{
-              flexGrow: 1,
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
+          <div className={classes.searchBar}>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -301,6 +325,20 @@ const Tree: FC = () => {
               {searchFoundCount || 0}
             </span>
           </div>
+          <Button
+            variant="contained"
+            color="secondary"
+            disabled={treeZoom === 1}
+            onClick={() => setTreeZoom(1)}
+          >
+            ریست
+          </Button>
+          <IconButton color="inherit" onClick={() => handleZoomButtons('in')}>
+            <ZoomInIcon />
+          </IconButton>
+          <IconButton color="inherit" onClick={() => handleZoomButtons('out')}>
+            <ZoomOutIcon />
+          </IconButton>
           <div className={classes.mainButtons}>
             <Button
               variant="contained"
@@ -334,6 +372,7 @@ const Tree: FC = () => {
             >
               <SortableTree
                 rowDirection="rtl"
+                style={{ zoom: treeZoom }}
                 onlyExpandSearchedNodes
                 rowHeight={175}
                 treeData={treeData}
