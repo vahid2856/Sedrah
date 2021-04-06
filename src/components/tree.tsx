@@ -23,11 +23,15 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import SearchIcon from '@material-ui/icons/Search';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 
-import NodeRenderer from '@components/node-renderer';
+import NodeRendererComponent from '@components/node-renderer';
 import AlertDialog from '@components/dialog-box';
 import AddNodeForm from '@components/add-node-form';
 import EditNodeForm from '@components/edit-node-form';
+import ImportInitialTree from '@components/import-tree';
 
 export interface SedrahNodeData extends TreeItem {
   age: number;
@@ -39,7 +43,7 @@ import {
   Theme,
   createStyles,
 } from '@material-ui/core/styles';
-import { ButtonGroup } from '@material-ui/core';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     contentWrapper: {
@@ -52,7 +56,12 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       height: `calc(100vh - ${128}px)`,
     },
-
+    searchBar: {
+      flexGrow: 1,
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
     search: {
       position: 'relative',
       borderRadius: theme.shape.borderRadius,
@@ -85,6 +94,11 @@ const useStyles = makeStyles((theme: Theme) =>
         width: '20ch',
       },
     },
+    mainButtons: {
+      '& button': {
+        margin: theme.spacing(0, 1),
+      },
+    },
   }),
 );
 
@@ -96,6 +110,7 @@ const Tree: FC = () => {
     { id: 5, title: 'منظومه', subtitle: '' },
     { id: 7, title: 'فیلم سازی' },
   ]);
+  const [treeZoom, setTreeZoom] = useState(1);
   const [selectedNodes, setSelectedNodes] = useState<Array<SedrahNodeData>>([]);
   const [isRemoveAlertVisible, setIsRemoveAlertVisible] = useState(false);
   const [selectedNodePath, setSelectedNodePath] = useState<Array<
@@ -108,10 +123,6 @@ const Tree: FC = () => {
   const [searchString, setSearchString] = useState('');
   const [searchFocusIndex, setSearchFocusIndex] = useState(0);
   const [searchFoundCount, setSearchFoundCount] = useState(0);
-
-  const nodeContentRenderer: typeof NodeRenderer = (nodeData) => {
-    return NodeRenderer({ ...nodeData });
-  };
 
   const getNodeKey: GetNodeKeyFunction = ({ treeIndex }) => treeIndex;
 
@@ -193,6 +204,39 @@ const Tree: FC = () => {
         : 0,
     );
 
+  const handleZoomButtons = (zoomType: 'in' | 'out') => {
+    setTreeZoom((prevState) => {
+      const bottomLimit = 0.25;
+      const topLimit = 3;
+
+      if (zoomType === 'in') {
+        if (prevState === topLimit) {
+          return prevState;
+        }
+        return prevState + 0.25;
+      }
+      if (zoomType === 'out') {
+        if (prevState === bottomLimit) {
+          return prevState;
+        }
+        return prevState - 0.25;
+      }
+
+      return 1;
+    });
+  };
+
+  const handleExportToFile = () => {
+    const link = document.createElement('a');
+    const treeString =
+      'data:text/json;charset=utf-8,' +
+      encodeURIComponent(JSON.stringify(treeData));
+    link.setAttribute('href', treeString);
+    link.setAttribute('download', 'tree.json');
+    document.body.appendChild(link);
+    link.click();
+  };
+
   const renderNodeButtons = (
     node: SedrahNodeData,
     path: Array<string | number>,
@@ -206,9 +250,6 @@ const Tree: FC = () => {
         )}
         onChange={() => {
           setSelectedNodes((prevState) => {
-            // TODO: fix this TS issue
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             const newState = [...prevState];
 
             const wasSelectedNodeIndex = prevState.findIndex(
@@ -260,14 +301,7 @@ const Tree: FC = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6">Sedrah</Typography>
-          <div
-            style={{
-              flexGrow: 1,
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
+          <div className={classes.searchBar}>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -282,10 +316,10 @@ const Tree: FC = () => {
                 onChange={(e) => setSearchString(e.target.value)}
               />
             </div>
-            <IconButton onClick={selectNextMatch}>
+            <IconButton color="inherit" onClick={selectNextMatch}>
               <NavigateNextIcon />
             </IconButton>
-            <IconButton onClick={selectPrevMatch}>
+            <IconButton color="inherit" onClick={selectPrevMatch}>
               <NavigateBeforeIcon />
             </IconButton>
             <span>
@@ -295,23 +329,39 @@ const Tree: FC = () => {
               {searchFoundCount || 0}
             </span>
           </div>
-          <ButtonGroup>
+          <Button
+            variant="contained"
+            color="secondary"
+            disabled={treeZoom === 1}
+            onClick={() => setTreeZoom(1)}
+          >
+            ریست
+          </Button>
+          <IconButton color="inherit" onClick={() => handleZoomButtons('in')}>
+            <ZoomInIcon />
+          </IconButton>
+          <IconButton color="inherit" onClick={() => handleZoomButtons('out')}>
+            <ZoomOutIcon />
+          </IconButton>
+          <div className={classes.mainButtons}>
             <Button
               variant="contained"
               color="secondary"
               disabled={selectedNodes.length === 0}
               onClick={() => alert(JSON.stringify(selectedNodes))}
             >
-              خروجی منتخب
+              نمایش منتخب
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              onClick={() => alert(JSON.stringify(treeData))}
+              onClick={handleExportToFile}
+              disabled={treeData.length === 0}
+              startIcon={<OpenInNewIcon />}
             >
-              خروجی
+              خروجی نهایی
             </Button>
-          </ButtonGroup>
+          </div>
         </Toolbar>
       </AppBar>
       <Paper className={classes.contentWrapper} elevation={10}>
@@ -325,6 +375,7 @@ const Tree: FC = () => {
             >
               <SortableTree
                 rowDirection="rtl"
+                style={{ zoom: treeZoom }}
                 onlyExpandSearchedNodes
                 rowHeight={175}
                 treeData={treeData}
@@ -336,7 +387,10 @@ const Tree: FC = () => {
                     matches.length > 0 ? searchFocusIndex % matches.length : 0,
                   );
                 }}
-                nodeContentRenderer={nodeContentRenderer}
+                nodeContentRenderer={NodeRendererComponent}
+                placeholderRenderer={() => (
+                  <ImportInitialTree onImport={setTreeData} />
+                )}
                 generateNodeProps={({ node, path }) => ({
                   buttons: renderNodeButtons(node as SedrahNodeData, path),
                 })}
