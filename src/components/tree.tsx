@@ -110,7 +110,9 @@ const useStyles = makeStyles((theme: Theme) =>
 const Tree: FC = () => {
   const classes = useStyles();
 
-  const [treeData, setTreeData] = useState<Array<TreeItem>>([]);
+  const [treeData, setTreeData] = useState<Array<TreeItem>>([
+     { id: 5, title: 'خانه دوست کجاست', subtitle: 'عباس کیارستمی', age: 5 },
+  ]);
   const [summaryMode, setSummaryMode] = useState(false);
   const [treeZoom, setTreeZoom] = useState(1);
   const [selectedNodes, setSelectedNodes] = useState<Array<SedrahNodeData>>([]);
@@ -160,8 +162,9 @@ const Tree: FC = () => {
       (prevTreeData) =>
         addNodeUnderParent({
           treeData: prevTreeData,
-          parentKey: parentPathToAdd,
+          parentKey: parentPathToAdd === '' ? undefined : parentPathToAdd,
           expandParent: true,
+          addAsFirstChild: parentPathToAdd === '',
           getNodeKey,
           newNode: {
             title: newNodeData.title,
@@ -434,7 +437,16 @@ const Tree: FC = () => {
                 }}
                 nodeContentRenderer={NodeRendererComponent}
                 placeholderRenderer={() => (
-                  <ImportInitialTree onImport={setTreeData} />
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      setParentPathToAdd('');
+                      setIsAddFormVisible(true);
+                    }}
+                  >
+                    افزودن گره
+                  </Button>
                 )}
                 generateNodeProps={({ node, path }) => ({
                   summaryMode,
