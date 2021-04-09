@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
     mainContent: {
       padding: theme.spacing(2),
       height: `calc(100vh - ${128}px)`,
+      overflow: 'scroll',
     },
     searchBar: {
       flexGrow: 1,
@@ -415,6 +416,7 @@ const Tree: FC = () => {
             >
               <SortableTree
                 rowDirection="rtl"
+                isVirtualized={false}
                 style={{ zoom: treeZoom }}
                 onlyExpandSearchedNodes
                 rowHeight={summaryMode ? 92 : 172}
