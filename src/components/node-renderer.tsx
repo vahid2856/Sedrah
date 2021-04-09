@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { isDescendant, NodeData } from 'react-sortable-tree';
 import { NodeRendererProps } from 'react-sortable-tree';
 import Card from '@material-ui/core/Card';
@@ -18,6 +18,7 @@ function classnames(...classes: Array<unknown>) {
 }
 
 interface SedrahNodeRendererProps extends NodeRendererProps {
+  summaryMode?: boolean;
   toggleChildrenVisibility?: (data: NodeData) => void;
 }
 
@@ -36,6 +37,7 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
     title = null,
     subtitle = null,
     rowDirection = 'ltr',
+    summaryMode,
 
     scaffoldBlockPxWidth,
     connectDragPreview,
@@ -52,6 +54,7 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
   const nodeTitle = title || node.title;
   const nodeSubtitle = subtitle || node.subtitle;
   const rowDirectionClass = rowDirection === 'rtl' ? 'rst__rtl' : null;
+  const [isExapnded, setIsExapnded] = useState(false);
 
   let handle;
   if (canDrag) {
@@ -141,11 +144,29 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
           >
             {handle}
 
-            <Card raised={isSearchMatch}>
-              <CardHeader title={nodeTitle} subheader={nodeSubtitle} />
-              <CardActions disableSpacing>
-                {buttons.map((btn) => btn)}
-              </CardActions>
+            <Card
+              raised={isSearchMatch}
+              onClick={() => setIsExapnded((prevState) => !prevState)}
+            >
+              <CardHeader
+                disableTypography
+                title={<div>{nodeTitle}</div>}
+                subheader={
+                  summaryMode ? null : (
+                    <div style={{ marginTop: '8px', marginBottom: '-8px' }}>
+                      {nodeSubtitle}
+                    </div>
+                  )
+                }
+                action={
+                  summaryMode && isExapnded ? buttons.map((btn) => btn) : null
+                }
+              />
+              {!summaryMode && (
+                <CardActions disableSpacing>
+                  {buttons.map((btn) => btn)}
+                </CardActions>
+              )}
             </Card>
           </div>,
         )}
