@@ -417,7 +417,10 @@ const Tree: FC = () => {
               <SortableTree
                 rowDirection="rtl"
                 isVirtualized={false}
-                style={{ zoom: treeZoom }}
+                style={{
+                  transform: `scale(${treeZoom})`,
+                  transformOrigin: 'top right',
+                }}
                 onlyExpandSearchedNodes
                 rowHeight={summaryMode ? 92 : 172}
                 treeData={treeData}
