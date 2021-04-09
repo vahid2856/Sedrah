@@ -16,6 +16,10 @@ import Grid from '@material-ui/core/Grid';
 import Checkbox from '@material-ui/core/Checkbox';
 import InputBase from '@material-ui/core/InputBase';
 import Paper from '@material-ui/core/Paper';
+import Divider from '@material-ui/core/Divider';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import TextField from '@material-ui/core/TextField';
 
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
@@ -106,6 +110,7 @@ const Tree: FC = () => {
   const classes = useStyles();
 
   const [treeData, setTreeData] = useState<Array<TreeItem>>([]);
+  const [summaryMode, setSummaryMode] = useState(false);
   const [treeZoom, setTreeZoom] = useState(1);
   const [selectedNodes, setSelectedNodes] = useState<Array<SedrahNodeData>>([]);
   const [isRemoveAlertVisible, setIsRemoveAlertVisible] = useState(false);
@@ -233,6 +238,10 @@ const Tree: FC = () => {
     link.click();
   };
 
+  const handleDetailsMode = () => {
+    setSummaryMode((prevState) => !prevState);
+  };
+
   const renderNodeButtons = (
     node: SedrahNodeData,
     path: Array<string | number>,
@@ -260,6 +269,7 @@ const Tree: FC = () => {
             }
           });
         }}
+        onClick={(e) => e.stopPropagation()}
       />,
       <IconButton
         key="update"
@@ -290,6 +300,31 @@ const Tree: FC = () => {
         <DeleteIcon />
       </IconButton>,
     ];
+  };
+
+  const renderNodeTitle = (
+    node: SedrahNodeData,
+    path: Array<string | number>,
+  ) => {
+    return (
+      <TextField
+        size="small"
+        variant="outlined"
+        value={node.title}
+        onChange={(event) => {
+          const newTitle = event.target.value;
+
+          setTreeData((prevTreeData) =>
+            changeNodeAtPath({
+              treeData: prevTreeData,
+              path,
+              getNodeKey,
+              newNode: { ...node, title: newTitle },
+            }),
+          );
+        }}
+      />
+    );
   };
 
   return (
@@ -339,6 +374,14 @@ const Tree: FC = () => {
           <IconButton color="inherit" onClick={() => handleZoomButtons('out')}>
             <ZoomOutIcon />
           </IconButton>
+          <Divider variant="middle" orientation="vertical" flexItem />
+          <FormControlLabel
+            control={
+              <Switch checked={!summaryMode} onChange={handleDetailsMode} />
+            }
+            label="نمایش با جزئیات"
+          />
+          <Divider variant="middle" orientation="vertical" flexItem />
           <div className={classes.mainButtons}>
             <Button
               variant="contained"
@@ -374,7 +417,7 @@ const Tree: FC = () => {
                 rowDirection="rtl"
                 style={{ zoom: treeZoom }}
                 onlyExpandSearchedNodes
-                rowHeight={175}
+                rowHeight={summaryMode ? 92 : 172}
                 treeData={treeData}
                 searchQuery={searchString}
                 searchFocusOffset={searchFocusIndex}
@@ -389,7 +432,9 @@ const Tree: FC = () => {
                   <ImportInitialTree onImport={setTreeData} />
                 )}
                 generateNodeProps={({ node, path }) => ({
+                  summaryMode,
                   buttons: renderNodeButtons(node as SedrahNodeData, path),
+                  title: renderNodeTitle(node as SedrahNodeData, path),
                 })}
                 onChange={(treeData) => setTreeData(treeData)}
               />
