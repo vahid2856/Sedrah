@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import SortableTree, {
   TreeItem,
   addNodeUnderParent,
@@ -7,111 +7,38 @@ import SortableTree, {
 } from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
 import { GetNodeKeyFunction } from 'react-sortable-tree/utils/tree-data-utils';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Grid from '@material-ui/core/Grid';
-import Checkbox from '@material-ui/core/Checkbox';
-import InputBase from '@material-ui/core/InputBase';
-import Paper from '@material-ui/core/Paper';
-import Divider from '@material-ui/core/Divider';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import TextField from '@material-ui/core/TextField';
 
-import EditIcon from '@material-ui/icons/Edit';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
-import SearchIcon from '@material-ui/icons/Search';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import ZoomInIcon from '@material-ui/icons/ZoomIn';
-import ZoomOutIcon from '@material-ui/icons/ZoomOut';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 
 import NodeRendererComponent from '@components/node-renderer';
 import AlertDialog from '@components/dialog-box';
 import AddNodeForm from '@components/add-node-form';
 import EditNodeForm from '@components/edit-node-form';
-import ImportInitialTree from '@components/import-tree';
+import NodeTitle from '@components/node-components/node-title';
+import NodeButtons from '@components/node-components/node-buttons';
+import { useStyles } from '@components/styles';
+import TopBar from '@components/top-bar';
 
 export interface SedrahNodeData extends TreeItem {
   age: number;
 }
 
-import {
-  fade,
-  makeStyles,
-  Theme,
-  createStyles,
-} from '@material-ui/core/styles';
+export type ReactSetState<T> = Dispatch<SetStateAction<T>>;
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    contentWrapper: {
-      display: 'flex',
-      flexGrow: 1,
-      padding: theme.spacing(2),
-      margin: theme.spacing(2),
-    },
-    mainContent: {
-      padding: theme.spacing(2),
-      height: `calc(100vh - ${128}px)`,
-      overflow: 'scroll',
-    },
-    searchBar: {
-      flexGrow: 1,
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    search: {
-      position: 'relative',
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor: fade(theme.palette.common.white, 0.15),
-      '&:hover': {
-        backgroundColor: fade(theme.palette.common.white, 0.25),
-      },
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-    searchIcon: {
-      padding: theme.spacing(0, 2),
-      height: '100%',
-      position: 'absolute',
-      pointerEvents: 'none',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    inputRoot: {
-      color: 'inherit',
-    },
-    inputInput: {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('md')]: {
-        width: '20ch',
-      },
-    },
-    mainButtons: {
-      '& button': {
-        margin: theme.spacing(0, 1),
-      },
-    },
-  }),
-);
+export const getNodeKey: GetNodeKeyFunction = ({ treeIndex }) => treeIndex;
+
+const initialTree = [
+  { id: 5, title: 'خانه دوست کجاست', subtitle: 'عباس کیارستمی', age: 5 },
+];
 
 const Tree: FC = () => {
   const classes = useStyles();
 
-  const [treeData, setTreeData] = useState<Array<TreeItem>>([
-     { id: 5, title: 'خانه دوست کجاست', subtitle: 'عباس کیارستمی', age: 5 },
+  const [treeData, setTreeData] = useState<Array<TreeItem>>(initialTree);
+  const [prevTreeData, setPrevTreeData] = useState<Array<Array<TreeItem>>>([
+    initialTree,
   ]);
   const [summaryMode, setSummaryMode] = useState(false);
   const [treeZoom, setTreeZoom] = useState(1);
@@ -128,8 +55,6 @@ const Tree: FC = () => {
   const [searchFocusIndex, setSearchFocusIndex] = useState(0);
   const [searchFoundCount, setSearchFoundCount] = useState(0);
 
-  const getNodeKey: GetNodeKeyFunction = ({ treeIndex }) => treeIndex;
-
   const toggleRemoveAlert = () => {
     setIsRemoveAlertVisible((prevState) => !prevState);
   };
@@ -142,11 +67,23 @@ const Tree: FC = () => {
     setIsEditFormVisible((prevState) => !prevState);
   };
 
+  const updateTree = (newTreeData: Array<TreeItem>) => {
+    setTreeData(() => {
+      setPrevTreeData((prevState) => {
+        const newState = [...prevState];
+        newState.push(newTreeData);
+        return newState;
+      });
+
+      return newTreeData;
+    });
+  };
+
   const handleRemoveNode = () => {
     if (selectedNodePath) {
-      setTreeData((state) =>
+      updateTree(
         removeNodeAtPath({
-          treeData: state,
+          treeData,
           path: selectedNodePath,
           getNodeKey,
         }),
@@ -158,29 +95,28 @@ const Tree: FC = () => {
   };
 
   const handleAddNode = (newNodeData: SedrahNodeData) => {
-    setTreeData(
-      (prevTreeData) =>
-        addNodeUnderParent({
-          treeData: prevTreeData,
-          parentKey: parentPathToAdd === '' ? undefined : parentPathToAdd,
-          expandParent: true,
-          addAsFirstChild: parentPathToAdd === '',
-          getNodeKey,
-          newNode: {
-            title: newNodeData.title,
-            subtitle: newNodeData.subtitle,
-            age: newNodeData.age,
-          },
-        }).treeData,
+    updateTree(
+      addNodeUnderParent({
+        treeData,
+        parentKey: parentPathToAdd === '' ? undefined : parentPathToAdd,
+        expandParent: true,
+        addAsFirstChild: parentPathToAdd === '',
+        getNodeKey,
+        newNode: {
+          title: newNodeData.title,
+          subtitle: newNodeData.subtitle,
+          age: newNodeData.age,
+        },
+      }).treeData,
     );
     toggleAddForm();
   };
 
   const handleUpdateNode = (newNodeData: SedrahNodeData) => {
     if (selectedNodePath) {
-      setTreeData((state) =>
+      updateTree(
         changeNodeAtPath({
-          treeData: state,
+          treeData,
           path: selectedNodePath,
           getNodeKey,
           newNode: {
@@ -195,219 +131,24 @@ const Tree: FC = () => {
     setSelectedNodePath(null);
   };
 
-  const selectPrevMatch = () =>
-    setSearchFocusIndex((prevSearchFocusIndex) =>
-      prevSearchFocusIndex !== null
-        ? (searchFoundCount + prevSearchFocusIndex - 1) % searchFoundCount
-        : searchFoundCount - 1,
-    );
-
-  const selectNextMatch = () =>
-    setSearchFocusIndex((prevSearchFocusIndex) =>
-      prevSearchFocusIndex !== null
-        ? (prevSearchFocusIndex + 1) % searchFoundCount
-        : 0,
-    );
-
-  const handleZoomButtons = (zoomType: 'in' | 'out') => {
-    setTreeZoom((prevState) => {
-      const bottomLimit = 0.25;
-      const topLimit = 3;
-
-      if (zoomType === 'in') {
-        if (prevState === topLimit) {
-          return prevState;
-        }
-        return prevState + 0.25;
-      }
-      if (zoomType === 'out') {
-        if (prevState === bottomLimit) {
-          return prevState;
-        }
-        return prevState - 0.25;
-      }
-
-      return 1;
-    });
-  };
-
-  const handleExportToFile = () => {
-    const link = document.createElement('a');
-    const treeString =
-      'data:text/json;charset=utf-8,' +
-      encodeURIComponent(JSON.stringify(treeData));
-    link.setAttribute('href', treeString);
-    link.setAttribute('download', 'tree.json');
-    document.body.appendChild(link);
-    link.click();
-  };
-
-  const handleDetailsMode = () => {
-    setSummaryMode((prevState) => !prevState);
-  };
-
-  const renderNodeButtons = (
-    node: SedrahNodeData,
-    path: Array<string | number>,
-  ) => {
-    return [
-      <Checkbox
-        key="select checkbox"
-        size="small"
-        checked={selectedNodes.some(
-          (selectedNode) => selectedNode.id === node.id,
-        )}
-        onChange={() => {
-          setSelectedNodes((prevState) => {
-            const newState = [...prevState];
-
-            const wasSelectedNodeIndex = prevState.findIndex(
-              (prevNode) => prevNode.id === node.id,
-            );
-
-            if (wasSelectedNodeIndex > -1) {
-              newState.splice(wasSelectedNodeIndex, 1);
-              return newState;
-            } else {
-              return [...prevState, node];
-            }
-          });
-        }}
-        onClick={(e) => e.stopPropagation()}
-      />,
-      <IconButton
-        key="update"
-        onClick={() => {
-          setSelectedNode(node);
-          setSelectedNodePath(path);
-          setIsEditFormVisible(true);
-        }}
-      >
-        <EditIcon />
-      </IconButton>,
-      <IconButton
-        key="add"
-        onClick={() => {
-          setParentPathToAdd(path[path.length - 1]);
-          setIsAddFormVisible(true);
-        }}
-      >
-        <AddIcon />
-      </IconButton>,
-      <IconButton
-        key="remove"
-        onClick={() => {
-          setSelectedNodePath(path);
-          setIsRemoveAlertVisible(true);
-        }}
-      >
-        <DeleteIcon />
-      </IconButton>,
-    ];
-  };
-
-  const renderNodeTitle = (
-    node: SedrahNodeData,
-    path: Array<string | number>,
-  ) => {
-    return (
-      <TextField
-        size="small"
-        variant="outlined"
-        value={node.title}
-        onChange={(event) => {
-          const newTitle = event.target.value;
-
-          setTreeData((prevTreeData) =>
-            changeNodeAtPath({
-              treeData: prevTreeData,
-              path,
-              getNodeKey,
-              newNode: { ...node, title: newTitle },
-            }),
-          );
-        }}
-      />
-    );
-  };
-
   return (
     <>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6">Sedrah</Typography>
-          <div className={classes.searchBar}>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                placeholder="جستجو..."
-                value={searchString}
-                onChange={(e) => setSearchString(e.target.value)}
-              />
-            </div>
-            <IconButton color="inherit" onClick={selectNextMatch}>
-              <NavigateNextIcon />
-            </IconButton>
-            <IconButton color="inherit" onClick={selectPrevMatch}>
-              <NavigateBeforeIcon />
-            </IconButton>
-            <span>
-              &nbsp;
-              {searchFoundCount > 0 ? searchFocusIndex + 1 : 0}
-              &nbsp;/&nbsp;
-              {searchFoundCount || 0}
-            </span>
-          </div>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={treeZoom === 1}
-            onClick={() => setTreeZoom(1)}
-          >
-            ریست
-          </Button>
-          <IconButton color="inherit" onClick={() => handleZoomButtons('in')}>
-            <ZoomInIcon />
-          </IconButton>
-          <IconButton color="inherit" onClick={() => handleZoomButtons('out')}>
-            <ZoomOutIcon />
-          </IconButton>
-          <Divider variant="middle" orientation="vertical" flexItem />
-          <FormControlLabel
-            control={
-              <Switch checked={!summaryMode} onChange={handleDetailsMode} />
-            }
-            label="نمایش با جزئیات"
-          />
-          <Divider variant="middle" orientation="vertical" flexItem />
-          <div className={classes.mainButtons}>
-            <Button
-              variant="contained"
-              color="secondary"
-              disabled={selectedNodes.length === 0}
-              onClick={() => alert(JSON.stringify(selectedNodes))}
-            >
-              نمایش منتخب
-            </Button>
-            <ImportInitialTree onImport={setTreeData} />
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleExportToFile}
-              disabled={treeData.length === 0}
-              startIcon={<OpenInNewIcon />}
-            >
-              خروجی نهایی
-            </Button>
-          </div>
-        </Toolbar>
-      </AppBar>
+      <TopBar
+        treeData={treeData}
+        selectedNodes={selectedNodes}
+        searchFocusIndex={searchFocusIndex}
+        searchFoundCount={searchFoundCount}
+        searchString={searchString}
+        treeZoom={treeZoom}
+        summaryMode={summaryMode}
+        prevTreeData={prevTreeData}
+        onSetTreeData={setTreeData}
+        onSetSearchFocusIndex={setSearchFocusIndex}
+        onSetSearchString={setSearchString}
+        onSetTreeZoom={setTreeZoom}
+        onSetSummaryMode={setSummaryMode}
+        onSetPrevTreeData={setPrevTreeData}
+      />
       <Paper className={classes.contentWrapper} elevation={10}>
         <Grid container spacing={2} direction="column">
           <Grid item>
@@ -450,8 +191,28 @@ const Tree: FC = () => {
                 )}
                 generateNodeProps={({ node, path }) => ({
                   summaryMode,
-                  buttons: renderNodeButtons(node as SedrahNodeData, path),
-                  title: renderNodeTitle(node as SedrahNodeData, path),
+                  buttons: (
+                    <NodeButtons
+                      node={node as SedrahNodeData}
+                      path={path}
+                      selectedNodes={selectedNodes}
+                      onSetSelectedNodes={setSelectedNodes}
+                      onSetSelectedNode={setSelectedNode}
+                      onSetSelectedNodePath={setSelectedNodePath}
+                      onSetIsEditFormVisible={setIsEditFormVisible}
+                      onSetParentPathToAdd={setParentPathToAdd}
+                      onSetIsAddFormVisible={setIsAddFormVisible}
+                      onSetIsRemoveAlertVisible={setIsRemoveAlertVisible}
+                    />
+                  ),
+                  title: (
+                    <NodeTitle
+                      node={node as SedrahNodeData}
+                      path={path}
+                      treeData={treeData}
+                      onUpdateTree={updateTree}
+                    />
+                  ),
                 })}
                 onChange={(treeData) => setTreeData(treeData)}
               />

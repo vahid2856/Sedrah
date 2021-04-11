@@ -158,14 +158,10 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
                     </div>
                   )
                 }
-                action={
-                  summaryMode && isExapnded ? buttons.map((btn) => btn) : null
-                }
+                action={summaryMode && isExapnded ? buttons : null}
               />
               {!summaryMode && (
-                <CardActions disableSpacing>
-                  {buttons.map((btn) => btn)}
-                </CardActions>
+                <CardActions disableSpacing>{buttons}</CardActions>
               )}
             </Card>
           </div>,
