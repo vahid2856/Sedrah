@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
-import NodeRendererComponent from '@components/node-renderer';
+import NodeRendererComponent from '@components/node-components/node-renderer';
 import AlertDialog from '@components/dialog-box';
 import AddNodeForm from '@components/add-node-form';
 import EditNodeForm from '@components/edit-node-form';
