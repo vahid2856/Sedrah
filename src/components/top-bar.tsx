@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { TreeItem } from 'react-sortable-tree';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -18,10 +18,12 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import UndoIcon from '@material-ui/icons/Undo';
+import MenuIcon from '@material-ui/icons/Menu';
 
 import ImportInitialTree from '@components/import-tree';
 import { useStyles } from '@components/styles';
 import { ReactSetState, SedrahNodeData } from '@components/tree';
+import { Drawer, List, ListItem } from '@material-ui/core';
 
 interface TopBarProps {
   treeData: Array<TreeItem>;
@@ -58,6 +60,8 @@ const TopBar: FC<TopBarProps> = (props) => {
     onSetPrevTreeData,
   } = props;
   const classes = useStyles();
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const updateTree = (newTreeData: Array<TreeItem>) => {
     onSetTreeData(() => {
@@ -133,9 +137,16 @@ const TopBar: FC<TopBarProps> = (props) => {
     onSetSummaryMode((prevState) => !prevState);
   };
 
+  const toggleDrawer = () => {
+    setIsDrawerOpen((prevState) => !prevState);
+  };
+
   return (
     <AppBar position="static">
       <Toolbar>
+        <IconButton color="inherit" onClick={toggleDrawer}>
+          <MenuIcon />
+        </IconButton>
         <Typography variant="h6">Sedrah</Typography>
         <div className={classes.searchBar}>
           <div className={classes.search}>
@@ -165,14 +176,6 @@ const TopBar: FC<TopBarProps> = (props) => {
             {searchFoundCount || 0}
           </span>
         </div>
-        <IconButton
-          disabled={prevTreeData.length < 2}
-          color="inherit"
-          onClick={handleUndo}
-        >
-          <UndoIcon />
-        </IconButton>
-        <Divider variant="middle" orientation="vertical" flexItem />
         <Button
           variant="contained"
           color="secondary"
@@ -188,33 +191,49 @@ const TopBar: FC<TopBarProps> = (props) => {
           <ZoomOutIcon />
         </IconButton>
         <Divider variant="middle" orientation="vertical" flexItem />
-        <FormControlLabel
-          control={
-            <Switch checked={!summaryMode} onChange={handleDetailsMode} />
-          }
-          label="نمایش با جزئیات"
-        />
-        <Divider variant="middle" orientation="vertical" flexItem />
-        <div className={classes.mainButtons}>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={selectedNodes.length === 0}
-            onClick={() => alert(JSON.stringify(selectedNodes))}
-          >
-            نمایش منتخب
-          </Button>
-          <ImportInitialTree onImport={updateTree} />
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleExportToFile}
-            disabled={treeData.length === 0}
-            startIcon={<OpenInNewIcon />}
-          >
-            خروجی نهایی
-          </Button>
-        </div>
+        <IconButton
+          disabled={prevTreeData.length < 2}
+          color="inherit"
+          onClick={handleUndo}
+        >
+          <UndoIcon />
+        </IconButton>
+        <Drawer anchor="right" open={isDrawerOpen} onClose={toggleDrawer}>
+          <List>
+            <ListItem>
+              <Button
+                variant="contained"
+                color="secondary"
+                disabled={selectedNodes.length === 0}
+                onClick={() => alert(JSON.stringify(selectedNodes))}
+              >
+                نمایش منتخب
+              </Button>
+            </ListItem>
+            <ListItem>
+              <ImportInitialTree onImport={updateTree} />
+            </ListItem>
+            <ListItem>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleExportToFile}
+                disabled={treeData.length === 0}
+                startIcon={<OpenInNewIcon />}
+              >
+                خروجی نهایی
+              </Button>
+            </ListItem>
+            <ListItem>
+              <FormControlLabel
+                control={
+                  <Switch checked={!summaryMode} onChange={handleDetailsMode} />
+                }
+                label="نمایش با جزئیات"
+              />
+            </ListItem>
+          </List>
+        </Drawer>
       </Toolbar>
     </AppBar>
   );
