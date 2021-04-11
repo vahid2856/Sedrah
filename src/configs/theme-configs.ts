@@ -1,27 +1,26 @@
 import { ThemeOptions } from '@material-ui/core';
-import VazirWoff2 from '../static/fonts/Vazir.woff2';
+import Lotus from '../static/fonts/Lotus.woff';
 
-const vazir = {
-  fontFamily: 'Vazir',
+const lotus = {
+  fontFamily: 'B Lotus',
   fontStyle: 'normal',
   fontDisplay: 'swap' as const,
   fontWeight: 400,
   src: `
-    local('Vazir'),
-    local('Vazir-Regular'),
-    url(${VazirWoff2 as string}) format('woff2')
+    local('B Lotus'),
+    url(${Lotus as string}) format('woff')
   `,
 };
 
 const theme: ThemeOptions = {
   direction: 'rtl',
   typography: {
-    fontFamily: 'Vazir, Roboto, sans-serif',
+    fontFamily: '"B Lotus", Roboto, sans-serif',
   },
   overrides: {
     MuiCssBaseline: {
       '@global': {
-        '@font-face': [vazir],
+        '@font-face': [lotus],
       },
     },
     MuiTab: {
