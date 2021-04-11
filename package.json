@@ -6,7 +6,7 @@
   "main": "index.ts",
   "scripts": {
     "dev": "webpack serve --mode development --open --hot",
-    "lint": "tsc && eslint src/**/*.{ts,tsx,js} --fix",
+    "lint": "tsc && eslint src/**/*.{ts,tsx} --fix",
     "build": "webpack --mode production",
     "postinstall": "patch-package"
   },
@@ -19,7 +19,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{ts,tsx,js}": [
+    "src/**/*.{ts,tsx}": [
       "npm run lint",
       "git add"
     ]
