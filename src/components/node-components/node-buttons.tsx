@@ -1,0 +1,97 @@
+import { FC } from 'react';
+
+import IconButton from '@material-ui/core/IconButton';
+import Checkbox from '@material-ui/core/Checkbox';
+
+import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+
+import { ReactSetState, SedrahNodeData } from '@components/tree';
+
+interface NodeTitleProps {
+  node: SedrahNodeData;
+  path: Array<string | number>;
+  selectedNodes: Array<SedrahNodeData>;
+  onSetSelectedNodes: ReactSetState<Array<SedrahNodeData>>;
+  onSetSelectedNode: ReactSetState<SedrahNodeData | null>;
+  onSetSelectedNodePath: ReactSetState<Array<string | number> | null>;
+  onSetIsEditFormVisible: ReactSetState<boolean>;
+  onSetParentPathToAdd: ReactSetState<string | number>;
+  onSetIsAddFormVisible: ReactSetState<boolean>;
+  onSetIsRemoveAlertVisible: ReactSetState<boolean>;
+}
+
+const NodeButtons: FC<NodeTitleProps> = (props) => {
+  const {
+    node,
+    path,
+    selectedNodes,
+    onSetSelectedNodes,
+    onSetSelectedNode,
+    onSetSelectedNodePath,
+    onSetIsEditFormVisible,
+    onSetParentPathToAdd,
+    onSetIsAddFormVisible,
+    onSetIsRemoveAlertVisible,
+  } = props;
+
+  return (
+    <>
+      <Checkbox
+        key="select checkbox"
+        size="small"
+        checked={selectedNodes.some(
+          (selectedNode) => selectedNode.id === node.id,
+        )}
+        onChange={() => {
+          onSetSelectedNodes((prevState) => {
+            const newState = [...prevState];
+
+            const wasSelectedNodeIndex = prevState.findIndex(
+              (prevNode) => prevNode.id === node.id,
+            );
+
+            if (wasSelectedNodeIndex > -1) {
+              newState.splice(wasSelectedNodeIndex, 1);
+              return newState;
+            } else {
+              return [...prevState, node];
+            }
+          });
+        }}
+        onClick={(e) => e.stopPropagation()}
+      />
+      <IconButton
+        key="update"
+        onClick={() => {
+          onSetSelectedNode(node);
+          onSetSelectedNodePath(path);
+          onSetIsEditFormVisible(true);
+        }}
+      >
+        <EditIcon />
+      </IconButton>
+      <IconButton
+        key="add"
+        onClick={() => {
+          onSetParentPathToAdd(path[path.length - 1]);
+          onSetIsAddFormVisible(true);
+        }}
+      >
+        <AddIcon />
+      </IconButton>
+      <IconButton
+        key="remove"
+        onClick={() => {
+          onSetSelectedNodePath(path);
+          onSetIsRemoveAlertVisible(true);
+        }}
+      >
+        <DeleteIcon />
+      </IconButton>
+    </>
+  );
+};
+
+export default NodeButtons;
