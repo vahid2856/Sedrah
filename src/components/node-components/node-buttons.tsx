@@ -17,9 +17,8 @@ interface NodeTitleProps {
   onSetSelectedNode: ReactSetState<SedrahNodeData | null>;
   onSetSelectedNodePath: ReactSetState<Array<string | number> | null>;
   onSetIsEditFormVisible: ReactSetState<boolean>;
-  onSetParentPathToAdd: ReactSetState<string | number>;
-  onSetIsAddFormVisible: ReactSetState<boolean>;
   onSetIsRemoveAlertVisible: ReactSetState<boolean>;
+  onAddNode: (path: string | number) => void;
 }
 
 const NodeButtons: FC<NodeTitleProps> = (props) => {
@@ -31,9 +30,8 @@ const NodeButtons: FC<NodeTitleProps> = (props) => {
     onSetSelectedNode,
     onSetSelectedNodePath,
     onSetIsEditFormVisible,
-    onSetParentPathToAdd,
-    onSetIsAddFormVisible,
     onSetIsRemoveAlertVisible,
+    onAddNode,
   } = props;
 
   return (
@@ -75,8 +73,7 @@ const NodeButtons: FC<NodeTitleProps> = (props) => {
       <IconButton
         key="add"
         onClick={() => {
-          onSetParentPathToAdd(path[path.length - 1]);
-          onSetIsAddFormVisible(true);
+          onAddNode(path[path.length - 1]);
         }}
       >
         <AddIcon />

@@ -19,6 +19,7 @@ function classnames(...classes: Array<unknown>) {
 
 interface SedrahNodeRendererProps extends NodeRendererProps {
   summaryMode?: boolean;
+  isWithHandle?: boolean;
   toggleChildrenVisibility?: (data: NodeData) => void;
 }
 
@@ -38,6 +39,7 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
     subtitle = null,
     rowDirection = 'ltr',
     summaryMode,
+    isWithHandle,
 
     scaffoldBlockPxWidth,
     connectDragPreview,
@@ -142,7 +144,7 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
               ...style,
             }}
           >
-            {handle}
+            {isWithHandle && handle}
 
             <Card
               raised={isSearchMatch}
