@@ -33,12 +33,14 @@ interface TopBarProps {
   searchString: string;
   treeZoom: number;
   summaryMode: boolean;
+  isWithHandle: boolean;
   prevTreeData: Array<Array<TreeItem>>;
   onSetTreeData: ReactSetState<Array<TreeItem>>;
   onSetSearchFocusIndex: ReactSetState<number>;
   onSetSearchString: ReactSetState<string>;
   onSetTreeZoom: ReactSetState<number>;
   onSetSummaryMode: ReactSetState<boolean>;
+  onSetIsWithHandle: ReactSetState<boolean>;
   onSetPrevTreeData: ReactSetState<Array<Array<TreeItem>>>;
 }
 
@@ -51,12 +53,14 @@ const TopBar: FC<TopBarProps> = (props) => {
     searchString,
     treeZoom,
     summaryMode,
+    isWithHandle,
     prevTreeData,
     onSetTreeData,
     onSetSearchFocusIndex,
     onSetSearchString,
     onSetTreeZoom,
     onSetSummaryMode,
+    onSetIsWithHandle,
     onSetPrevTreeData,
   } = props;
   const classes = useStyles();
@@ -133,8 +137,12 @@ const TopBar: FC<TopBarProps> = (props) => {
     link.click();
   };
 
-  const handleDetailsMode = () => {
+  const toggleDetailsMode = () => {
     onSetSummaryMode((prevState) => !prevState);
+  };
+
+  const toggleIsWithHandle = () => {
+    onSetIsWithHandle((prevState) => !prevState);
   };
 
   const toggleDrawer = () => {
@@ -227,9 +235,20 @@ const TopBar: FC<TopBarProps> = (props) => {
             <ListItem>
               <FormControlLabel
                 control={
-                  <Switch checked={!summaryMode} onChange={handleDetailsMode} />
+                  <Switch checked={!summaryMode} onChange={toggleDetailsMode} />
                 }
                 label="نمایش با جزئیات"
+              />
+            </ListItem>
+            <ListItem>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={isWithHandle}
+                    onChange={toggleIsWithHandle}
+                  />
+                }
+                label="قابل جابجایی"
               />
             </ListItem>
           </List>

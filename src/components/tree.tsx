@@ -14,7 +14,6 @@ import Paper from '@material-ui/core/Paper';
 
 import NodeRendererComponent from '@components/node-components/node-renderer';
 import AlertDialog from '@components/dialog-box';
-import AddNodeForm from '@components/add-node-form';
 import EditNodeForm from '@components/edit-node-form';
 import NodeTitle from '@components/node-components/node-title';
 import NodeButtons from '@components/node-components/node-buttons';
@@ -41,6 +40,7 @@ const Tree: FC = () => {
     initialTree,
   ]);
   const [summaryMode, setSummaryMode] = useState(false);
+  const [isWithHandle, setIsWithHandle] = useState(true);
   const [treeZoom, setTreeZoom] = useState(1);
   const [selectedNodes, setSelectedNodes] = useState<Array<SedrahNodeData>>([]);
   const [isRemoveAlertVisible, setIsRemoveAlertVisible] = useState(false);
@@ -48,8 +48,6 @@ const Tree: FC = () => {
     number | string
   > | null>(null);
   const [selectedNode, setSelectedNode] = useState<SedrahNodeData | null>(null);
-  const [isAddFormVisible, setIsAddFormVisible] = useState(false);
-  const [parentPathToAdd, setParentPathToAdd] = useState<string | number>('');
   const [isEditFormVisible, setIsEditFormVisible] = useState(false);
   const [searchString, setSearchString] = useState('');
   const [searchFocusIndex, setSearchFocusIndex] = useState(0);
@@ -57,10 +55,6 @@ const Tree: FC = () => {
 
   const toggleRemoveAlert = () => {
     setIsRemoveAlertVisible((prevState) => !prevState);
-  };
-
-  const toggleAddForm = () => {
-    setIsAddFormVisible((prevState) => !prevState);
   };
 
   const toggleEditForm = () => {
@@ -94,22 +88,21 @@ const Tree: FC = () => {
     }
   };
 
-  const handleAddNode = (newNodeData: SedrahNodeData) => {
+  const handleAddNode = (parentPath?: string | number) => {
     updateTree(
       addNodeUnderParent({
         treeData,
-        parentKey: parentPathToAdd === '' ? undefined : parentPathToAdd,
+        parentKey: parentPath,
         expandParent: true,
-        addAsFirstChild: parentPathToAdd === '',
+        addAsFirstChild: parentPath === undefined,
         getNodeKey,
         newNode: {
-          title: newNodeData.title,
-          subtitle: newNodeData.subtitle,
-          age: newNodeData.age,
+          title: '',
+          subtitle: '',
+          age: '',
         },
       }).treeData,
     );
-    toggleAddForm();
   };
 
   const handleUpdateNode = (newNodeData: SedrahNodeData) => {
@@ -141,12 +134,14 @@ const Tree: FC = () => {
         searchString={searchString}
         treeZoom={treeZoom}
         summaryMode={summaryMode}
+        isWithHandle={isWithHandle}
         prevTreeData={prevTreeData}
         onSetTreeData={setTreeData}
         onSetSearchFocusIndex={setSearchFocusIndex}
         onSetSearchString={setSearchString}
         onSetTreeZoom={setTreeZoom}
         onSetSummaryMode={setSummaryMode}
+        onSetIsWithHandle={setIsWithHandle}
         onSetPrevTreeData={setPrevTreeData}
       />
       <Paper className={classes.contentWrapper} elevation={10}>
@@ -182,8 +177,7 @@ const Tree: FC = () => {
                     variant="contained"
                     color="secondary"
                     onClick={() => {
-                      setParentPathToAdd('');
-                      setIsAddFormVisible(true);
+                      handleAddNode();
                     }}
                   >
                     افزودن گره
@@ -191,6 +185,7 @@ const Tree: FC = () => {
                 )}
                 generateNodeProps={({ node, path }) => ({
                   summaryMode,
+                  isWithHandle,
                   buttons: (
                     <NodeButtons
                       node={node as SedrahNodeData}
@@ -200,9 +195,8 @@ const Tree: FC = () => {
                       onSetSelectedNode={setSelectedNode}
                       onSetSelectedNodePath={setSelectedNodePath}
                       onSetIsEditFormVisible={setIsEditFormVisible}
-                      onSetParentPathToAdd={setParentPathToAdd}
-                      onSetIsAddFormVisible={setIsAddFormVisible}
                       onSetIsRemoveAlertVisible={setIsRemoveAlertVisible}
+                      onAddNode={handleAddNode}
                     />
                   ),
                   title: (
@@ -228,13 +222,6 @@ const Tree: FC = () => {
         cancelText="خیر"
         onOK={handleRemoveNode}
         onCancel={toggleRemoveAlert}
-      />
-      <AlertDialog
-        open={isAddFormVisible}
-        title="افزودن گره جدید"
-        content={<AddNodeForm onAddNode={handleAddNode} />}
-        cancelText="انصراف"
-        onCancel={toggleAddForm}
       />
       <AlertDialog
         open={isEditFormVisible}
