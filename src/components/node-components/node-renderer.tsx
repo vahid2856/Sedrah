@@ -152,6 +152,7 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
               <CardHeader
                 disableTypography
                 title={nodeTitle}
+                style={{ ...(summaryMode && { padding: 0 }) }}
                 subheader={
                   summaryMode ? null : (
                     <div style={{ marginTop: '8px', marginBottom: '-8px' }}>

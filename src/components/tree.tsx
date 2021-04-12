@@ -166,7 +166,7 @@ const Tree: FC = () => {
                   transformOrigin: 'top right',
                 }}
                 onlyExpandSearchedNodes
-                rowHeight={summaryMode ? 92 : 172}
+                rowHeight={summaryMode ? 60 : 172}
                 treeData={treeData}
                 searchQuery={searchString}
                 searchFocusOffset={searchFocusIndex}
