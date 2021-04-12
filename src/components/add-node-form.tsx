@@ -51,8 +51,9 @@ const AddNodeForm: FC<AddNodeFormProps> = (props) => {
   return (
     <form onSubmit={handleFormSubmit} noValidate autoComplete="off">
       <Grid container spacing={2}>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
+            fullWidth
             type="text"
             required
             label="تیتر اصلی"
@@ -64,8 +65,9 @@ const AddNodeForm: FC<AddNodeFormProps> = (props) => {
             onChange={(e) => handleFieldChange('title', e.target.value)}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
+            fullWidth
             type="text"
             label="تیتر فرعی"
             variant="outlined"
@@ -76,8 +78,9 @@ const AddNodeForm: FC<AddNodeFormProps> = (props) => {
             onChange={(e) => handleFieldChange('subtitle', e.target.value)}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
+            fullWidth
             type="number"
             label="سن"
             variant="outlined"

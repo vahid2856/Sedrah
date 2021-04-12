@@ -146,11 +146,12 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
 
             <Card
               raised={isSearchMatch}
+              elevation={summaryMode ? 0 : 2}
               onClick={() => setIsExapnded((prevState) => !prevState)}
             >
               <CardHeader
                 disableTypography
-                title={<div>{nodeTitle}</div>}
+                title={nodeTitle}
                 subheader={
                   summaryMode ? null : (
                     <div style={{ marginTop: '8px', marginBottom: '-8px' }}>

@@ -56,10 +56,5 @@ export const useStyles = makeStyles((theme: Theme) =>
         width: '20ch',
       },
     },
-    mainButtons: {
-      '& button': {
-        margin: theme.spacing(0, 1),
-      },
-    },
   }),
 );
