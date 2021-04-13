@@ -18,6 +18,7 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import UndoIcon from '@material-ui/icons/Undo';
+import RedoIcon from '@material-ui/icons/Redo';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import ImportInitialTree from '@components/import-tree';
@@ -35,13 +36,15 @@ interface TopBarProps {
   summaryMode: boolean;
   isWithHandle: boolean;
   prevTreeData: Array<Array<TreeItem>>;
+  undoRedoIndex: number;
+  onUpdateTree: (newTreeData: Array<TreeItem>) => void;
   onSetTreeData: ReactSetState<Array<TreeItem>>;
   onSetSearchFocusIndex: ReactSetState<number>;
   onSetSearchString: ReactSetState<string>;
   onSetTreeZoom: ReactSetState<number>;
   onSetSummaryMode: ReactSetState<boolean>;
   onSetIsWithHandle: ReactSetState<boolean>;
-  onSetPrevTreeData: ReactSetState<Array<Array<TreeItem>>>;
+  onSetUndoRedoIndex: ReactSetState<number>;
 }
 
 const TopBar: FC<TopBarProps> = (props) => {
@@ -55,38 +58,33 @@ const TopBar: FC<TopBarProps> = (props) => {
     summaryMode,
     isWithHandle,
     prevTreeData,
+    undoRedoIndex,
+    onUpdateTree,
     onSetTreeData,
     onSetSearchFocusIndex,
     onSetSearchString,
     onSetTreeZoom,
     onSetSummaryMode,
     onSetIsWithHandle,
-    onSetPrevTreeData,
+    onSetUndoRedoIndex,
   } = props;
   const classes = useStyles();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const updateTree = (newTreeData: Array<TreeItem>) => {
-    onSetTreeData(() => {
-      onSetPrevTreeData((prevState) => {
-        const newState = [...prevState];
-        newState.push(newTreeData);
-        return newState;
-      });
+  const handleUndo = () => {
+    onSetUndoRedoIndex((prevIndex) => {
+      onSetTreeData(prevTreeData[prevIndex - 1]);
 
-      return newTreeData;
+      return prevIndex - 1;
     });
   };
 
-  const handleUndo = () => {
-    onSetPrevTreeData((prevState) => {
-      const newState = [...prevState];
-      newState.pop();
+  const handleRedo = () => {
+    onSetUndoRedoIndex((prevIndex) => {
+      onSetTreeData(prevTreeData[prevIndex + 1]);
 
-      onSetTreeData(newState[newState.length - 1]);
-
-      return newState;
+      return prevIndex + 1;
     });
   };
 
@@ -200,7 +198,14 @@ const TopBar: FC<TopBarProps> = (props) => {
         </IconButton>
         <Divider variant="middle" orientation="vertical" flexItem />
         <IconButton
-          disabled={prevTreeData.length < 2}
+          disabled={prevTreeData.length - 1 <= undoRedoIndex}
+          color="inherit"
+          onClick={handleRedo}
+        >
+          <RedoIcon />
+        </IconButton>
+        <IconButton
+          disabled={prevTreeData.length <= 1 || undoRedoIndex === 0}
           color="inherit"
           onClick={handleUndo}
         >
@@ -219,7 +224,7 @@ const TopBar: FC<TopBarProps> = (props) => {
               </Button>
             </ListItem>
             <ListItem>
-              <ImportInitialTree onImport={updateTree} />
+              <ImportInitialTree onImport={onUpdateTree} />
             </ListItem>
             <ListItem>
               <Button
