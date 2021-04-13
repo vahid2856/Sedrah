@@ -21,7 +21,10 @@ import { useStyles } from '@components/styles';
 import TopBar from '@components/top-bar';
 
 export interface SedrahNodeData extends TreeItem {
-  age: number;
+  introducer: text;
+  birth_year: number;
+  tel: number;
+  email: text;
 }
 
 export type ReactSetState<T> = Dispatch<SetStateAction<T>>;
@@ -29,7 +32,12 @@ export type ReactSetState<T> = Dispatch<SetStateAction<T>>;
 export const getNodeKey: GetNodeKeyFunction = ({ treeIndex }) => treeIndex;
 
 const initialTree = [
-  { id: 5, title: 'خانه دوست کجاست', subtitle: 'عباس کیارستمی', age: 5 },
+  { id: 0,  name : 'نام و نام خانوادگی',
+          username: 'نام کاربری',
+          introducer: 'معرف',
+          birth_year: '1380',
+          tel: '09101400000',
+          email: 'email@mail.com' },
 ];
 
 const Tree: FC = () => {
@@ -101,9 +109,12 @@ const Tree: FC = () => {
         addAsFirstChild: parentPath === undefined,
         getNodeKey,
         newNode: {
-          title: '',
-          subtitle: '',
-          age: '',
+          name : '',
+          username: '',
+          introducer: '',
+          birth_year: '',
+          tel: '',
+          email: ''
         },
       }).treeData,
     );
@@ -186,7 +197,7 @@ const Tree: FC = () => {
                       handleAddNode();
                     }}
                   >
-                    افزودن گره
+                    افزودن کاربر
                   </Button>
                 )}
                 generateNodeProps={({ node, path }) => ({
@@ -222,8 +233,8 @@ const Tree: FC = () => {
       </Paper>
       <AlertDialog
         open={isRemoveAlertVisible}
-        title="حذف گره"
-        content="آیا از حذف این گره مطمئن هستید؟"
+        title="حذف کاربر"
+        content="آیا از حذف این کاربر مطمئن هستید؟"
         okText="بله"
         cancelText="خیر"
         onOK={handleRemoveNode}
@@ -231,7 +242,7 @@ const Tree: FC = () => {
       />
       <AlertDialog
         open={isEditFormVisible}
-        title="ویرایش گره"
+        title="ویرایش کاربر"
         content={
           <EditNodeForm
             initialValues={selectedNode}

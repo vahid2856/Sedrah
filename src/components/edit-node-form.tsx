@@ -15,14 +15,20 @@ type FormErrors = {
 const EditNodeForm: FC<AddNodeFormProps> = (props) => {
   const { initialValues, onUpdateNode } = props;
   const [formValues, setFormValues] = useState<SedrahNodeData>({
-    title: '',
-    subtitle: '',
-    age: 1,
+          name : '',
+          username: '',
+          introducer: '',
+          birth_year: '',
+          tel: '',
+          email: ''
   });
   const [formErrors, setFormErrors] = useState<FormErrors>({
-    title: '',
-    subtitle: '',
-    age: '',
+          name : '',
+          username: '',
+          introducer: '',
+          birth_year: '',
+          tel: '',
+          email: ''
   });
 
   useEffect(() => {
@@ -35,7 +41,12 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
     fieldName: keyof SedrahNodeData,
     fieldValue: string | number,
   ) => {
-    setFormErrors({ title: '', subtitle: '', age: '' });
+    setFormErrors({ name : '',
+          username: '',
+          introducer: '',
+          birth_year: '',
+          tel: '',
+          email: ''});
     setFormValues((prevState) => ({ ...prevState, [fieldName]: fieldValue }));
   };
 
@@ -54,44 +65,84 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
   return (
     <form onSubmit={handleFormSubmit} noValidate autoComplete="off">
       <Grid container spacing={2}>
+
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
             type="text"
             required
-            label="تیتر اصلی"
+            label="نام و نام خانوادگی"
             variant="outlined"
             size="small"
-            error={Boolean(formErrors.title)}
-            helperText={formErrors.title}
-            value={formValues.title}
-            onChange={(e) => handleFieldChange('title', e.target.value)}
+            error={Boolean(formErrors.name)}
+            helperText={formErrors.name}
+            value={formValues.name}
+            onChange={(e) => handleFieldChange('name', e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
             type="text"
-            label="تیتر فرعی"
+            label="نام کاربری درخواستی"
             variant="outlined"
             size="small"
-            error={Boolean(formErrors.subtitle)}
-            helperText={formErrors.subtitle}
-            value={formValues.subtitle}
-            onChange={(e) => handleFieldChange('subtitle', e.target.value)}
+            error={Boolean(formErrors.username)}
+            helperText={formErrors.username}
+            value={formValues.username}
+            onChange={(e) => handleFieldChange('username', e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            type="text"
+            label="معرف"
+            variant="outlined"
+            size="small"
+            error={Boolean(formErrors.introducer)}
+            helperText={formErrors.introducer}
+            value={formValues.introducer}
+            onChange={(e) => handleFieldChange('introducer', e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
             type="number"
-            label="سن"
+            label="تاریخ تولد"
             variant="outlined"
             size="small"
-            error={Boolean(formErrors.age)}
-            helperText={formErrors.age}
-            value={formValues.age}
-            onChange={(e) => handleFieldChange('age', e.target.value)}
+            error={Boolean(formErrors.birthyear)}
+            helperText={formErrors.birthyear}
+            value={formValues.birthyear}
+            onChange={(e) => handleFieldChange('birthyear', e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            type="number"
+            label="tel"
+            variant="outlined"
+            size="small"
+            error={Boolean(formErrors.tel)}
+            helperText={formErrors.tel}
+            value={formValues.tel}
+            onChange={(e) => handleFieldChange('tel', e.target.value)}
+          />
+        </Grid>
+         <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            type="text"
+            label="email"
+            variant="outlined"
+            size="small"
+            error={Boolean(formErrors.email)}
+            helperText={formErrors.email}
+            value={formValues.email}
+            onChange={(e) => handleFieldChange('email', e.target.value)}
           />
         </Grid>
         <Grid container spacing={2} justify="flex-end">
