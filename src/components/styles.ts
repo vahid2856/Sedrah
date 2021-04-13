@@ -56,5 +56,16 @@ export const useStyles = makeStyles((theme: Theme) =>
         width: '20ch',
       },
     },
+    nodeTitle: {
+      padding: theme.spacing(0, 1),
+      minHeight: 40,
+      minWidth: 100,
+      boxSizing: 'content-box',
+    },
+    nodeTitleFocused: {
+      border: '1px solid rgba(0,0,0,0.23)',
+      borderRadius: 3,
+      minHeight: 38,
+    },
   }),
 );
