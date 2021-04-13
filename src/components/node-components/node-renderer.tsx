@@ -35,8 +35,8 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
     parentNode = null,
     draggedNode = null,
     canDrop = false,
-    title = null,
-    subtitle = null,
+    name = null,
+    username = null,
     rowDirection = 'ltr',
     summaryMode,
     isWithHandle,
@@ -53,8 +53,8 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
     isOver, // Not needed, but preserved for other renderers
     ...otherProps
   } = props;
-  const nodeTitle = title || node.title;
-  const nodeSubtitle = subtitle || node.subtitle;
+  const nodeTitle = name || node.name;
+  const nodeSubtitle = username || node.username;
   const rowDirectionClass = rowDirection === 'rtl' ? 'rst__rtl' : null;
   const [isExapnded, setIsExapnded] = useState(false);
 

@@ -33,7 +33,7 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
             treeData,
             path,
             getNodeKey,
-            newNode: { ...node, title: newTitle },
+            newNode: { ...node, name: newTitle },
           }),
         );
       }}
@@ -46,9 +46,12 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
               expandParent: true,
               getNodeKey,
               newNode: {
-                title: '',
-                subtitle: '',
-                age: '',
+              name : '',
+              username: '',
+              introducer: '',
+              birth_year: '',
+              tel: '',
+              email: ''
               },
             }).treeData,
           );
