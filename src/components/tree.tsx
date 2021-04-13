@@ -39,6 +39,7 @@ const Tree: FC = () => {
   const [prevTreeData, setPrevTreeData] = useState<Array<Array<TreeItem>>>([
     initialTree,
   ]);
+  const [undoRedoIndex, setUndoRedoIndex] = useState(0);
   const [summaryMode, setSummaryMode] = useState(false);
   const [isWithHandle, setIsWithHandle] = useState(true);
   const [treeZoom, setTreeZoom] = useState(1);
@@ -57,6 +58,8 @@ const Tree: FC = () => {
     setIsRemoveAlertVisible((prevState) => !prevState);
   };
 
+  console.log(treeData, prevTreeData, undoRedoIndex);
+
   const toggleEditForm = () => {
     setIsEditFormVisible((prevState) => !prevState);
   };
@@ -64,8 +67,9 @@ const Tree: FC = () => {
   const updateTree = (newTreeData: Array<TreeItem>) => {
     setTreeData(() => {
       setPrevTreeData((prevState) => {
-        const newState = [...prevState];
+        const newState = [...prevState].slice(0, undoRedoIndex + 1);
         newState.push(newTreeData);
+        setUndoRedoIndex(newState.length - 1);
         return newState;
       });
 
@@ -136,13 +140,15 @@ const Tree: FC = () => {
         summaryMode={summaryMode}
         isWithHandle={isWithHandle}
         prevTreeData={prevTreeData}
+        undoRedoIndex={undoRedoIndex}
+        onUpdateTree={updateTree}
         onSetTreeData={setTreeData}
         onSetSearchFocusIndex={setSearchFocusIndex}
         onSetSearchString={setSearchString}
         onSetTreeZoom={setTreeZoom}
         onSetSummaryMode={setSummaryMode}
         onSetIsWithHandle={setIsWithHandle}
-        onSetPrevTreeData={setPrevTreeData}
+        onSetUndoRedoIndex={setUndoRedoIndex}
       />
       <Paper className={classes.contentWrapper} elevation={10}>
         <Grid container spacing={2} direction="column">
