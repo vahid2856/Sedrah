@@ -52,12 +52,12 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
 
   const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (formValues.title !== '') {
+    if (formValues.name !== '') {
       onUpdateNode(formValues);
     } else {
       setFormErrors((prevState) => ({
         ...prevState,
-        title: 'title is required',
+        name: 'name is required',
       }));
     }
   };

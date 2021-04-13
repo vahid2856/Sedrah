@@ -23,8 +23,8 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
   return (
     <InputBase
       classes={{ root: classes.nodeTitle, focused: classes.nodeTitleFocused }}
-      value={node.title}
-      style={{ width: `${(node.title as string).length}ch` }}
+      value={node.name}
+      style={{ width: `${(node.name as string).length}ch` }}
       onChange={(event) => {
         const newTitle = event.target.value;
 

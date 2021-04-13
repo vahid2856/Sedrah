@@ -48,7 +48,7 @@ const AlertDialog: FC<AlertDialogProps> = (props) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{name}</DialogTitle>
       <DialogContent>
         <DialogContentText component="div" id="alert-dialog-description">
           {content}
