@@ -18,7 +18,7 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
     name: '',
     username: '',
     introducer: '',
-    tel: 0912,
+    tel: '',
     email: '',
   });
   const [formErrors, setFormErrors] = useState<FormErrors>({
