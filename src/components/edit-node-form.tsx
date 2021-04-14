@@ -82,6 +82,7 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
           <TextField
             fullWidth
             type="text"
+            required
             label="نام کاربری درخواستی"
             variant="outlined"
             size="small"
@@ -95,6 +96,7 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
           <TextField
             fullWidth
             type="text"
+            required
             label="معرف"
             variant="outlined"
             size="small"
