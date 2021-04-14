@@ -49,7 +49,6 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
                 name: '',
                 username: '',
                 introducer: '',
-                birth_year: '',
                 tel: '',
                 email: '',
               },

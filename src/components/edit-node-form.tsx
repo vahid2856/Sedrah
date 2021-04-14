@@ -18,15 +18,13 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
     name: '',
     username: '',
     introducer: '',
-    birth_year: 1300,
-    tel: '',
+    tel: 0912,
     email: '',
   });
   const [formErrors, setFormErrors] = useState<FormErrors>({
     name: '',
     username: '',
     introducer: '',
-    birth_year: '',
     tel: '',
     email: '',
   });
@@ -45,7 +43,6 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
       name: '',
       username: '',
       introducer: '',
-      birth_year: '',
       tel: '',
       email: '',
     });
@@ -105,19 +102,6 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
             helperText={formErrors.introducer}
             value={formValues.introducer}
             onChange={(e) => handleFieldChange('introducer', e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            type="number"
-            label="تاریخ تولد"
-            variant="outlined"
-            size="small"
-            error={Boolean(formErrors.birth_year)}
-            helperText={formErrors.birth_year}
-            value={formValues.birth_year}
-            onChange={(e) => handleFieldChange('birth_year', e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>

@@ -24,7 +24,6 @@ export interface SedrahNodeData extends TreeItem {
   name: string;
   username: string;
   introducer: string;
-  birth_year: number;
   tel: string;
   email: string;
 }
@@ -39,7 +38,6 @@ const initialTree = [
     name: 'نام و نام خانوادگی',
     username: 'نام کاربری',
     introducer: 'معرف',
-    birth_year: 1380,
     tel: '09101400000',
     email: 'email@mail.com',
   },
@@ -115,7 +113,6 @@ const Tree: FC = () => {
           name: '',
           username: '',
           introducer: '',
-          birth_year: '',
           tel: '',
           email: '',
         },
