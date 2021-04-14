@@ -24,7 +24,7 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
     <InputBase
       classes={{ root: classes.nodeTitle, focused: classes.nodeTitleFocused }}
       value={node.name}
-      style={{ width: `${(node.name as string).length}ch` }}
+      style={{ width: `${node.name.length}ch` }}
       onChange={(event) => {
         const newTitle = event.target.value;
 
@@ -46,12 +46,12 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
               expandParent: true,
               getNodeKey,
               newNode: {
-              name : '',
-              username: '',
-              introducer: '',
-              birth_year: '',
-              tel: '',
-              email: ''
+                name: '',
+                username: '',
+                introducer: '',
+                birth_year: '',
+                tel: '',
+                email: '',
               },
             }).treeData,
           );

@@ -21,10 +21,12 @@ import { useStyles } from '@components/styles';
 import TopBar from '@components/top-bar';
 
 export interface SedrahNodeData extends TreeItem {
-  introducer: text;
+  name: string;
+  username: string;
+  introducer: string;
   birth_year: number;
-  tel: number;
-  email: text;
+  tel: string;
+  email: string;
 }
 
 export type ReactSetState<T> = Dispatch<SetStateAction<T>>;
@@ -32,12 +34,15 @@ export type ReactSetState<T> = Dispatch<SetStateAction<T>>;
 export const getNodeKey: GetNodeKeyFunction = ({ treeIndex }) => treeIndex;
 
 const initialTree = [
-  { id: 0,  name : 'نام و نام خانوادگی',
-          username: 'نام کاربری',
-          introducer: 'معرف',
-          birth_year: '1380',
-          tel: '09101400000',
-          email: 'email@mail.com' },
+  {
+    id: 0,
+    name: 'نام و نام خانوادگی',
+    username: 'نام کاربری',
+    introducer: 'معرف',
+    birth_year: 1380,
+    tel: '09101400000',
+    email: 'email@mail.com',
+  },
 ];
 
 const Tree: FC = () => {
@@ -65,8 +70,6 @@ const Tree: FC = () => {
   const toggleRemoveAlert = () => {
     setIsRemoveAlertVisible((prevState) => !prevState);
   };
-
-  console.log(treeData, prevTreeData, undoRedoIndex);
 
   const toggleEditForm = () => {
     setIsEditFormVisible((prevState) => !prevState);
@@ -109,12 +112,12 @@ const Tree: FC = () => {
         addAsFirstChild: parentPath === undefined,
         getNodeKey,
         newNode: {
-          name : '',
+          name: '',
           username: '',
           introducer: '',
           birth_year: '',
           tel: '',
-          email: ''
+          email: '',
         },
       }).treeData,
     );

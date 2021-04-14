@@ -15,20 +15,20 @@ type FormErrors = {
 const EditNodeForm: FC<AddNodeFormProps> = (props) => {
   const { initialValues, onUpdateNode } = props;
   const [formValues, setFormValues] = useState<SedrahNodeData>({
-          name : '',
-          username: '',
-          introducer: '',
-          birth_year: '',
-          tel: '',
-          email: ''
+    name: '',
+    username: '',
+    introducer: '',
+    birth_year: 1300,
+    tel: '',
+    email: '',
   });
   const [formErrors, setFormErrors] = useState<FormErrors>({
-          name : '',
-          username: '',
-          introducer: '',
-          birth_year: '',
-          tel: '',
-          email: ''
+    name: '',
+    username: '',
+    introducer: '',
+    birth_year: '',
+    tel: '',
+    email: '',
   });
 
   useEffect(() => {
@@ -41,12 +41,14 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
     fieldName: keyof SedrahNodeData,
     fieldValue: string | number,
   ) => {
-    setFormErrors({ name : '',
-          username: '',
-          introducer: '',
-          birth_year: '',
-          tel: '',
-          email: ''});
+    setFormErrors({
+      name: '',
+      username: '',
+      introducer: '',
+      birth_year: '',
+      tel: '',
+      email: '',
+    });
     setFormValues((prevState) => ({ ...prevState, [fieldName]: fieldValue }));
   };
 
@@ -65,7 +67,6 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
   return (
     <form onSubmit={handleFormSubmit} noValidate autoComplete="off">
       <Grid container spacing={2}>
-
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -113,17 +114,17 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
             label="تاریخ تولد"
             variant="outlined"
             size="small"
-            error={Boolean(formErrors.birthyear)}
-            helperText={formErrors.birthyear}
-            value={formValues.birthyear}
-            onChange={(e) => handleFieldChange('birthyear', e.target.value)}
+            error={Boolean(formErrors.birth_year)}
+            helperText={formErrors.birth_year}
+            value={formValues.birth_year}
+            onChange={(e) => handleFieldChange('birth_year', e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
             type="number"
-            label="tel"
+            label="تلفن"
             variant="outlined"
             size="small"
             error={Boolean(formErrors.tel)}
@@ -132,11 +133,11 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
             onChange={(e) => handleFieldChange('tel', e.target.value)}
           />
         </Grid>
-         <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
             type="text"
-            label="email"
+            label="ایمیل"
             variant="outlined"
             size="small"
             error={Boolean(formErrors.email)}
