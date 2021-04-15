@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import { themeConfigs, rtlConfigs } from '@configs/index';
+import { themeConfigs, rtlConfigs, Configs } from '@configs/index';
 import Tree from '@components/tree';
 
 const App: FC = () => {
@@ -14,7 +14,9 @@ const App: FC = () => {
     <ThemeProvider theme={createMuiTheme(themeConfigs)}>
       <CssBaseline />
       <StylesProvider jss={rtlConfigs}>
-        <Tree />
+        <Configs>
+          <Tree />
+        </Configs>
       </StylesProvider>
     </ThemeProvider>
   );
