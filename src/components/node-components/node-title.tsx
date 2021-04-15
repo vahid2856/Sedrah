@@ -24,6 +24,7 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
 
   return (
     <InputBase
+      autoFocus
       classes={{ root: classes.nodeTitle, focused: classes.nodeTitleFocused }}
       value={node[primaryField]}
       style={{ width: `${node[primaryField].toString().length}ch` }}
