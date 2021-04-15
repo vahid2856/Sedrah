@@ -10,6 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 interface NodeTitleProps {
   node: SedrahNodeData & NodeData;
+  treeIndex: number;
   path: Array<string | number>;
   selectedNodes: Array<SedrahNodeData & NodeData>;
   onSetSelectedNodes: ReactSetState<Array<SedrahNodeData & NodeData>>;
@@ -23,6 +24,7 @@ interface NodeTitleProps {
 const NodeButtons: FC<NodeTitleProps> = (props) => {
   const {
     node,
+    treeIndex,
     path,
     selectedNodes,
     onSetSelectedNodes,
@@ -39,21 +41,21 @@ const NodeButtons: FC<NodeTitleProps> = (props) => {
         key="select checkbox"
         size="small"
         checked={selectedNodes.some(
-          (selectedNode) => selectedNode.treeIndex === node.treeIndex,
+          (selectedNode) => selectedNode.treeIndex === treeIndex,
         )}
         onChange={() => {
           onSetSelectedNodes((prevState) => {
             const newState = [...prevState];
 
             const wasSelectedNodeIndex = prevState.findIndex(
-              (prevNode) => prevNode.treeIndex === node.treeIndex,
+              (prevNode) => prevNode.treeIndex === treeIndex,
             );
 
             if (wasSelectedNodeIndex > -1) {
               newState.splice(wasSelectedNodeIndex, 1);
               return newState;
             } else {
-              return [...prevState, node];
+              return [...prevState, { ...node, treeIndex }];
             }
           });
         }}

@@ -148,6 +148,7 @@ const Tree: FC = () => {
               elevation={10}
               variant="outlined"
               square
+              onClick={() => setExpandedNodeId(-1)}
             >
               <SortableTree
                 rowDirection="rtl"
@@ -179,7 +180,7 @@ const Tree: FC = () => {
                     افزودن گره
                   </Button>
                 )}
-                generateNodeProps={({ node, path }) => ({
+                generateNodeProps={({ node, path, treeIndex }) => ({
                   summaryMode,
                   isWithHandle,
                   expandedNodeId,
@@ -187,6 +188,7 @@ const Tree: FC = () => {
                   buttons: (
                     <NodeButtons
                       node={node as SedrahNodeData & NodeData}
+                      treeIndex={treeIndex}
                       path={path}
                       selectedNodes={selectedNodes}
                       onSetSelectedNodes={setSelectedNodes}

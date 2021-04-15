@@ -155,7 +155,10 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
             <Card
               raised={isSearchMatch}
               elevation={summaryMode ? 0 : 2}
-              onClick={() => setExpandedNodeId && setExpandedNodeId(treeIndex)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setExpandedNodeId && setExpandedNodeId(treeIndex);
+              }}
             >
               <CardHeader
                 disableTypography

@@ -52,6 +52,17 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
             }).treeData,
           );
         }
+        if (e.code === 'Insert') {
+          onUpdateTree(
+            addNodeUnderParent({
+              treeData,
+              parentKey: path[path.length - 1],
+              expandParent: true,
+              getNodeKey,
+              newNode: { [primaryField]: '' },
+            }).treeData,
+          );
+        }
       }}
     />
   );
