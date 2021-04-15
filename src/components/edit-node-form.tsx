@@ -1,7 +1,7 @@
 import { FC, FormEvent, useEffect, useState } from 'react';
 import { Button, Grid, TextField } from '@material-ui/core';
 
-import { SedrahNodeData } from '@components/tree';
+import { useConfigs } from '@configs/main-configs';
 
 interface AddNodeFormProps {
   initialValues: SedrahNodeData | null;
@@ -14,16 +14,19 @@ type FormErrors = {
 
 const EditNodeForm: FC<AddNodeFormProps> = (props) => {
   const { initialValues, onUpdateNode } = props;
-  const [formValues, setFormValues] = useState<SedrahNodeData>({
-    title: '',
-    subtitle: '',
-    age: 1,
-  });
-  const [formErrors, setFormErrors] = useState<FormErrors>({
-    title: '',
-    subtitle: '',
-    age: '',
-  });
+  const { fields } = useConfigs();
+  const [formValues, setFormValues] = useState(
+    fields.reduce(
+      (res, field) => ({ ...res, [field.name]: field.initialValue }),
+      {} as SedrahNodeData,
+    ),
+  );
+  const [formErrors, setFormErrors] = useState(
+    fields.reduce(
+      (res, field) => ({ ...res, [field.name]: '' }),
+      {} as FormErrors,
+    ),
+  );
 
   useEffect(() => {
     if (initialValues) {
@@ -35,65 +38,55 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
     fieldName: keyof SedrahNodeData,
     fieldValue: string | number,
   ) => {
-    setFormErrors({ title: '', subtitle: '', age: '' });
+    setFormErrors(
+      fields.reduce(
+        (res, field) => ({ ...res, [field.name]: '' }),
+        {} as FormErrors,
+      ),
+    );
     setFormValues((prevState) => ({ ...prevState, [fieldName]: fieldValue }));
   };
 
   const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (formValues.title !== '') {
+    const withoutError = fields.reduce((isValid, field) => {
+      if (field.isValidate) {
+        if (formValues[field.name] === '') {
+          setFormErrors((prevState) => ({
+            ...prevState,
+            [field.name]: 'ضروری است',
+          }));
+          return false;
+        }
+      }
+
+      return isValid;
+    }, true);
+
+    if (withoutError) {
       onUpdateNode(formValues);
-    } else {
-      setFormErrors((prevState) => ({
-        ...prevState,
-        title: 'title is required',
-      }));
     }
   };
 
   return (
     <form onSubmit={handleFormSubmit} noValidate autoComplete="off">
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            type="text"
-            required
-            label="تیتر اصلی"
-            variant="outlined"
-            size="small"
-            error={Boolean(formErrors.title)}
-            helperText={formErrors.title}
-            value={formValues.title}
-            onChange={(e) => handleFieldChange('title', e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            type="text"
-            label="تیتر فرعی"
-            variant="outlined"
-            size="small"
-            error={Boolean(formErrors.subtitle)}
-            helperText={formErrors.subtitle}
-            value={formValues.subtitle}
-            onChange={(e) => handleFieldChange('subtitle', e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            type="number"
-            label="سن"
-            variant="outlined"
-            size="small"
-            error={Boolean(formErrors.age)}
-            helperText={formErrors.age}
-            value={formValues.age}
-            onChange={(e) => handleFieldChange('age', e.target.value)}
-          />
-        </Grid>
+        {fields.map((field) => (
+          <Grid key={field.name} item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type={field.type}
+              required={field.isValidate}
+              label={field.label}
+              variant="outlined"
+              size="small"
+              error={Boolean(formErrors[field.name])}
+              helperText={formErrors[field.name]}
+              value={formValues[field.name]}
+              onChange={(e) => handleFieldChange(field.name, e.target.value)}
+            />
+          </Grid>
+        ))}
         <Grid container spacing={2} justify="flex-end">
           <Grid item>
             <Button type="submit" color="primary" variant="contained">

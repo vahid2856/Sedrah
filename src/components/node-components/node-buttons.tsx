@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { NodeData } from 'react-sortable-tree';
 
 import IconButton from '@material-ui/core/IconButton';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -7,13 +8,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import { ReactSetState, SedrahNodeData } from '@components/tree';
-
 interface NodeTitleProps {
-  node: SedrahNodeData;
+  node: SedrahNodeData & NodeData;
   path: Array<string | number>;
-  selectedNodes: Array<SedrahNodeData>;
-  onSetSelectedNodes: ReactSetState<Array<SedrahNodeData>>;
+  selectedNodes: Array<SedrahNodeData & NodeData>;
+  onSetSelectedNodes: ReactSetState<Array<SedrahNodeData & NodeData>>;
   onSetSelectedNode: ReactSetState<SedrahNodeData | null>;
   onSetSelectedNodePath: ReactSetState<Array<string | number> | null>;
   onSetIsEditFormVisible: ReactSetState<boolean>;
@@ -40,14 +39,14 @@ const NodeButtons: FC<NodeTitleProps> = (props) => {
         key="select checkbox"
         size="small"
         checked={selectedNodes.some(
-          (selectedNode) => selectedNode.id === node.id,
+          (selectedNode) => selectedNode.treeIndex === node.treeIndex,
         )}
         onChange={() => {
           onSetSelectedNodes((prevState) => {
             const newState = [...prevState];
 
             const wasSelectedNodeIndex = prevState.findIndex(
-              (prevNode) => prevNode.id === node.id,
+              (prevNode) => prevNode.treeIndex === node.treeIndex,
             );
 
             if (wasSelectedNodeIndex > -1) {
