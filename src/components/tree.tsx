@@ -48,6 +48,7 @@ const Tree: FC = () => {
   const [searchString, setSearchString] = useState('');
   const [searchFocusIndex, setSearchFocusIndex] = useState(0);
   const [searchFoundCount, setSearchFoundCount] = useState(0);
+  const [expandedNodeId, setExpandedNodeId] = useState(-1);
 
   const toggleRemoveAlert = () => {
     setIsRemoveAlertVisible((prevState) => !prevState);
@@ -181,6 +182,8 @@ const Tree: FC = () => {
                 generateNodeProps={({ node, path }) => ({
                   summaryMode,
                   isWithHandle,
+                  expandedNodeId,
+                  setExpandedNodeId,
                   buttons: (
                     <NodeButtons
                       node={node as SedrahNodeData & NodeData}

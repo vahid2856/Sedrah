@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { isDescendant, NodeData } from 'react-sortable-tree';
 import { NodeRendererProps } from 'react-sortable-tree';
 
@@ -23,6 +23,8 @@ function classnames(...classes: Array<unknown>) {
 interface SedrahNodeRendererProps extends NodeRendererProps {
   summaryMode?: boolean;
   isWithHandle?: boolean;
+  expandedNodeId?: number;
+  setExpandedNodeId?: ReactSetState<number>;
   toggleChildrenVisibility?: (data: NodeData) => void;
 }
 
@@ -43,6 +45,8 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
     rowDirection = 'ltr',
     summaryMode,
     isWithHandle,
+    expandedNodeId,
+    setExpandedNodeId,
 
     scaffoldBlockPxWidth,
     connectDragPreview,
@@ -59,7 +63,6 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
   const { secondaryField } = useConfigs();
 
   const rowDirectionClass = rowDirection === 'rtl' ? 'rst__rtl' : null;
-  const [isExapnded, setIsExapnded] = useState(false);
 
   let handle;
   if (canDrag) {
@@ -152,7 +155,7 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
             <Card
               raised={isSearchMatch}
               elevation={summaryMode ? 0 : 2}
-              onClick={() => setIsExapnded((prevState) => !prevState)}
+              onClick={() => setExpandedNodeId && setExpandedNodeId(treeIndex)}
             >
               <CardHeader
                 disableTypography
@@ -168,7 +171,9 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
                     </>
                   )
                 }
-                action={summaryMode && isExapnded ? buttons : null}
+                action={
+                  summaryMode && expandedNodeId === treeIndex ? buttons : null
+                }
               />
               {!summaryMode && (
                 <CardActions disableSpacing>{buttons}</CardActions>
