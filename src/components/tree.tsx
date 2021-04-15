@@ -1,6 +1,7 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { FC, useState } from 'react';
 import SortableTree, {
   TreeItem,
+  NodeData,
   addNodeUnderParent,
   removeNodeAtPath,
   changeNodeAtPath,
@@ -12,6 +13,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
+import { useConfigs } from '@configs/main-configs';
 import NodeRendererComponent from '@components/node-components/node-renderer';
 import AlertDialog from '@components/dialog-box';
 import EditNodeForm from '@components/edit-node-form';
@@ -20,20 +22,11 @@ import NodeButtons from '@components/node-components/node-buttons';
 import { useStyles } from '@components/styles';
 import TopBar from '@components/top-bar';
 
-export interface SedrahNodeData extends TreeItem {
-  age: number;
-}
-
-export type ReactSetState<T> = Dispatch<SetStateAction<T>>;
-
 export const getNodeKey: GetNodeKeyFunction = ({ treeIndex }) => treeIndex;
-
-const initialTree = [
-  { id: 5, title: 'خانه دوست کجاست', subtitle: 'عباس کیارستمی', age: 5 },
-];
 
 const Tree: FC = () => {
   const classes = useStyles();
+  const { initialTree, primaryField } = useConfigs();
 
   const [treeData, setTreeData] = useState<Array<TreeItem>>(initialTree);
   const [prevTreeData, setPrevTreeData] = useState<Array<Array<TreeItem>>>([
@@ -43,7 +36,9 @@ const Tree: FC = () => {
   const [summaryMode, setSummaryMode] = useState(false);
   const [isWithHandle, setIsWithHandle] = useState(true);
   const [treeZoom, setTreeZoom] = useState(1);
-  const [selectedNodes, setSelectedNodes] = useState<Array<SedrahNodeData>>([]);
+  const [selectedNodes, setSelectedNodes] = useState<
+    Array<SedrahNodeData & NodeData>
+  >([]);
   const [isRemoveAlertVisible, setIsRemoveAlertVisible] = useState(false);
   const [selectedNodePath, setSelectedNodePath] = useState<Array<
     number | string
@@ -53,12 +48,11 @@ const Tree: FC = () => {
   const [searchString, setSearchString] = useState('');
   const [searchFocusIndex, setSearchFocusIndex] = useState(0);
   const [searchFoundCount, setSearchFoundCount] = useState(0);
+  const [expandedNodeId, setExpandedNodeId] = useState(-1);
 
   const toggleRemoveAlert = () => {
     setIsRemoveAlertVisible((prevState) => !prevState);
   };
-
-  console.log(treeData, prevTreeData, undoRedoIndex);
 
   const toggleEditForm = () => {
     setIsEditFormVisible((prevState) => !prevState);
@@ -100,11 +94,7 @@ const Tree: FC = () => {
         expandParent: true,
         addAsFirstChild: parentPath === undefined,
         getNodeKey,
-        newNode: {
-          title: '',
-          subtitle: '',
-          age: '',
-        },
+        newNode: { [primaryField]: '' },
       }).treeData,
     );
   };
@@ -192,9 +182,11 @@ const Tree: FC = () => {
                 generateNodeProps={({ node, path }) => ({
                   summaryMode,
                   isWithHandle,
+                  expandedNodeId,
+                  setExpandedNodeId,
                   buttons: (
                     <NodeButtons
-                      node={node as SedrahNodeData}
+                      node={node as SedrahNodeData & NodeData}
                       path={path}
                       selectedNodes={selectedNodes}
                       onSetSelectedNodes={setSelectedNodes}

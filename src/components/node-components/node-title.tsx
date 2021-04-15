@@ -6,7 +6,8 @@ import {
 } from 'react-sortable-tree';
 import InputBase from '@material-ui/core/InputBase';
 
-import { SedrahNodeData, getNodeKey } from '@components/tree';
+import { useConfigs } from '@configs/main-configs';
+import { getNodeKey } from '@components/tree';
 import { useStyles } from '@components/styles';
 
 interface NodeTitleProps {
@@ -19,12 +20,14 @@ interface NodeTitleProps {
 const NodeTitle: FC<NodeTitleProps> = (props) => {
   const { node, path, treeData, onUpdateTree } = props;
   const classes = useStyles();
+  const { primaryField } = useConfigs();
 
   return (
     <InputBase
+      autoFocus
       classes={{ root: classes.nodeTitle, focused: classes.nodeTitleFocused }}
-      value={node.title}
-      style={{ width: `${(node.title as string).length}ch` }}
+      value={node[primaryField]}
+      style={{ width: `${node[primaryField].toString().length}ch` }}
       onChange={(event) => {
         const newTitle = event.target.value;
 
@@ -33,7 +36,7 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
             treeData,
             path,
             getNodeKey,
-            newNode: { ...node, title: newTitle },
+            newNode: { ...node, [primaryField]: newTitle },
           }),
         );
       }}
@@ -45,11 +48,7 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
               parentKey: path[path.length - 2],
               expandParent: true,
               getNodeKey,
-              newNode: {
-                title: '',
-                subtitle: '',
-                age: '',
-              },
+              newNode: { [primaryField]: '' },
             }).treeData,
           );
         }

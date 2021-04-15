@@ -10,6 +10,9 @@ import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
 import SearchIcon from '@material-ui/icons/Search';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -23,8 +26,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import ImportInitialTree from '@components/import-tree';
 import { useStyles } from '@components/styles';
-import { ReactSetState, SedrahNodeData } from '@components/tree';
-import { Drawer, List, ListItem } from '@material-ui/core';
 
 interface TopBarProps {
   treeData: Array<TreeItem>;
