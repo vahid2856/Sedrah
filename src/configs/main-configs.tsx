@@ -125,7 +125,7 @@ const mainConfigs: ConfigContextInterface = {
       importance: '3',
     },
   ],
-  primaryField: 'name',
+  primaryField: 'goal',
   secondaryField: 'priority',
 };
 
