@@ -169,7 +169,7 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
                     <>
                       <div style={{ marginTop: '8px', marginBottom: '-8px' }}>
                         {/* You can show other fields' value here (e.g. <div>{node.birthYear}</div>)*/}
-                        {node[secondaryField]}
+                        {node[secondaryField]} - {node.nodeType}
                       </div>
                     </>
                   )
