@@ -1,5 +1,6 @@
 import { FC, MouseEvent, useState } from 'react';
 import SortableTree, {
+  SearchData,
   TreeItem,
   addNodeUnderParent,
   removeNodeAtPath,
@@ -71,6 +72,15 @@ const Tree: FC = () => {
     mouseX: null | number;
     mouseY: null | number;
   }>(initialContextMenuPos);
+
+  const customSearchMethod = (data: SearchData): boolean => {
+    const searchQuery = data.searchQuery as string;
+    const primary = data.node[primaryField] as string;
+    if (searchQuery) {
+      return primary.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1;
+    }
+    return false;
+  };
 
   const toggleRemoveAlert = () => {
     setIsRemoveAlertVisible((prevState) => !prevState);
@@ -198,6 +208,7 @@ const Tree: FC = () => {
                 rowHeight={summaryMode ? 60 : 172}
                 treeData={treeData}
                 getNodeKey={getNodeKey}
+                searchMethod={customSearchMethod}
                 searchQuery={searchString}
                 searchFocusOffset={searchFocusIndex}
                 searchFinishCallback={(matches) => {
