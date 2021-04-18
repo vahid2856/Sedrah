@@ -1,7 +1,6 @@
-import { FC, useState } from 'react';
+import { FC, MouseEvent, useState } from 'react';
 import SortableTree, {
   TreeItem,
-  NodeData,
   addNodeUnderParent,
   removeNodeAtPath,
   changeNodeAtPath,
@@ -12,6 +11,8 @@ import { GetNodeKeyFunction } from 'react-sortable-tree/utils/tree-data-utils';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import { useConfigs } from '@configs/main-configs';
 import NodeRendererComponent from '@components/node-components/node-renderer';
@@ -22,11 +23,28 @@ import NodeButtons from '@components/node-components/node-buttons';
 import { useStyles } from '@components/styles';
 import TopBar from '@components/top-bar';
 
-export const getNodeKey: GetNodeKeyFunction = ({ treeIndex }) => treeIndex;
+export const getNodeKey: GetNodeKeyFunction = ({ node }) => node.id as string;
+
+export const generateID = (): string => {
+  // Math.random should be unique because of its seeding algorithm.
+  // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+  // after the decimal.
+  return '_' + Math.random().toString(36).substr(2, 9);
+};
+
+const initialContextMenuPos = {
+  mouseX: null,
+  mouseY: null,
+};
 
 const Tree: FC = () => {
   const classes = useStyles();
-  const { initialTree, primaryField } = useConfigs();
+  const {
+    initialTree,
+    primaryField,
+    mainFunctions,
+    onUpdateNode,
+  } = useConfigs();
 
   const [treeData, setTreeData] = useState<Array<TreeItem>>(initialTree);
   const [prevTreeData, setPrevTreeData] = useState<Array<Array<TreeItem>>>([
@@ -36,9 +54,7 @@ const Tree: FC = () => {
   const [summaryMode, setSummaryMode] = useState(false);
   const [isWithHandle, setIsWithHandle] = useState(true);
   const [treeZoom, setTreeZoom] = useState(1);
-  const [selectedNodes, setSelectedNodes] = useState<
-    Array<SedrahNodeData & NodeData>
-  >([]);
+  const [selectedNodes, setSelectedNodes] = useState<Array<SedrahNodeData>>([]);
   const [isRemoveAlertVisible, setIsRemoveAlertVisible] = useState(false);
   const [selectedNodePath, setSelectedNodePath] = useState<Array<
     number | string
@@ -49,6 +65,12 @@ const Tree: FC = () => {
   const [searchFocusIndex, setSearchFocusIndex] = useState(0);
   const [searchFoundCount, setSearchFoundCount] = useState(0);
   const [expandedNodeId, setExpandedNodeId] = useState(-1);
+  const [latestNodeID, setLatestNodeID] = useState('');
+
+  const [contextMenuPos, setContextMenuPos] = useState<{
+    mouseX: null | number;
+    mouseY: null | number;
+  }>(initialContextMenuPos);
 
   const toggleRemoveAlert = () => {
     setIsRemoveAlertVisible((prevState) => !prevState);
@@ -94,7 +116,7 @@ const Tree: FC = () => {
         expandParent: true,
         addAsFirstChild: parentPath === undefined,
         getNodeKey,
-        newNode: { [primaryField]: '' },
+        newNode: { id: generateID(), [primaryField]: '' },
       }).treeData,
     );
   };
@@ -116,6 +138,20 @@ const Tree: FC = () => {
     toggleEditForm();
     setSelectedNode(null);
     setSelectedNodePath(null);
+
+    onUpdateNode && onUpdateNode(newNodeData);
+  };
+
+  const handleContextMenu = (event: MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setContextMenuPos({
+      mouseX: event.clientX - 2,
+      mouseY: event.clientY - 4,
+    });
+  };
+
+  const handleCloseContextMenu = () => {
+    setContextMenuPos(initialContextMenuPos);
   };
 
   return (
@@ -149,6 +185,7 @@ const Tree: FC = () => {
               variant="outlined"
               square
               onClick={() => setExpandedNodeId(-1)}
+              onContextMenu={handleContextMenu}
             >
               <SortableTree
                 rowDirection="rtl"
@@ -160,6 +197,7 @@ const Tree: FC = () => {
                 onlyExpandSearchedNodes
                 rowHeight={summaryMode ? 60 : 172}
                 treeData={treeData}
+                getNodeKey={getNodeKey}
                 searchQuery={searchString}
                 searchFocusOffset={searchFocusIndex}
                 searchFinishCallback={(matches) => {
@@ -180,15 +218,14 @@ const Tree: FC = () => {
                     افزودن گره
                   </Button>
                 )}
-                generateNodeProps={({ node, path, treeIndex }) => ({
+                generateNodeProps={({ node, path }) => ({
                   summaryMode,
                   isWithHandle,
                   expandedNodeId,
                   setExpandedNodeId,
                   buttons: (
                     <NodeButtons
-                      node={node as SedrahNodeData & NodeData}
-                      treeIndex={treeIndex}
+                      node={node as SedrahNodeData}
                       path={path}
                       selectedNodes={selectedNodes}
                       onSetSelectedNodes={setSelectedNodes}
@@ -202,14 +239,40 @@ const Tree: FC = () => {
                   title: (
                     <NodeTitle
                       node={node as SedrahNodeData}
+                      latestNodeID={latestNodeID}
                       path={path}
                       treeData={treeData}
                       onUpdateTree={updateTree}
+                      onSetLatestNodeID={setLatestNodeID}
                     />
                   ),
                 })}
                 onChange={(treeData) => setTreeData(treeData)}
               />
+              <Menu
+                keepMounted
+                open={contextMenuPos.mouseY !== null}
+                onClose={handleCloseContextMenu}
+                anchorReference="anchorPosition"
+                anchorPosition={
+                  contextMenuPos.mouseY !== null &&
+                  contextMenuPos.mouseX !== null
+                    ? {
+                        top: contextMenuPos.mouseY,
+                        left: contextMenuPos.mouseX,
+                      }
+                    : undefined
+                }
+              >
+                {Object.keys(mainFunctions).map((func) => (
+                  <MenuItem
+                    key={func}
+                    onClick={() => mainFunctions[func].cb(selectedNodes)}
+                  >
+                    {mainFunctions[func].label}
+                  </MenuItem>
+                ))}
+              </Menu>
             </Paper>
           </Grid>
         </Grid>
