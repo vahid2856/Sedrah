@@ -52,74 +52,81 @@ export interface NodeFields {
 const mainConfigs: ConfigContextInterface = {
   fields: [
     {
-      name: 'name',
+      name: 'goal',
       initialValue: '',
       multiline: false, // If true, a textarea element will be rendered instead of an input
       type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select'
-      label: 'نام',
+      label: 'هدف',
       isValidate: true, // Field need to be validated or not
     },
     {
-      name: 'username',
-      initialValue: '',
+      name: 'priority',
+      initialValue: 1,
+      multiline: true,
+      type: 'number',
+      label: 'اولیت',
+      isValidate: false,
+    },
+    {
+      name: 'description',
+      initialValue: 1300,
       multiline: true,
       type: 'text',
-      label: 'نام کاربری',
+      label: 'توضیحات',
       isValidate: false,
     },
     {
-      name: 'birthYear',
-      initialValue: 1300,
-      multiline: false,
-      type: 'number',
-      label: 'تولد',
-      isValidate: false,
-    },
-    {
-      name: 'color',
-      selectType: 'multiple', // Can be one of 'multiple' | 'single'
-      initialValue: ['red'], // If select type is 'multiple' should be array of values else strign or number
+      name: 'goal_type',
+      selectType: 'single', // Can be one of 'multiple' | 'single'
+      initialValue: ['how?'], // If select type is 'multiple' should be array of values else strign or number
       type: 'select',
-      label: 'رنگ',
+      label: 'نوع هدف',
       options: [
-        { value: 'red', label: 'قرمز' },
-        { value: 'blue', label: 'آبی' },
+        { value: 'why?', label: 'چرایی' },
+        { value: 'what?', label: 'چیستی' },
+        { value: 'how?', label: 'چگونگی' },
       ],
-      isValidate: false,
+      isValidate: true,
     },
     {
-      name: 'olderThanFifty',
-      initialValue: true,
-      type: 'checkbox',
-      label: 'بیش از پنجاه سال',
-      isValidate: false,
-    },
-    {
-      name: 'size',
-      initialValue: 'small',
+      name: 'urgency',
+      selectType: 'single', // Can be one of 'multiple' | 'single'
+      initialValue: ['1'], // If select type is 'multiple' should be array of values else strign or number
       type: 'select',
-      selectType: 'single',
+      label: 'فوریت',
       options: [
-        { value: 'small', label: 'کوچک' },
-        { value: 'medium', label: 'متوسط' },
-        { value: 'large', label: 'بزرگ' },
+        { value: '1', label: 'بدون فوریت' },
+        { value: '2', label: 'در روزهای آینده' },
+        { value: '3', label: 'فوری' },
       ],
-      label: 'اندازه',
-      isValidate: false,
+      isValidate: true,
     },
+    {
+      name: 'importance',
+      selectType: 'single', // Can be one of 'multiple' | 'single'
+      initialValue: ['1'], // If select type is 'multiple' should be array of values else strign or number
+      type: 'select',
+      label: 'اهمیت',
+      options: [
+        { value: '1', label: 'اهمیت پایین' },
+        { value: '2', label: 'مهم' },
+        { value: '3', label: 'خیلی مهم' },
+      ],
+      isValidate: true,
+    }
   ],
   initialTree: [
     {
-      name: 'خانه دوست کجاست',
-      username: 'عباس کیارستمی',
-      birthYear: 1313,
-      color: ['red'],
-      size: 'small',
-      olderThanFifty: true,
+      goal: 'عبد خدا شدن',
+      priority: 9,
+      description: '',
+      goal_type: 'why',
+      urgency: '3',
+      importance: '3',
     },
   ],
   primaryField: 'name',
-  secondaryField: 'username',
+  secondaryField: 'priority',
 };
 
 const ConfigsContext = createContext(mainConfigs);
