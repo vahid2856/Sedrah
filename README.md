@@ -14,3 +14,7 @@
 - Code linting with `npm run lint`
 
 - Building project and make it ready for deployment with `npm run build`.
+
+## Node settings
+
+- Set fields, data types for nodes and context menu functions in [main-configs.tsx](src/configs/main-configs.tsx) file.
