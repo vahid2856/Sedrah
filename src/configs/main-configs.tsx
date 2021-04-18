@@ -69,7 +69,7 @@ const mainConfigs: ConfigContextInterface = {
     },
     {
       name: 'description',
-      initialValue: 1300,
+      initialValue: '',
       multiline: true,
       type: 'text',
       label: 'توضیحات',
