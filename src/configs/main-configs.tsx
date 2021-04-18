@@ -1,5 +1,7 @@
 import { createContext, FC, useContext } from 'react';
 
+import { generateID } from '@components/tree';
+
 interface TextField<R, F extends keyof R = keyof R> {
   type: 'text' | 'number';
   multiline: boolean;
@@ -36,10 +38,21 @@ interface ConfigContextInterface {
   initialTree: Array<SedrahNodeData>;
   primaryField: keyof SedrahNodeData;
   secondaryField: keyof SedrahNodeData;
+  mainFunctions: MainFunctionsINterface;
+  onUpdateNode?: (nodeData?: SedrahNodeData) => void;
+}
+
+interface MainFunctionsINterface {
+  [func: string]: {
+    label: string;
+    cb: (selectedNodes: Array<SedrahNodeData>) => void;
+  };
 }
 
 // Add new field and its type in this interface
 export interface NodeFields {
+  id: string; // Unique id of node. Never remove this field.
+  nodeType: string; // Type of Node. Never remove this field.
   name: string;
   username: string;
   birthYear: number;
@@ -48,7 +61,17 @@ export interface NodeFields {
   olderThanFifty: boolean;
 }
 
-// Main project Config files
+// Main project callback functions
+const mainFunctions: MainFunctionsINterface = {
+  test1: {
+    label: 'تست یک',
+    cb: (selectedNodes) => {
+      console.log(selectedNodes);
+    },
+  },
+};
+
+// Main project config files
 const mainConfigs: ConfigContextInterface = {
   fields: [
     {
@@ -58,6 +81,20 @@ const mainConfigs: ConfigContextInterface = {
       type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select'
       label: 'نام',
       isValidate: true, // Field need to be validated or not
+    },
+    {
+      // Never remove this field.
+      name: 'nodeType',
+      initialValue: '',
+      type: 'select',
+      selectType: 'single',
+      options: [
+        { value: '', label: 'بدون نوع' },
+        { value: 'simple', label: 'ساده' },
+        { value: 'complex', label: 'پیچیده' },
+      ],
+      label: 'نوع گره',
+      isValidate: false,
     },
     {
       name: 'username',
@@ -110,6 +147,8 @@ const mainConfigs: ConfigContextInterface = {
   ],
   initialTree: [
     {
+      id: generateID(),
+      nodeType: 'simple',
       name: 'خانه دوست کجاست',
       username: 'عباس کیارستمی',
       birthYear: 1313,
@@ -120,6 +159,8 @@ const mainConfigs: ConfigContextInterface = {
   ],
   primaryField: 'name',
   secondaryField: 'username',
+  mainFunctions,
+  onUpdateNode: (v) => console.log(v), // Callback when node updated
 };
 
 const ConfigsContext = createContext(mainConfigs);
