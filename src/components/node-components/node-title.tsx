@@ -7,7 +7,7 @@ import {
 import InputBase from '@material-ui/core/InputBase';
 
 import { useConfigs } from '@configs/main-configs';
-import { generateID, getNodeKey } from '@components/tree';
+import { getNodeKey } from '@components/tree';
 import { useStyles } from '@components/styles';
 
 interface NodeTitleProps {
@@ -29,7 +29,7 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
     onSetLatestNodeID,
   } = props;
   const classes = useStyles();
-  const { primaryField } = useConfigs();
+  const { primaryField, generateNewNode } = useConfigs();
 
   return (
     <InputBase
@@ -51,7 +51,7 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
       }}
       onKeyUp={(e) => {
         if (e.code === 'Enter') {
-          const newNodeID = generateID();
+          const newNode = generateNewNode();
 
           onUpdateTree(
             addNodeUnderParent({
@@ -59,13 +59,13 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
               parentKey: path[path.length - 2],
               expandParent: true,
               getNodeKey,
-              newNode: { id: newNodeID, [primaryField]: '' },
+              newNode: newNode,
             }).treeData,
           );
-          onSetLatestNodeID(newNodeID);
+          onSetLatestNodeID(newNode.id);
         }
         if (e.code === 'Insert') {
-          const newNodeID = generateID();
+          const newNode = generateNewNode();
 
           onUpdateTree(
             addNodeUnderParent({
@@ -73,10 +73,10 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
               parentKey: path[path.length - 1],
               expandParent: true,
               getNodeKey,
-              newNode: { id: newNodeID, [primaryField]: '' },
+              newNode: newNode,
             }).treeData,
           );
-          onSetLatestNodeID(newNodeID);
+          onSetLatestNodeID(newNode.id);
         }
       }}
     />
