@@ -1,4 +1,7 @@
 import { FC, FormEvent, useEffect, useState } from 'react';
+import jMoment, { Moment } from 'moment-jalaali';
+
+import { DatePicker, TimePicker, DateTimePicker } from '@material-ui/pickers';
 
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -59,7 +62,7 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
   const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault();
     const withoutError = fields.reduce((isValid, field) => {
-      if (field.isValidate) {
+      if (field.isRequired) {
         if (formValues[field.name] === '') {
           setFormErrors((prevState) => ({
             ...prevState,
@@ -84,13 +87,14 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
           switch (field.type) {
             case 'number':
             case 'text':
+            case 'color':
               return (
                 <Grid key={field.name} item xs={12} sm={6}>
                   <TextField
                     fullWidth
                     multiline={field.multiline}
                     type={field.type}
-                    required={field.isValidate}
+                    required={field.isRequired}
                     label={field.label}
                     variant="outlined"
                     size="small"
@@ -141,6 +145,57 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
                       ))}
                     </Select>
                   </FormControl>
+                </Grid>
+              );
+            case 'date':
+              return (
+                <Grid key={field.name} item xs={12} sm={6}>
+                  <DatePicker
+                    fullWidth
+                    type="text"
+                    size="small"
+                    inputVariant="outlined"
+                    okLabel="تایید"
+                    cancelLabel="انصراف"
+                    value={formValues[field.name] as Moment}
+                    onChange={(v) =>
+                      handleFieldChange(field.name, v || jMoment())
+                    }
+                  />
+                </Grid>
+              );
+            case 'time':
+              return (
+                <Grid key={field.name} item xs={12} sm={6}>
+                  <TimePicker
+                    fullWidth
+                    type="text"
+                    size="small"
+                    inputVariant="outlined"
+                    okLabel="تایید"
+                    cancelLabel="انصراف"
+                    value={formValues[field.name] as Moment}
+                    onChange={(v) =>
+                      handleFieldChange(field.name, v || jMoment())
+                    }
+                  />
+                </Grid>
+              );
+            case 'dateTime':
+              return (
+                <Grid key={field.name} item xs={12} sm={6}>
+                  <DateTimePicker
+                    fullWidth
+                    type="text"
+                    size="small"
+                    inputVariant="outlined"
+                    okLabel="تایید"
+                    cancelLabel="انصراف"
+                    value={formValues[field.name] as Moment}
+                    onChange={(v) =>
+                      handleFieldChange(field.name, v || jMoment())
+                    }
+                  />
                 </Grid>
               );
 
