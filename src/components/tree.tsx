@@ -42,10 +42,10 @@ const Tree: FC = () => {
   const classes = useStyles();
   const {
     initialTree,
+    treeNodes,
     primaryField,
     mainFunctions,
     generateNewNode,
-    onUpdateNode,
   } = useConfigs();
 
   const [treeData, setTreeData] = useState<Array<TreeItem>>(initialTree);
@@ -120,7 +120,7 @@ const Tree: FC = () => {
   };
 
   const handleAddNode = (parentPath?: string | number) => {
-    const newNode = generateNewNode();
+    const newNode = generateNewNode('simple');
 
     updateTree(
       addNodeUnderParent({
@@ -154,7 +154,8 @@ const Tree: FC = () => {
     setSelectedNode(null);
     setSelectedNodePath(null);
 
-    onUpdateNode && onUpdateNode(newNodeData);
+    const callback = treeNodes[newNodeData.nodeType].onUpdateNode;
+    callback && callback(newNodeData);
   };
 
   const handleContextMenu = (event: MouseEvent<HTMLDivElement>) => {
@@ -302,18 +303,21 @@ const Tree: FC = () => {
         onOK={handleRemoveNode}
         onCancel={toggleRemoveAlert}
       />
-      <AlertDialog
-        open={isEditFormVisible}
-        title="ویرایش گره"
-        content={
-          <EditNodeForm
-            initialValues={selectedNode}
-            onUpdateNode={handleUpdateNode}
-          />
-        }
-        cancelText="انصراف"
-        onCancel={toggleEditForm}
-      />
+      {isEditFormVisible && selectedNode && (
+        <AlertDialog
+          open={isEditFormVisible}
+          title="ویرایش گره"
+          content={
+            <EditNodeForm
+              initialValues={selectedNode}
+              fields={treeNodes[selectedNode.nodeType].fields}
+              onUpdateNode={handleUpdateNode}
+            />
+          }
+          cancelText="انصراف"
+          onCancel={toggleEditForm}
+        />
+      )}
     </>
   );
 };
