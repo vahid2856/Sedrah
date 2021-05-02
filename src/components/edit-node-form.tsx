@@ -152,6 +152,7 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
                 <Grid key={field.name} item xs={12} sm={6}>
                   <DatePicker
                     fullWidth
+                    label={field.label}
                     type="text"
                     size="small"
                     inputVariant="outlined"
@@ -169,6 +170,7 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
                 <Grid key={field.name} item xs={12} sm={6}>
                   <TimePicker
                     fullWidth
+                    label={field.label}
                     type="text"
                     size="small"
                     inputVariant="outlined"
@@ -186,6 +188,7 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
                 <Grid key={field.name} item xs={12} sm={6}>
                   <DateTimePicker
                     fullWidth
+                    label={field.label}
                     type="text"
                     size="small"
                     inputVariant="outlined"
