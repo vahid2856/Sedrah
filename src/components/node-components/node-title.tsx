@@ -36,7 +36,9 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
       autoFocus={latestNodeID === node.id}
       classes={{ root: classes.nodeTitle, focused: classes.nodeTitleFocused }}
       value={node[primaryField]}
-      style={{ width: `${node[primaryField].toString().length}ch` }}
+      style={{
+        width: `${node?.[primaryField]?.toString()?.length || 0}ch`,
+      }}
       onChange={(event) => {
         const newTitle = event.target.value;
 
@@ -51,7 +53,7 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
       }}
       onKeyUp={(e) => {
         if (e.code === 'Enter') {
-          const newNode = generateNewNode();
+          const newNode = generateNewNode('simple');
 
           onUpdateTree(
             addNodeUnderParent({
@@ -65,7 +67,7 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
           onSetLatestNodeID(newNode.id);
         }
         if (e.code === 'Insert') {
-          const newNode = generateNewNode();
+          const newNode = generateNewNode('simple');
 
           onUpdateTree(
             addNodeUnderParent({
