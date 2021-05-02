@@ -3,51 +3,45 @@ import { createContext, FC, useContext, ReactNode } from 'react';
 import { generateID } from '@components/tree';
 import jMoment, { Moment } from 'moment-jalaali';
 
-interface TextField<R, F extends keyof R = keyof R> {
+interface FieldDefaultProperties<R, F extends keyof R = keyof R> {
+  name: F;
+  initialValue: R[F];
+  label: string;
+  isRequired: boolean;
+  validationFunc?: <T = R[F]>(value?: T) => boolean;
+}
+
+interface TextField {
   type: 'text' | 'number' | 'color';
   multiline: boolean;
-  name: F;
-  initialValue: R[F];
-  label: string;
-  isRequired: boolean;
 }
 
-interface CheckboxField<R, F extends keyof R = keyof R> {
+interface CheckboxField {
   type: 'checkbox';
-  name: F;
-  initialValue: R[F];
-  label: string;
-  isRequired: boolean;
 }
 
-interface SelectField<R, F extends keyof R = keyof R> {
+interface SelectField {
   type: 'select';
   selectType: 'single' | 'multiple';
-  name: F;
-  initialValue: R[F];
-  label: string;
   options: Array<{ value: string; label: string }>;
-  isRequired: boolean;
 }
 
-interface DateTimeField<R, F extends keyof R = keyof R> {
+interface DateTimeField {
   type: 'date' | 'time' | 'dateTime';
-  name: F;
-  initialValue: R[F];
-  label: string;
-  isRequired: boolean;
 }
+
+type AllFields = TextField | SelectField | CheckboxField | DateTimeField;
 
 export type Fields<
   R = SedrahNodeData,
   F extends keyof R = keyof R
-> = F extends keyof R
-  ?
-      | TextField<R, F>
-      | SelectField<R, F>
-      | CheckboxField<R, F>
-      | DateTimeField<R, F>
-  : never;
+> = F extends keyof R ? FieldDefaultProperties<R, F> & AllFields : never;
+
+interface DefaultFields {
+  id: string; // Unique id of node. Never remove this field.
+  nodeType: NodeTypes; // Type of Node. Never remove this field.
+  name: string; // Primary field. Never remove this field.
+}
 
 interface ConfigContextInterface {
   treeNodes: {
@@ -88,10 +82,7 @@ const generateNewNode = (type: NodeTypes): SedrahNodeData => {
 export type NodeTypes = 'full' | 'simple';
 
 // Add new field and its type in this interface
-export interface NodeFields {
-  id: string; // Unique id of node. Never remove this field.
-  nodeType: NodeTypes; // Type of Node. Never remove this field.
-  name: string;
+export interface NodeFields extends DefaultFields {
   username?: string;
   birthYear?: number;
   permissions?: Array<string>;
@@ -127,7 +118,7 @@ const mainConfigs: ConfigContextInterface = {
           isRequired: true, // Field need to be validated or not
         },
       ],
-      nodeView: function NodeView(node) {
+      nodeView: function SimpleNodeView(node) {
         return (
           <div>
             <span>گره ساده - </span>
@@ -162,6 +153,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'number',
           label: 'تولد',
           isRequired: false,
+          validationFunc: (v) => Number(v) > 1310,
         },
         {
           name: 'permissions',
@@ -226,7 +218,7 @@ const mainConfigs: ConfigContextInterface = {
           isRequired: false,
         },
       ],
-      nodeView: function NodeView(node) {
+      nodeView: function FullNodeView(node) {
         return <div style={{ color: node.color }}>{node.time?.toString()}</div>;
       },
       onUpdateNode: (v) => console.log(v), // Callback when node updated
