@@ -43,6 +43,8 @@ interface DefaultFields {
   name: string; // Primary field. Never remove this field.
 }
 
+type DefaultNodeType = 'simple';
+
 interface ConfigContextInterface {
   treeNodes: {
     [NodeType in NodeTypes]: {
@@ -78,8 +80,13 @@ const generateNewNode = (type: NodeTypes): SedrahNodeData => {
   );
 };
 
-// Deiffernt Node types. Do not remove 'simple'
-export type NodeTypes = 'full' | 'simple';
+/* *** DO NOT CHANGE ANYTHING UPPER THAN HERE *** */
+/* ***                                        *** */
+/* ***                                        *** */
+/* ***                                        *** */
+
+// Deiffernt Node types. Do not remove DefaultNodeType
+export type NodeTypes = DefaultNodeType | 'full';
 
 // Add new field and its type in this interface
 export interface NodeFields extends DefaultFields {
@@ -133,10 +140,10 @@ const mainConfigs: ConfigContextInterface = {
         {
           name: 'name',
           initialValue: '',
-          multiline: false, // If true, a textarea element will be rendered instead of an input
+          multiline: false, // If true, a "textarea" element will be rendered instead of an input
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام',
-          isRequired: true, // Field need to be validated or not
+          isRequired: true, // Field is required or not
         },
         {
           name: 'username',
@@ -158,7 +165,7 @@ const mainConfigs: ConfigContextInterface = {
         {
           name: 'permissions',
           selectType: 'multiple', // Can be one of 'multiple' | 'single'
-          initialValue: ['admin'], // If select type is 'multiple' should be array of values else strign or number
+          initialValue: ['admin'], // If select type is 'multiple' then "initialValue" should be an array of values
           type: 'select',
           label: 'دسترسی‌ها',
           options: [
