@@ -6,7 +6,7 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardHeader from '@material-ui/core/CardHeader';
 
-import { useConfigs } from '@configs/main-configs';
+import { NodeTypes, useConfigs } from '@configs/main-configs';
 
 function classnames(...classes: Array<unknown>) {
   // Use Boolean constructor as a filter callback
@@ -60,7 +60,7 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
     isOver, // Not needed, but preserved for other renderers
     ...otherProps
   } = props;
-  const { secondaryField } = useConfigs();
+  const { treeNodes } = useConfigs();
 
   const rowDirectionClass = rowDirection === 'rtl' ? 'rst__rtl' : null;
 
@@ -165,14 +165,11 @@ const NodeRenderer: FC<SedrahNodeRendererProps> = (props) => {
                 title={title}
                 style={{ ...(summaryMode && { padding: 0 }) }}
                 subheader={
-                  summaryMode ? null : (
-                    <>
-                      <div style={{ marginTop: '8px', marginBottom: '-8px' }}>
-                        {/* You can show other fields' value here (e.g. <div>{node.birthYear}</div>)*/}
-                        {node[secondaryField]} - {node.nodeType}
-                      </div>
-                    </>
-                  )
+                  summaryMode
+                    ? null
+                    : treeNodes[node.nodeType as NodeTypes].nodeView(
+                        node as SedrahNodeData,
+                      )
                 }
                 action={
                   summaryMode && expandedNodeId === treeIndex ? buttons : null

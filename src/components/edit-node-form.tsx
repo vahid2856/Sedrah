@@ -1,4 +1,4 @@
-import { FC, FormEvent, useEffect, useState } from 'react';
+import { FC, FormEvent, useState } from 'react';
 import jMoment, { Moment } from 'moment-jalaali';
 
 import { DatePicker, TimePicker, DateTimePicker } from '@material-ui/pickers';
@@ -13,10 +13,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import { useConfigs } from '@configs/main-configs';
+import { useConfigs, Fields, NodeTypes } from '@configs/main-configs';
 
 interface AddNodeFormProps {
-  initialValues: SedrahNodeData | null;
+  initialValues: SedrahNodeData;
+  fields: Array<Fields>;
   onUpdateNode: (formValues: SedrahNodeData) => void;
 }
 
@@ -25,28 +26,33 @@ type FormErrors = {
 };
 
 const EditNodeForm: FC<AddNodeFormProps> = (props) => {
-  const { initialValues, onUpdateNode } = props;
-  const { fields, generateNewNode } = useConfigs();
-  const [formValues, setFormValues] = useState(generateNewNode());
+  const { initialValues, fields, onUpdateNode } = props;
+  const { treeNodes, nodeTypes, generateNewNode } = useConfigs();
+
+  const [formFields, setFormFields] = useState(fields);
+
+  const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState(
-    fields.reduce(
+    formFields.reduce(
       (res, field) => ({ ...res, [field.name]: '' }),
       {} as FormErrors,
     ),
   );
 
-  useEffect(() => {
-    if (initialValues) {
-      setFormValues(initialValues);
-    }
-  }, [initialValues]);
+  const handleUpdateType = (type: NodeTypes) => {
+    setFormFields(treeNodes[type].fields);
+    setFormValues((prevValues) => ({
+      ...generateNewNode(type),
+      ...(prevValues.name && { name: prevValues.name }),
+    }));
+  };
 
   const handleFieldChange = (
     fieldName: keyof SedrahNodeData,
     fieldValue: SedrahNodeData[keyof SedrahNodeData],
   ) => {
     setFormErrors(
-      fields.reduce(
+      formFields.reduce(
         (res, field) => ({ ...res, [field.name]: '' }),
         {} as FormErrors,
       ),
@@ -56,7 +62,7 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
 
   const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const withoutError = fields.reduce((isValid, field) => {
+    const withoutError = formFields.reduce((isValid, field) => {
       if (field.isRequired) {
         if (formValues[field.name] === '') {
           setFormErrors((prevState) => ({
@@ -78,7 +84,29 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
   return (
     <form onSubmit={handleFormSubmit} noValidate autoComplete="off">
       <Grid container spacing={2}>
-        {fields.map((field) => {
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth variant="outlined" size="small">
+            <InputLabel id="select-label">نوع گره</InputLabel>
+            <Select
+              labelId="select-label"
+              value={formValues.nodeType}
+              onChange={(e) => {
+                handleUpdateType(e.target.value as NodeTypes);
+                handleFieldChange('nodeType', e.target.value as NodeTypes);
+              }}
+              label="نوع گره"
+            >
+              {nodeTypes.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
+      <Grid container spacing={2}>
+        {formFields.map((field) => {
           switch (field.type) {
             case 'number':
             case 'text':
