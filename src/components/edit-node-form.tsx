@@ -26,13 +26,8 @@ type FormErrors = {
 
 const EditNodeForm: FC<AddNodeFormProps> = (props) => {
   const { initialValues, onUpdateNode } = props;
-  const { fields } = useConfigs();
-  const [formValues, setFormValues] = useState(
-    fields.reduce(
-      (res, field) => ({ ...res, [field.name]: field.initialValue }),
-      {} as SedrahNodeData,
-    ),
-  );
+  const { fields, generateNewNode } = useConfigs();
+  const [formValues, setFormValues] = useState(generateNewNode());
   const [formErrors, setFormErrors] = useState(
     fields.reduce(
       (res, field) => ({ ...res, [field.name]: '' }),

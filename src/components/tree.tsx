@@ -44,6 +44,7 @@ const Tree: FC = () => {
     initialTree,
     primaryField,
     mainFunctions,
+    generateNewNode,
     onUpdateNode,
   } = useConfigs();
 
@@ -119,6 +120,8 @@ const Tree: FC = () => {
   };
 
   const handleAddNode = (parentPath?: string | number) => {
+    const newNode = generateNewNode();
+
     updateTree(
       addNodeUnderParent({
         treeData,
@@ -126,9 +129,11 @@ const Tree: FC = () => {
         expandParent: true,
         addAsFirstChild: parentPath === undefined,
         getNodeKey,
-        newNode: { id: generateID(), [primaryField]: '' },
+        newNode: newNode,
       }).treeData,
     );
+
+    setLatestNodeID(newNode.id);
   };
 
   const handleUpdateNode = (newNodeData: SedrahNodeData) => {

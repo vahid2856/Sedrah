@@ -51,16 +51,29 @@ interface ConfigContextInterface {
   initialTree: Array<SedrahNodeData>;
   primaryField: keyof SedrahNodeData;
   secondaryField: keyof SedrahNodeData;
-  mainFunctions: MainFunctionsINterface;
+  mainFunctions: MainFunctionsInterface;
+  generateNewNode: () => SedrahNodeData;
   onUpdateNode?: (nodeData?: SedrahNodeData) => void;
 }
 
-interface MainFunctionsINterface {
+interface MainFunctionsInterface {
   [func: string]: {
     label: string;
     cb: (selectedNodes: Array<SedrahNodeData>) => void;
   };
 }
+
+const generateNewNode = (): SedrahNodeData => {
+  return mainConfigs.fields.reduce(
+    (res, field) => {
+      return {
+        ...res,
+        [field.name]: field.initialValue,
+      };
+    },
+    { id: generateID() } as SedrahNodeData,
+  );
+};
 
 // Add new field and its type in this interface
 export interface NodeFields {
@@ -79,7 +92,7 @@ export interface NodeFields {
 }
 
 // Main project callback functions
-const mainFunctions: MainFunctionsINterface = {
+const mainFunctions: MainFunctionsInterface = {
   test1: {
     label: 'تست یک',
     cb: (selectedNodes) => {
@@ -211,6 +224,7 @@ const mainConfigs: ConfigContextInterface = {
   primaryField: 'name',
   secondaryField: 'username',
   mainFunctions,
+  generateNewNode,
   onUpdateNode: (v) => console.log(v), // Callback when node updated
 };
 
