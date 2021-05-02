@@ -1,14 +1,15 @@
 import { createContext, FC, useContext } from 'react';
 
 import { generateID } from '@components/tree';
+import jMoment, { Moment } from 'moment-jalaali';
 
 interface TextField<R, F extends keyof R = keyof R> {
-  type: 'text' | 'number';
+  type: 'text' | 'number' | 'color';
   multiline: boolean;
   name: F;
   initialValue: R[F];
   label: string;
-  isValidate: boolean;
+  isRequired: boolean;
 }
 
 interface CheckboxField<R, F extends keyof R = keyof R> {
@@ -16,7 +17,7 @@ interface CheckboxField<R, F extends keyof R = keyof R> {
   name: F;
   initialValue: R[F];
   label: string;
-  isValidate: boolean;
+  isRequired: boolean;
 }
 
 interface SelectField<R, F extends keyof R = keyof R> {
@@ -26,11 +27,23 @@ interface SelectField<R, F extends keyof R = keyof R> {
   initialValue: R[F];
   label: string;
   options: Array<{ value: string; label: string }>;
-  isValidate: boolean;
+  isRequired: boolean;
+}
+
+interface DateTimeField<R, F extends keyof R = keyof R> {
+  type: 'date' | 'time' | 'dateTime';
+  name: F;
+  initialValue: R[F];
+  label: string;
+  isRequired: boolean;
 }
 
 type Fields<R = SedrahNodeData, F extends keyof R = keyof R> = F extends keyof R
-  ? TextField<R, F> | SelectField<R, F> | CheckboxField<R, F>
+  ?
+      | TextField<R, F>
+      | SelectField<R, F>
+      | CheckboxField<R, F>
+      | DateTimeField<R, F>
   : never;
 
 interface ConfigContextInterface {
@@ -69,9 +82,13 @@ export interface NodeFields {
   name: string;
   username: string;
   birthYear: number;
-  color: Array<string>;
+  permissions: Array<string>;
   size: string;
   olderThanFifty: boolean;
+  color: string;
+  date: Moment;
+  time: Moment;
+  dateAndTime: Moment;
 }
 
 // Main project callback functions
@@ -91,9 +108,9 @@ const mainConfigs: ConfigContextInterface = {
       name: 'name',
       initialValue: '',
       multiline: false, // If true, a textarea element will be rendered instead of an input
-      type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select'
+      type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
       label: 'نام',
-      isValidate: true, // Field need to be validated or not
+      isRequired: true, // Field need to be validated or not
     },
     {
       // Never remove this field.
@@ -107,7 +124,7 @@ const mainConfigs: ConfigContextInterface = {
         { value: 'complex', label: 'پیچیده' },
       ],
       label: 'نوع گره',
-      isValidate: false,
+      isRequired: false,
     },
     {
       name: 'username',
@@ -115,7 +132,7 @@ const mainConfigs: ConfigContextInterface = {
       multiline: true,
       type: 'text',
       label: 'نام کاربری',
-      isValidate: false,
+      isRequired: false,
     },
     {
       name: 'birthYear',
@@ -123,26 +140,27 @@ const mainConfigs: ConfigContextInterface = {
       multiline: false,
       type: 'number',
       label: 'تولد',
-      isValidate: false,
+      isRequired: false,
     },
     {
-      name: 'color',
+      name: 'permissions',
       selectType: 'multiple', // Can be one of 'multiple' | 'single'
-      initialValue: ['red'], // If select type is 'multiple' should be array of values else string or number
+      initialValue: ['admin'], // If select type is 'multiple' should be array of values else strign or number
       type: 'select',
-      label: 'رنگ',
+      label: 'دسترسی‌ها',
       options: [
-        { value: 'red', label: 'قرمز' },
-        { value: 'blue', label: 'آبی' },
+        { value: 'admin', label: 'ادمین' },
+        { value: 'user', label: 'کاربر' },
+        { value: 'guest', label: 'مهمان' },
       ],
-      isValidate: false,
+      isRequired: false,
     },
     {
       name: 'olderThanFifty',
       initialValue: true,
       type: 'checkbox',
       label: 'بیش از پنجاه سال',
-      isValidate: false,
+      isRequired: false,
     },
     {
       name: 'size',
@@ -155,7 +173,36 @@ const mainConfigs: ConfigContextInterface = {
         { value: 'large', label: 'بزرگ' },
       ],
       label: 'اندازه',
-      isValidate: false,
+      isRequired: false,
+    },
+    {
+      name: 'color',
+      initialValue: '',
+      multiline: false,
+      type: 'color',
+      label: 'رنگ',
+      isRequired: false,
+    },
+    {
+      name: 'date',
+      initialValue: jMoment(),
+      type: 'date',
+      label: 'تاریخ',
+      isRequired: false,
+    },
+    {
+      name: 'time',
+      initialValue: jMoment(),
+      type: 'time',
+      label: 'زمان',
+      isRequired: false,
+    },
+    {
+      name: 'dateAndTime',
+      initialValue: jMoment(),
+      type: 'dateTime',
+      label: 'تاریخ و زمان',
+      isRequired: false,
     },
   ],
   initialTree: [
@@ -165,9 +212,13 @@ const mainConfigs: ConfigContextInterface = {
       name: 'خانه دوست کجاست',
       username: 'عباس کیارستمی',
       birthYear: 1313,
-      color: ['red'],
+      permissions: ['admin'],
       size: 'small',
       olderThanFifty: true,
+      color: '',
+      date: jMoment(),
+      time: jMoment(),
+      dateAndTime: jMoment(),
     },
   ],
   primaryField: 'name',
