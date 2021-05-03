@@ -73,6 +73,16 @@ const EditNodeForm: FC<AddNodeFormProps> = (props) => {
         }
       }
 
+      if (typeof field.validationFunc === 'function') {
+        if (!field.validationFunc(formValues[field.name])) {
+          setFormErrors((prevState) => ({
+            ...prevState,
+            [field.name]: 'مقدار معتبر نیست',
+          }));
+          return false;
+        }
+      }
+
       return isValid;
     }, true);
 
