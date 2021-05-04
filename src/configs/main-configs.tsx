@@ -103,7 +103,7 @@ export interface NodeFields extends DefaultFields {
 
 // Main project callback functions
 const mainFunctions: MainFunctionsInterface = {
-  send_message: {
+  [send_message: {
     label: 'ارسال پیام',
     cb: (selectedNodes) => {
       console.log(selectedNodes);
@@ -114,7 +114,7 @@ const mainFunctions: MainFunctionsInterface = {
     cb: (selectedNodes) => {
       console.log(selectedNodes);
     },
-  },
+  }]
 };
 
 // Main project config files
@@ -263,7 +263,9 @@ const mainConfigs: ConfigContextInterface = {
     {
       id: generateID(),
       nodeType: 'simple',
-      name: 'خانه دوست کجاست',
+      element_user: '',
+      tags: [],
+      name: 'عبد',
     },
   ],
   nodeTypes: [
