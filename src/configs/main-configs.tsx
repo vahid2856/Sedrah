@@ -169,7 +169,7 @@ const mainConfigs: ConfigContextInterface = {
       },
       onUpdateNode: (v) => console.log(v), // Callback when node updated
     },
-    Madreseh:
+    madreseh:
     {
       fields: [
         {
