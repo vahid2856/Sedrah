@@ -43,7 +43,7 @@ interface DefaultFields {
   name: string; // Primary field. Never remove this field.
 }
 
-type DefaultNodeType = 'simple';
+type DefaultNodeType = 'individual';
 
 interface ConfigContextInterface {
   treeNodes: {
@@ -126,7 +126,7 @@ const mainFunctions: MainFunctionsInterface = {
 // Main project config files
 const mainConfigs: ConfigContextInterface = {
   treeNodes: {
-    simple:
+    individual:
     {
       fields: [
         {
@@ -159,17 +159,17 @@ const mainConfigs: ConfigContextInterface = {
           isRequired: false,
         }
       ],
-      nodeView: function SimpleNodeView(node) {
+      nodeView: function IndividualNodeView(node) {
         return (
           <div>
-            <span>فرد - </span>
-            <span>{node.name}</span>
+            <span>گروهها - </span>
+            <span>{node.tags}</span>
           </div>
         );
       },
       onUpdateNode: (v) => console.log(v), // Callback when node updated
     },
-    full: {
+    project: {
       fields: [
         {
           name: 'name',
@@ -180,53 +180,24 @@ const mainConfigs: ConfigContextInterface = {
           isRequired: true, // Field is required or not
         },
         {
-          name: 'username',
+          name: 'element_user',
           initialValue: '',
-          multiline: true,
-          type: 'text',
-          label: 'نام کاربری',
-          isRequired: false,
+          multiline: false, // If true, a textarea element will be rendered instead of an input
+          type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
+          label: 'نام کاربری در المنت',
+          isRequired: true, // Field need to be validated or not
         },
         {
-          name: 'birthYear',
-          initialValue: 1300,
-          multiline: false,
-          type: 'number',
-          label: 'تولد',
-          isRequired: false,
-          validationFunc: (v) => Number(v) > 1310,
-        },
-        {
-          name: 'permissions',
-          selectType: 'multiple', // Can be one of 'multiple' | 'single'
-          initialValue: ['admin'], // If select type is 'multiple' then "initialValue" should be an array of values
+          name: 'priority',
+          selectType: 'single', // Can be one of 'multiple' | 'single'
+          initialValue: 'reg', // If select type is 'multiple' then "initialValue" should be an array of values
           type: 'select',
-          label: 'دسترسی‌ها',
+          label: 'اولویت',
           options: [
-            { value: 'admin', label: 'ادمین' },
-            { value: 'user', label: 'کاربر' },
-            { value: 'guest', label: 'مهمان' },
+            { value: 'مهم', label: 'مهم' },
+            { value: 'عادی', label: 'عادی' },
+            { value: 'بسیار مهم', label: 'بسیار مهم' },
           ],
-          isRequired: false,
-        },
-        {
-          name: 'olderThanFifty',
-          initialValue: true,
-          type: 'checkbox',
-          label: 'بیش از پنجاه سال',
-          isRequired: false,
-        },
-        {
-          name: 'size',
-          initialValue: 'small',
-          type: 'select',
-          selectType: 'single',
-          options: [
-            { value: 'small', label: 'کوچک' },
-            { value: 'medium', label: 'متوسط' },
-            { value: 'large', label: 'بزرگ' },
-          ],
-          label: 'اندازه',
           isRequired: false,
         },
         {
@@ -238,29 +209,15 @@ const mainConfigs: ConfigContextInterface = {
           isRequired: false,
         },
         {
-          name: 'date',
-          initialValue: jMoment(),
-          type: 'date',
-          label: 'تاریخ',
-          isRequired: false,
-        },
-        {
-          name: 'time',
-          initialValue: jMoment(),
-          type: 'time',
-          label: 'زمان',
-          isRequired: false,
-        },
-        {
           name: 'dateAndTime',
           initialValue: jMoment(),
           type: 'dateTime',
-          label: 'تاریخ و زمان',
+          label: 'ضرب العجل',
           isRequired: false,
         },
       ],
-      nodeView: function FullNodeView(node) {
-        return <div style={{ color: node.color }}>{node.time?.toString()}</div>;
+      nodeView: function ProjectNodeView(node) {
+        return <div style={{ color: node.color }}><span>پروژه - </span>{node.priority}</div>;
       },
       onUpdateNode: (v) => console.log(v), // Callback when node updated
     },
@@ -268,15 +225,15 @@ const mainConfigs: ConfigContextInterface = {
   initialTree: [
     {
       id: generateID(),
-      nodeType: 'simple',
+      nodeType: 'individual',
       element_user: '',
       tags: [],
       name: 'عبد',
     },
   ],
   nodeTypes: [
-    { value: 'simple', label: 'ساده' },
-    { value: 'full', label: 'پیچیده' },
+    { value: 'individual', label: 'فرد' },
+    { value: 'project', label: 'پروژه' }
   ],
   primaryField: 'name',
   mainFunctions,
