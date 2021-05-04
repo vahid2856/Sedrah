@@ -86,7 +86,7 @@ const generateNewNode = (type: NodeTypes): SedrahNodeData => {
 /* ***                                        *** */
 
 // Deiffernt Node types. Do not remove DefaultNodeType
-export type NodeTypes = DefaultNodeType | 'project';
+export type NodeTypes = DefaultNodeType | 'project' | 'madreseh' ;
 
 // Add new field and its type in this interface
 export interface NodeFields extends DefaultFields {
