@@ -103,14 +103,8 @@ export interface NodeFields extends DefaultFields {
 
 // Main project callback functions
 const mainFunctions: MainFunctionsInterface = {
-  send_message: {
-    label: 'ارسال پیام',
-    cb: (selectedNodes) => {
-      console.log(selectedNodes);
-    },
-  },
-  send_message: {
-    label: 'ایجاد پخش زنده',
+  test1: {
+    label: 'تست یک',
     cb: (selectedNodes) => {
       console.log(selectedNodes);
     },
@@ -120,43 +114,21 @@ const mainFunctions: MainFunctionsInterface = {
 // Main project config files
 const mainConfigs: ConfigContextInterface = {
   treeNodes: {
-    simple:
-    {
+    simple: {
       fields: [
         {
           name: 'name',
           initialValue: '',
           multiline: false, // If true, a textarea element will be rendered instead of an input
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
-          label: 'نام فرد',
+          label: 'نام',
           isRequired: true, // Field need to be validated or not
         },
-        {
-          name: 'element_user',
-          initialValue: '',
-          multiline: false, // If true, a textarea element will be rendered instead of an input
-          type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
-          label: 'نام کاربری در المنت',
-          isRequired: true, // Field need to be validated or not
-        },
-        {
-          name: 'tags',
-          selectType: 'multiple', // Can be one of 'multiple' | 'single'
-          initialValue: ['admin'], // If select type is 'multiple' then "initialValue" should be an array of values
-          type: 'select',
-          label: 'گروه‌ها',
-          options: [
-            { value: 'film', label: 'فیلم‌سازی' },
-            { value: 'maaref', label: 'معارف' },
-            { value: 'arch', label: 'معماری' },
-          ],
-          isRequired: false,
-        }
       ],
       nodeView: function SimpleNodeView(node) {
         return (
           <div>
-            <span>فرد - </span>
+            <span>گره ساده - </span>
             <span>{node.name}</span>
           </div>
         );
