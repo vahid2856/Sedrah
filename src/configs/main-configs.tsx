@@ -148,7 +148,7 @@ const mainConfigs: ConfigContextInterface = {
         {
           name: 'tags',
           selectType: 'multiple', // Can be one of 'multiple' | 'single'
-          initialValue: ['admin'], // If select type is 'multiple' then "initialValue" should be an array of values
+          initialValue: ['معارف# '], // If select type is 'multiple' then "initialValue" should be an array of values
           type: 'select',
           label: 'گروه‌ها',
           options: [
@@ -218,7 +218,7 @@ const mainConfigs: ConfigContextInterface = {
           isRequired: false,
         }
       ],
-      nodeView: function ؤadresehNodeView(node) {
+      nodeView: function MadresehNodeView(node) {
         return (
           <div>
             <span>مسئول - </span>
@@ -271,7 +271,7 @@ const mainConfigs: ConfigContextInterface = {
           name: 'dateAndTime',
           initialValue: jMoment(),
           type: 'dateTime',
-          label: 'ضرب العجل',
+          label: 'مهلت',
           isRequired: false,
         },
       ],
