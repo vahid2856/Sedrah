@@ -169,6 +169,65 @@ const mainConfigs: ConfigContextInterface = {
       },
       onUpdateNode: (v) => console.log(v), // Callback when node updated
     },
+    Madreseh:
+    {
+      fields: [
+        {
+          name: 'name',
+          initialValue: '',
+          multiline: false, // If true, a textarea element will be rendered instead of an input
+          type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
+          label: 'نام گروه',
+          isRequired: true, // Field need to be validated or not
+        },
+        {
+          name: 'element_user',
+          initialValue: '',
+          multiline: false, // If true, a textarea element will be rendered instead of an input
+          type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
+          label: 'نام کاربری در المنت',
+          isRequired: true, // Field need to be validated or not
+        },
+        {
+          name: 'admin',
+          initialValue: '',
+          multiline: false, // If true, a textarea element will be rendered instead of an input
+          type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
+          label: 'نام مسئول',
+          isRequired: true, // Field need to be validated or not
+        },
+        {
+          name: 'element_user_admin',
+          initialValue: '',
+          multiline: false, // If true, a textarea element will be rendered instead of an input
+          type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
+          label: 'نام کاربری مسئول در المنت',
+          isRequired: true, // Field need to be validated or not
+        },
+        {
+          name: 'tags',
+          selectType: 'multiple', // Can be one of 'multiple' | 'single'
+          initialValue: ['admin'], // If select type is 'multiple' then "initialValue" should be an array of values
+          type: 'select',
+          label: 'گروه‌ها',
+          options: [
+            { value: 'فیلم‌سازی# ', label: 'فیلم‌سازی' },
+            { value: 'معارف# ', label: 'معارف' },
+            { value: 'معماری# ', label: 'معماری' },
+          ],
+          isRequired: false,
+        }
+      ],
+      nodeView: function ؤadresehNodeView(node) {
+        return (
+          <div>
+            <span>مسئول - </span>
+            <span>{node.admin}</span>
+          </div>
+        );
+      },
+      onUpdateNode: (v) => console.log(v), // Callback when node updated
+    },
     project: {
       fields: [
         {
@@ -233,7 +292,9 @@ const mainConfigs: ConfigContextInterface = {
   ],
   nodeTypes: [
     { value: 'individual', label: 'فرد' },
-    { value: 'project', label: 'پروژه' }
+    { value: 'project', label: 'پروژه' },
+    { value: 'madreseh', label: 'گروه' }
+
   ],
   primaryField: 'name',
   mainFunctions,

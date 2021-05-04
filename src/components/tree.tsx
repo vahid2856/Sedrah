@@ -120,7 +120,7 @@ const Tree: FC = () => {
   };
 
   const handleAddNode = (parentPath?: string | number) => {
-    const newNode = generateNewNode('simple');
+    const newNode = generateNewNode('madreseh');
 
     updateTree(
       addNodeUnderParent({
