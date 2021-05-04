@@ -86,7 +86,7 @@ const generateNewNode = (type: NodeTypes): SedrahNodeData => {
 /* ***                                        *** */
 
 // Deiffernt Node types. Do not remove DefaultNodeType
-export type NodeTypes = DefaultNodeType | 'full';
+export type NodeTypes = DefaultNodeType | 'project';
 
 // Add new field and its type in this interface
 export interface NodeFields extends DefaultFields {
@@ -152,9 +152,9 @@ const mainConfigs: ConfigContextInterface = {
           type: 'select',
           label: 'گروه‌ها',
           options: [
-            { value: 'film', label: 'فیلم‌سازی' },
-            { value: 'maaref', label: 'معارف' },
-            { value: 'arch', label: 'معماری' },
+            { value: 'فیلم‌سازی# ', label: 'فیلم‌سازی' },
+            { value: 'معارف# ', label: 'معارف' },
+            { value: 'معماری# ', label: 'معماری' },
           ],
           isRequired: false,
         }
