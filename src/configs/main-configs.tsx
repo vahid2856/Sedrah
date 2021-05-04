@@ -103,18 +103,24 @@ export interface NodeFields extends DefaultFields {
 
 // Main project callback functions
 const mainFunctions: MainFunctionsInterface = {
-  [send_message: {
+  send_message: {
     label: 'ارسال پیام',
     cb: (selectedNodes) => {
       console.log(selectedNodes);
     },
   },
-  send_message: {
+  live_stream: {
     label: 'ایجاد پخش زنده',
     cb: (selectedNodes) => {
       console.log(selectedNodes);
     },
-  }]
+  },
+  group_meeting: {
+    label: 'ایجاد جلسه گفتگو',
+    cb: (selectedNodes) => {
+      console.log(selectedNodes);
+    },
+  },
 };
 
 // Main project config files
