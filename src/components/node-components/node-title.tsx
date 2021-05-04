@@ -53,7 +53,7 @@ const NodeTitle: FC<NodeTitleProps> = (props) => {
       }}
       onKeyUp={(e) => {
         if (e.code === 'Enter') {
-          const newNode = generateNewNode('madreseh');
+          const newNode = generateNewNode('individual');
 
           onUpdateTree(
             addNodeUnderParent({
