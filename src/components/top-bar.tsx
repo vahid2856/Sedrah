@@ -154,7 +154,7 @@ const TopBar: FC<TopBarProps> = (props) => {
         <IconButton color="inherit" onClick={toggleDrawer}>
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6">Sedrah</Typography>
+        <Typography variant="h6">بسم الله الرحمن الرحیم الحمدلله رب العالمین و توکلت علی الله</Typography>
         <div className={classes.searchBar}>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
