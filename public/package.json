@@ -1,0 +1,22 @@
+{
+  "name": "matrix-widget",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vahid2856/Matrix-Widget.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vahid2856/Matrix-Widget/issues"
+  },
+  "homepage": "https://github.com/vahid2856/Matrix-Widget#readme",
+  "dependencies": {
+    "matrix-js-sdk": "^9.11.0"
+  }
+}
