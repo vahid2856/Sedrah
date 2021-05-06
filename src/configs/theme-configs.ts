@@ -1,4 +1,6 @@
 import { ThemeOptions } from '@material-ui/core';
+import { indigo, pink } from '@material-ui/core/colors';
+
 import Lotus from '../static/fonts/Lotus.woff';
 
 const lotus = {
@@ -16,6 +18,11 @@ const theme: ThemeOptions = {
   direction: 'rtl',
   typography: {
     fontFamily: '"B Lotus", Roboto, sans-serif',
+  },
+  palette: {
+    primary: indigo,
+    secondary: pink,
+    type: 'light',
   },
   overrides: {
     MuiCssBaseline: {

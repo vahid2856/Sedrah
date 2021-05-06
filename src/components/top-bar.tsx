@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { TreeItem } from 'react-sortable-tree';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -26,6 +26,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import ImportInitialTree from '@components/import-tree';
 import { useStyles } from '@components/styles';
+import { useConfigs } from '@configs/main-configs';
 
 interface TopBarProps {
   treeData: Array<TreeItem>;
@@ -72,6 +73,12 @@ const TopBar: FC<TopBarProps> = (props) => {
   const classes = useStyles();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const { appTitle } = useConfigs();
+
+  useEffect(() => {
+    document.title = appTitle;
+  }, [appTitle]);
 
   const handleUndo = () => {
     onSetUndoRedoIndex((prevIndex) => {
@@ -154,7 +161,7 @@ const TopBar: FC<TopBarProps> = (props) => {
         <IconButton color="inherit" onClick={toggleDrawer}>
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6">Sedrah</Typography>
+        <Typography variant="h6">{appTitle}</Typography>
         <div className={classes.searchBar}>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
