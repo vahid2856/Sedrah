@@ -185,9 +185,9 @@ const TopBar: FC<TopBarProps> = (props) => {
         </div>
 
         <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => alert(prompt("Please enter your token access", "your token");)}
+          variant = "contained"
+          color = "secondary"
+          onClick={() => alert(prompt("Please enter your token access", "your token"))}
         >
           اتصال
         </Button>
