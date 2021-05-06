@@ -183,6 +183,15 @@ const TopBar: FC<TopBarProps> = (props) => {
             {searchFoundCount || 0}
           </span>
         </div>
+
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick="alert('salam')"
+        >
+          اتصال
+        </Button>
+
         <Button
           variant="contained"
           color="secondary"
