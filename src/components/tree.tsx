@@ -43,7 +43,6 @@ const Tree: FC = () => {
   const {
     initialTree,
     treeNodes,
-    primaryField,
     mainFunctions,
     generateNewNode,
   } = useConfigs();
@@ -76,9 +75,24 @@ const Tree: FC = () => {
 
   const customSearchMethod = (data: SearchData): boolean => {
     const searchQuery = data.searchQuery as string;
-    const primary = data.node[primaryField] as string;
+    const searchNode = data.node as SedrahNodeData;
+
     if (searchQuery) {
-      return primary.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1;
+      return treeNodes[searchNode.nodeType].fields.reduce<boolean>(
+        (res, field) => {
+          if (field.isSearchable) {
+            return (
+              res ||
+              (searchNode[field.name] || '')
+                .toString()
+                .toLowerCase()
+                .indexOf(searchQuery.toLowerCase()) > -1
+            );
+          }
+          return res;
+        },
+        false,
+      );
     }
     return false;
   };

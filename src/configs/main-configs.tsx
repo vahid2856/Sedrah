@@ -8,6 +8,7 @@ interface FieldDefaultProperties<R, F extends keyof R = keyof R> {
   initialValue: R[F];
   label: string;
   isRequired: boolean;
+  isSearchable: boolean;
   validationFunc?: <T = R[F]>(value?: T) => boolean;
 }
 
@@ -58,6 +59,7 @@ interface ConfigContextInterface {
   primaryField: keyof SedrahNodeData;
   mainFunctions: MainFunctionsInterface;
   generateNewNode: (type: NodeTypes) => SedrahNodeData;
+  appTitle: string;
 }
 
 interface MainFunctionsInterface {
@@ -122,6 +124,7 @@ const mainConfigs: ConfigContextInterface = {
           multiline: false, // If true, a textarea element will be rendered instead of an input
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام',
+          isSearchable: true,
           isRequired: true, // Field need to be validated or not
         },
       ],
@@ -143,6 +146,7 @@ const mainConfigs: ConfigContextInterface = {
           multiline: false, // If true, a "textarea" element will be rendered instead of an input
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام',
+          isSearchable: true,
           isRequired: true, // Field is required or not
         },
         {
@@ -151,6 +155,7 @@ const mainConfigs: ConfigContextInterface = {
           multiline: true,
           type: 'text',
           label: 'نام کاربری',
+          isSearchable: false,
           isRequired: false,
         },
         {
@@ -159,6 +164,7 @@ const mainConfigs: ConfigContextInterface = {
           multiline: false,
           type: 'number',
           label: 'تولد',
+          isSearchable: false,
           isRequired: false,
           validationFunc: (v) => Number(v) > 1310,
         },
@@ -173,6 +179,7 @@ const mainConfigs: ConfigContextInterface = {
             { value: 'user', label: 'کاربر' },
             { value: 'guest', label: 'مهمان' },
           ],
+          isSearchable: false,
           isRequired: false,
         },
         {
@@ -180,6 +187,7 @@ const mainConfigs: ConfigContextInterface = {
           initialValue: true,
           type: 'checkbox',
           label: 'بیش از پنجاه سال',
+          isSearchable: false,
           isRequired: false,
         },
         {
@@ -193,6 +201,7 @@ const mainConfigs: ConfigContextInterface = {
             { value: 'large', label: 'بزرگ' },
           ],
           label: 'اندازه',
+          isSearchable: false,
           isRequired: false,
         },
         {
@@ -201,6 +210,7 @@ const mainConfigs: ConfigContextInterface = {
           multiline: false,
           type: 'color',
           label: 'رنگ',
+          isSearchable: false,
           isRequired: false,
         },
         {
@@ -208,6 +218,7 @@ const mainConfigs: ConfigContextInterface = {
           initialValue: jMoment(),
           type: 'date',
           label: 'تاریخ',
+          isSearchable: false,
           isRequired: false,
         },
         {
@@ -215,6 +226,7 @@ const mainConfigs: ConfigContextInterface = {
           initialValue: jMoment(),
           type: 'time',
           label: 'زمان',
+          isSearchable: false,
           isRequired: false,
         },
         {
@@ -222,6 +234,7 @@ const mainConfigs: ConfigContextInterface = {
           initialValue: jMoment(),
           type: 'dateTime',
           label: 'تاریخ و زمان',
+          isSearchable: false,
           isRequired: false,
         },
       ],
@@ -235,7 +248,7 @@ const mainConfigs: ConfigContextInterface = {
     {
       id: generateID(),
       nodeType: 'simple',
-      name: 'خانه دوست کجاست',
+      name: 'اولین گره',
     },
   ],
   nodeTypes: [
@@ -245,6 +258,7 @@ const mainConfigs: ConfigContextInterface = {
   primaryField: 'name',
   mainFunctions,
   generateNewNode,
+  appTitle: 'اپلیکیشن',
 };
 
 const ConfigsContext = createContext(mainConfigs);
