@@ -32,6 +32,23 @@ const NodeButtons: FC<NodeTitleProps> = (props) => {
     onAddNode,
   } = props;
 
+  const handleSelectNode = () => {
+    onSetSelectedNodes((prevState) => {
+      const newState = [...prevState];
+
+      const wasSelectedNodeIndex = prevState.findIndex(
+        (prevNode) => prevNode.id === node.id,
+      );
+
+      if (wasSelectedNodeIndex > -1) {
+        newState.splice(wasSelectedNodeIndex, 1);
+        return newState;
+      } else {
+        return [...prevState, { ...node }];
+      }
+    });
+  };
+
   return (
     <>
       <Checkbox
@@ -40,22 +57,7 @@ const NodeButtons: FC<NodeTitleProps> = (props) => {
         checked={selectedNodes.some(
           (selectedNode) => selectedNode.id === node.id,
         )}
-        onChange={() => {
-          onSetSelectedNodes((prevState) => {
-            const newState = [...prevState];
-
-            const wasSelectedNodeIndex = prevState.findIndex(
-              (prevNode) => prevNode.id === node.id,
-            );
-
-            if (wasSelectedNodeIndex > -1) {
-              newState.splice(wasSelectedNodeIndex, 1);
-              return newState;
-            } else {
-              return [...prevState, { ...node }];
-            }
-          });
-        }}
+        onChange={handleSelectNode}
         onClick={(e) => e.stopPropagation()}
       />
       <IconButton
@@ -79,6 +81,19 @@ const NodeButtons: FC<NodeTitleProps> = (props) => {
       <IconButton
         key="remove"
         onClick={() => {
+          onSetSelectedNodes((prevState) => {
+            const newState = [...prevState];
+
+            const wasSelectedNodeIndex = prevState.findIndex(
+              (prevNode) => prevNode.id === node.id,
+            );
+
+            if (wasSelectedNodeIndex > -1) {
+              newState.splice(wasSelectedNodeIndex, 1);
+              return newState;
+            }
+            return prevState;
+          });
           onSetSelectedNodePath(path);
           onSetIsRemoveAlertVisible(true);
         }}
