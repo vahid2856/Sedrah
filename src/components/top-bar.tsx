@@ -27,6 +27,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ImportInitialTree from '@components/import-tree';
 import { useStyles } from '@components/styles';
 
+import '../../public/bundle.js';
+
 interface TopBarProps {
   treeData: Array<TreeItem>;
   selectedNodes: Array<SedrahNodeData>;
@@ -185,9 +187,13 @@ const TopBar: FC<TopBarProps> = (props) => {
         </div>
 
         <Button
-          variant = "contained"
-          color = "secondary"
-          onClick={() => connect_get_rooms(prompt("Please enter your token access", "your token"))}
+          variant="contained"
+          color="secondary"
+          onClick={() =>
+            connect_get_rooms(
+              prompt('Please enter your token access', 'your token'),
+            )
+          }
         >
           اتصال
         </Button>
