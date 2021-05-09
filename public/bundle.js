@@ -1,169 +1,97 @@
-function connect_get_rooms(access_token)
-{
-//const accessToken = "";
-
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-//import sdk from "./node_modules/matrix-js-sdk";
+
 console.log("Start");
 var sdk = require("matrix-js-sdk");
-//console.log(sdk);
 console.log("--------------------------");
 
+// ==========   Variables   ==========
+const BASEURL = "https://quranic.network";
+const ACCESSTOKEN = "";
+const USERID = "";
+const PASSWORD = "";
 
-//const client = sdk.createClient("https://quranic.network");
 
-//console.log(client);
-//console.log("--------------------------");
 
-//client.login("m.login.password", {"user": "@vahid_nadarkhani:quranic.network", "password": ""}).then((response) => {
+// ========== login with username and password for get access token ==========
+
+//const client = sdk.createClient(BASEURL);
+
+//client.login("m.login.password", {"user": USERID, "password": PASSWORD}).then((response) => {
 //	const accessToken = response.access_token;
 //	console.log(accessToken);
 //});
-//console.log("test")
-//console.log(accessToken);//quranic.network"
-//console.log("--------------------------");
-//start();
 
 
+// ========== login with access token ==========
 
-const client = sdk.createClient(
-    baseUrl: "https://quranic.network",
-    accessToken: accessToken,
-   userId: "@vahid_nadarkhani:quranic.network"
+const client = sdk.createClient({
+    baseUrl: BASEURL,
+    accessToken: ACCESSTOKEN,
+   userId: USERID
 });
 
-console.log(client)
-//setTimeout(function () {console.log(client);  console.log(client.getAccessToken())}, 10000);
-//console.log(clinet.getAccessToken());
-start();
-//setTimeout(getRoomsList, 15000);
 
+// ========== call start function ==========
+start();
+
+
+// ========== start function ==========
 function start() {
   client.startClient();
   client.once('sync', function(state, prevState, res) {
-	//console.log("-->1");
 	console.log('state ----> ', state);
-	//console.log("-->2");
-	//setTimeout(getRoomsList, 1000);
-	alert(getRoomsList());
+	getRoomsList();
   });
 };
 
+
+// ========== get rooms list function ==========
 function getRoomsList() {
-console.log("---> in getRoomsList Function <---")
   var rooms = client.getRooms();
-console.log("rooms : ", rooms)
+  console.log("rooms : ", rooms)
   rooms.forEach(room => {
   	//console.log(room.roomId);
   });
 
-console.log("---> end of getRoomsList Function<---");
 
+// ========== for test , set specific room name here ==========
+var roomName = "";
+
+// ========== get one room from rooms by room name ==========
 for (var i=0; i <= rooms.length; i++){
   var room = rooms[i];
-  if (room.name === "طراحی و پیاده سازی داشبورد مدیریتی") {
+  if (room.name === roomName) {
     console.log(room.roomId);
     var roomId = room.roomId;
     break; 
   }
 };
 
+// ========== do something in room ==========
 if (roomId != null) {
 
-// ==========================================
-
-	/*
-		get room users list
-	*/
-
-
-var members = room.getJoinedMembers();
-members.forEach(member => {
-  console.log(member.name);
-});
+// ============ get room users list ==============================
+  //var members = room.getJoinedMembers();
+  //members.forEach(member => {
+  //  console.log(member.name);
+  //});
 
 
-// ==========================================
+// ============= send message function ===========================
+  var content = {
+    "body": "NEW TEST!",
+    "msgtype": "m.text"
+  };
 
-	/*
-		send message function
-	*/
-
-//  var content = {
-//    "body": "test msg from function!",
-//    "msgtype": "m.text"
-//  };
-
-//  client.sendEvent(roomId, "m.room.message", content, "").then((res) => {
+  client.sendEvent(roomId, "m.room.message", content, "").then((res) => {
    // message sent successfully
-//  }).catch((err) => {
-//    console.log(err);
-//  });
-
-// ==========================================
+  }).catch((err) => {
+    console.log(err);
+  });
 
 };
 
-//console.log(room)
-  //for (const [key, value] of Object.entries(room)) {
-    //console.log(key, value);
-    //console.log("-----------------------------------");
-
-    //if (key === "name" && value === "test"){
-     // var roomId = room[roomId];
-      //console.log(roomId);
-     // break;
-   // };
- // };
-  //console.log(rooms[i]);
-  //console.log("--------------------")
-
-  //if (key === "roomId") {
-  //  console.log("roomId : ", value);
-  //  var roomId = value;
-  //}else if (key === "name") {
-  //  console.log("name : ", value);
-  //  var name = value;
-  //}
-//};
-
-
-//var testRoomId = rooms[10];
-
-//var content = {
-//    "body": "Hello World",
-//    "msgtype": "m.text"
-//};
-
-//client.sendEvent(testRoomId, "m.room.message", content, "").then((res) => {
-   // message sent successfully
-//}).catch((err) => {
-//    console.log(err);
-//});
-
-
 };
-
-
-//  var rooms = client.getRooms();
-  //rooms.forEach(room => {
-   // console.log(room.roomId);
- // });
-//  setTimeout(getRoomsList, 5000);
-//};
-//setTimeout(getRoomsList, 10000);
-//console.log(client);
-
-//function getRoomsList() {
-//  client.startClient();
-//  var rooms = client.getRooms();
-//  console.log(rooms);
-//};
-//rooms.forEach(room => {
-//    console.log(room.roomId);
-//});
-
-
 
 },{"matrix-js-sdk":24}],2:[function(require,module,exports){
 function _defineProperty(obj, key, value) {
@@ -60449,4 +60377,3 @@ module.exports = {
 };
 
 },{}]},{},[1]);
-}
