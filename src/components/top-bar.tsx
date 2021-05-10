@@ -190,9 +190,7 @@ const TopBar: FC<TopBarProps> = (props) => {
           variant="contained"
           color="secondary"
           onClick={() =>
-            connect_get_rooms(
-              prompt('Please enter your token access', 'your token'),
-            )
+            alert(getRoomsList())
           }
         >
           اتصال

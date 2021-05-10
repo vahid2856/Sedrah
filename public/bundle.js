@@ -90,7 +90,7 @@ if (roomId != null) {
   });
 
 };
-
+return rooms;
 };
 
 },{"matrix-js-sdk":24}],2:[function(require,module,exports){
