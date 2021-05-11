@@ -6,12 +6,6 @@ console.log("--------------------------");
 
 // ==========   Variables   ==========
 const BASEURL = "https://quranic.network";
-const ACCESSTOKEN = "";
-const USERID = "";
-const PASSWORD = "";
-
-
-
 // ========== login with username and password for get access token ==========
 
 //const client = sdk.createClient(BASEURL);
@@ -46,7 +40,7 @@ function start() {
 
 
 // ========== get rooms list function ==========
-function getRoomsList() {
+export function getRoomsList() {
   var rooms = client.getRooms();
   console.log("rooms : ", rooms)
   rooms.forEach(room => {
