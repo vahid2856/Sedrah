@@ -28,6 +28,7 @@ import ImportInitialTree from '@components/import-tree';
 import { useStyles } from '@components/styles';
 
 import '../../public/bundle.js';
+import getRoomsList from '../../public/bundle.js';
 
 interface TopBarProps {
   treeData: Array<TreeItem>;
@@ -36,6 +37,7 @@ interface TopBarProps {
   searchFoundCount: number;
   searchString: string;
   treeZoom: number;
+  getRoomsList: Array;
   summaryMode: boolean;
   isWithHandle: boolean;
   prevTreeData: Array<Array<TreeItem>>;
@@ -67,6 +69,7 @@ const TopBar: FC<TopBarProps> = (props) => {
     onSetSearchFocusIndex,
     onSetSearchString,
     onSetTreeZoom,
+    getRoomsList,
     onSetSummaryMode,
     onSetIsWithHandle,
     onSetUndoRedoIndex,
