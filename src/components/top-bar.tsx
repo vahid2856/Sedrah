@@ -28,7 +28,6 @@ import ImportInitialTree from '@components/import-tree';
 import { useStyles } from '@components/styles';
 
 import '../../public/bundle.js';
-import getRoomsList from '../../public/bundle.js';
 
 interface TopBarProps {
   treeData: Array<TreeItem>;
