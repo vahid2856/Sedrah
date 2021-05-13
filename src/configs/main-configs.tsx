@@ -92,18 +92,16 @@ const generateNewNode = (type: NodeTypes): SedrahNodeData => {
 /* ***                                        *** */
 
 // Deiffernt Node types. Do not remove DefaultNodeType
-export type NodeTypes = DefaultNodeType | 'project' | 'madreseh' ;
+export type NodeTypes = DefaultNodeType | 'project' | 'madreseh';
 
 // Add new field and its type in this interface
 export interface NodeFields extends DefaultFields {
-  username?: string;
-  birthYear?: number;
-  permissions?: Array<string>;
-  size?: string;
-  olderThanFifty?: boolean;
+  element_user?: string;
+  tags?: Array<string>;
+  admin?: string;
+  priority?: string;
+  element_user_admin?: string;
   color?: string;
-  date?: Moment;
-  time?: Moment;
   dateAndTime?: Moment;
 }
 
@@ -141,7 +139,7 @@ const mainFunctions: MainFunctionsInterface = {
 const mainConfigs: ConfigContextInterface = {
   treeNodes: {
     simple: {
-     fields: [
+      fields: [
         {
           name: 'name',
           initialValue: '',
@@ -149,7 +147,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام فرد',
           isRequired: true, // Field need to be validated or not
-          isSearchable: true
+          isSearchable: true,
         },
         {
           name: 'element_user',
@@ -158,7 +156,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام کاربری در المنت',
           isRequired: true, // Field need to be validated or not
-          isSearchable: true
+          isSearchable: true,
         },
         {
           name: 'tags',
@@ -170,11 +168,11 @@ const mainConfigs: ConfigContextInterface = {
             { value: 'فیلم‌سازی# ', label: 'فیلم‌سازی' },
             { value: 'معارف# ', label: 'معارف' },
             { value: 'معماری# ', label: 'معماری' },
-             { value: 'منظومه# ', label: 'منظومه' },
+            { value: 'منظومه# ', label: 'منظومه' },
           ],
           isRequired: false,
-          isSearchable: true
-        }
+          isSearchable: true,
+        },
       ],
       nodeView: function SimpleNodeView(node) {
         return (
@@ -186,8 +184,7 @@ const mainConfigs: ConfigContextInterface = {
       },
       onUpdateNode: (v) => console.log(v), // Callback when node updated
     },
-   madreseh:
-    {
+    madreseh: {
       fields: [
         {
           name: 'name',
@@ -196,6 +193,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام گروه',
           isRequired: true, // Field need to be validated or not
+          isSearchable: true,
         },
         {
           name: 'element_user',
@@ -204,6 +202,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام کاربری در المنت',
           isRequired: true, // Field need to be validated or not
+          isSearchable: true,
         },
         {
           name: 'admin',
@@ -212,6 +211,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام مسئول',
           isRequired: true, // Field need to be validated or not
+          isSearchable: true,
         },
         {
           name: 'element_user_admin',
@@ -220,6 +220,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام کاربری مسئول در المنت',
           isRequired: true, // Field need to be validated or not
+          isSearchable: true,
         },
         {
           name: 'tags',
@@ -233,7 +234,8 @@ const mainConfigs: ConfigContextInterface = {
             { value: 'معماری# ', label: 'معماری' },
           ],
           isRequired: false,
-        }
+          isSearchable: true,
+        },
       ],
       nodeView: function MadresehNodeView(node) {
         return (
@@ -254,6 +256,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام',
           isRequired: true, // Field is required or not
+          isSearchable: true,
         },
         {
           name: 'element_user',
@@ -262,6 +265,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام کاربری در المنت',
           isRequired: true, // Field need to be validated or not
+          isSearchable: true,
         },
         {
           name: 'priority',
@@ -275,6 +279,7 @@ const mainConfigs: ConfigContextInterface = {
             { value: 'بسیار مهم', label: 'بسیار مهم' },
           ],
           isRequired: false,
+          isSearchable: true,
         },
         {
           name: 'color',
@@ -283,6 +288,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'color',
           label: 'رنگ',
           isRequired: false,
+          isSearchable: true,
         },
         {
           name: 'dateAndTime',
@@ -290,10 +296,16 @@ const mainConfigs: ConfigContextInterface = {
           type: 'dateTime',
           label: 'مهلت',
           isRequired: false,
+          isSearchable: true,
         },
       ],
       nodeView: function ProjectNodeView(node) {
-        return <div style={{ color: node.color }}><span>پروژه - </span>{node.priority}</div>;
+        return (
+          <div style={{ color: node.color }}>
+            <span>پروژه - </span>
+            {node.priority}
+          </div>
+        );
       },
       onUpdateNode: (v) => console.log(v), // Callback when node updated
     },
@@ -304,7 +316,7 @@ const mainConfigs: ConfigContextInterface = {
   nodeTypes: [
     { value: 'simple', label: 'فرد' },
     { value: 'project', label: 'پروژه' },
-    { value: 'madreseh', label: 'گروه' }
+    { value: 'madreseh', label: 'گروه' },
   ],
   primaryField: 'name',
   mainFunctions,
