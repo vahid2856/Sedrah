@@ -3,6 +3,10 @@ import { createContext, FC, useContext, ReactNode } from 'react';
 import { generateID } from '@components/tree';
 import jMoment, { Moment } from 'moment-jalaali';
 
+import  '../../public/matrix-js-sdk.js';
+import { send_message, send_individual_message } from '../../public/widget_func.js';
+
+
 interface FieldDefaultProperties<R, F extends keyof R = keyof R> {
   name: F;
   initialValue: R[F];
@@ -106,9 +110,17 @@ export interface NodeFields extends DefaultFields {
 // Main project callback functions
 const mainFunctions: MainFunctionsInterface = {
   send_message: {
-    label: 'ارسال پیام',
+    label: 'ارسال پیام گروهی',
     cb: (selectedNodes) => {
-      console.log(selectedNodes);
+      if (selectedNodes.length>0){
+      send_message(selectedNodes,'Salaam');}
+    },
+  },
+  send_individual_message: {
+    label: 'ارسال پیام شخصی',
+    cb: (selectedNodes) => {
+      if (selectedNodes.length>0) {
+      send_individual_message(selectedNodes,'Salaam');}
     },
   },
   live_stream: {
@@ -287,7 +299,7 @@ const mainConfigs: ConfigContextInterface = {
     },
   },
   initialTree: [
-  {"name":"دستیار عربی","element_user":"!CpnaMFWBRQluWOdsBm:quranic.network","id":"!CpnaMFWBRQluWOdsBm:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"1234567","element_user":"!EWKhEruXVJszSEmRcp:quranic.network","id":"!EWKhEruXVJszSEmRcp:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"کیوان","element_user":"!EzvOJBYpFJpHHayYYU:quranic.network","id":"!EzvOJBYpFJpHHayYYU:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"سی","element_user":"!IVVkuStknRKZIJfYDZ:quranic.network","id":"!IVVkuStknRKZIJfYDZ:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"ahmademoon","element_user":"!LfkudOofhvoJUYCFyC:matrix.org","id":"!LfkudOofhvoJUYCFyC:matrix.org","tags":["معارف# "],"nodeType":"simple"},{"name":"احمدی - ناظر فنی","element_user":"!PvmIsaMLiYScDEntAm:quranic.network","id":"!PvmIsaMLiYScDEntAm:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"رسانه","element_user":"!QbkIuZYQzpoQlLcyxd:quranic.network","id":"!QbkIuZYQzpoQlLcyxd:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"mahdi.ahmadi.py","element_user":"!RYqGRbOGnNryPFnwSX:matrix.org","id":"!RYqGRbOGnNryPFnwSX:matrix.org","tags":["معارف# "],"nodeType":"simple"},{"name":"نیازهای نرم افزار","element_user":"!RpJmlelsytNWAzogOE:quranic.network","id":"!RpJmlelsytNWAzogOE:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"test","element_user":"!RrTfPdmqxIqnVdThGY:quranic.network","id":"!RrTfPdmqxIqnVdThGY:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"آموزش _ تحلیل و طراحی","element_user":"!TFRQzzIgaKaCzDhCmv:quranic.network","id":"!TFRQzzIgaKaCzDhCmv:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"salambot","element_user":"!UDYktaOLzDUIjCLBfL:quranic.network","id":"!UDYktaOLzDUIjCLBfL:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"داشبورد مديريت","element_user":"!VpbuAIJrGRTvdMTobB:quranic.network","id":"!VpbuAIJrGRTvdMTobB:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"آموزش نرم‌افزار","element_user":"!XbjdvrvfguVJiqSfkO:ebad.quranic.network","id":"!XbjdvrvfguVJiqSfkO:ebad.quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"‌تحلیل و بررسی ایجاد باتها","element_user":"!aOvNTazraJPIFAPqpS:quranic.network","id":"!aOvNTazraJPIFAPqpS:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"smghandi","element_user":"!almjlaWSwuPIdXdSdC:quranic.network","id":"!almjlaWSwuPIdXdSdC:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"مدیریت پروژه","element_user":"!bIrlqoPmNtZIbOCnai:quranic.network","id":"!bIrlqoPmNtZIbOCnai:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"پشتیبانی- ثبت‌نام المنت عباد","element_user":"!cBsHFGXTIVCQKUTxCy:quranic.network","id":"!cBsHFGXTIVCQKUTxCy:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"test","element_user":"!hRnCkDmtPHyscWLSBR:quranic.network","id":"!hRnCkDmtPHyscWLSBR:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"Empty room (was admin)","element_user":"!ipoyjovQubpXhMQfgM:ebad.quranic.network","id":"!ipoyjovQubpXhMQfgM:ebad.quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"haghi","element_user":"!iuzgySRZmDQjvxWQHK:quranic.network","id":"!iuzgySRZmDQjvxWQHK:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"درباره کلیت معماری نرم‌افزار","element_user":"!keplMYypLIhxWlLTzA:quranic.network","id":"!keplMYypLIhxWlLTzA:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"دستیار صدا و تصویر","element_user":"!lfFYiGzGOeDecrmqjL:quranic.network","id":"!lfFYiGzGOeDecrmqjL:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"mohammad.zahmatkesh","element_user":"!oesabyzWpsQoRiggrD:ebad.quranic.network","id":"!oesabyzWpsQoRiggrD:ebad.quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"me.ahmadi","element_user":"!qjdEYMGqdZRSlzuLcG:quranic.network","id":"!qjdEYMGqdZRSlzuLcG:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"معارف","element_user":"!reBTMrlGehLTzqWkTm:quranic.network","id":"!reBTMrlGehLTzqWkTm:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"طراحی و پیاده سازی داشبورد مدیریتی","element_user":"!vvOUezWTUaCMtTzlhx:quranic.network","id":"!vvOUezWTUaCMtTzlhx:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"دفتر آموزش خواهران","element_user":"!xJtgyHJLWdOYqaJhgN:quranic.network","id":"!xJtgyHJLWdOYqaJhgN:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"3","element_user":"!xTVPXBIeQkRRLdADcV:quranic.network","id":"!xTVPXBIeQkRRLdADcV:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"ایده‌پردازی آموزش نوجوانان","element_user":"!yvPkSbLfJXGcAgSYoX:quranic.network","id":"!yvPkSbLfJXGcAgSYoX:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"vahid_nadarkhani","element_user":"!zMzXEzukzdBXbMQtTy:quranic.network","id":"!zMzXEzukzdBXbMQtTy:quranic.network","tags":["معارف# "],"nodeType":"simple"}
+  {"name":"عبد","element_user":"!CpnaMFWBRQluWOdsBm:quranic.network","id":"!test:quranic.network","tags":["معارف# "],"nodeType":"simple"}
   ],
   nodeTypes: [
     { value: 'simple', label: 'فرد' },

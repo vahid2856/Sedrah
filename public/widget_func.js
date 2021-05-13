@@ -4,7 +4,7 @@ console.log("--------------------------");
 const sdk = window.sdk;
 
 // ==========   Variables   ==========
-
+const BASEURL = "https://quranic.network";
 
 // ========== login with username and password for get access token ==========
 //const client = sdk.createClient(BASEURL);
@@ -37,7 +37,7 @@ export function start_matrix_client() {
 
 
 // ========== get rooms list function ==========
-export function getRoomsList(user, pass) {
+export function getRoomsList() {
   var tree = new Array();
   var rooms = client.getRooms();
   //console.log("rooms : ", rooms);
@@ -51,43 +51,65 @@ export function getRoomsList(user, pass) {
 };
 
 
-
-
-function sendMessage() {
-// ========== for test , set specific room name here ==========
-var roomName = "";
-
-// ========== get one room from rooms by room name ==========
+function getRoombyName(room_name){
+var rooms = getRoomsList()
+var roomId = ""
 if (roomName != "") {
   for (var i=0; i <= rooms.length; i++){
     var room = rooms[i];
     if (room.name === roomName) {
-      console.log(room.roomId);
-      var roomId = room.roomId;
-      break; 
+      roomId = room.roomId;
+      break;
     }
   };
-
-// ========== do something in room ==========
-  if (roomId != null) {
-
-// ============ get room users list ==============================
-//  var members = room.getJoinedMembers();
-//  members.forEach(member => {
-//    console.log(member.name);
-//   });
+}
+  return roomId;
+}
 
 
-// ============= send message function ===========================
+export function send_message(roomIds, content_text) {
+
+    // ============ get room users list ==============================
+    //  var members = room.getJoinedMembers();
+    //  members.forEach(member => {
+    //    console.log(member.name);
+    //   });
+
+    // ============= send message function ===========================
     var content = {
-      "body": "NEW TEST!",
+      "body": content_text,
       "msgtype": "m.text"
     };
-
-    client.sendEvent(roomId, "m.room.message", content, "").then((res) => {
+    roomIds.forEach(roomId => {
+    client.sendEvent(roomId["element_user"], "m.room.message", content, "").then((res) => {
      // message sent successfully
     }).catch((err) => {
       console.log(err);
-    });
-  };
-};};
+    });});
+};
+
+export function send_individual_message(rooms, content_text) {
+
+    // ============= send message function ===========================
+    var content = {
+      "body": content_text,
+      "msgtype": "m.text"
+    };
+    var final_users = new Array();
+    var selected_roomIds= rooms.forEach(roomId => {roomId["element_user"]});
+    var existing_rooms = getRoomsList();
+    existing_rooms.forEach(roomObj => {
+    if (selected_roomIds.includes(roomObj.roomId)){
+        var curr_members = roomObj.getJoinedMembers();
+        curr_members.forEach(member => {
+        if (!final_users.includes(member.roomId)){
+           final_users[final_users.length] = member.roomId;
+           client.sendEvent(member.roomId, "m.room.message", content, "").then((res) => {
+            // message sent successfully
+            }).catch((err) => {
+            console.log(err);
+            });
+        }
+    })}
+    })
+ };
