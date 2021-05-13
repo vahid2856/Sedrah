@@ -28,6 +28,11 @@ import ImportInitialTree from '@components/import-tree';
 import { useStyles } from '@components/styles';
 import { useConfigs } from '@configs/main-configs';
 
+import  '../../public/matrix-js-sdk.js';
+import { getRoomsList } from '../../public/widget_func.js';
+
+
+
 interface TopBarProps {
   treeData: Array<TreeItem>;
   selectedNodes: Array<SedrahNodeData>;
@@ -190,6 +195,19 @@ const TopBar: FC<TopBarProps> = (props) => {
             {searchFoundCount || 0}
           </span>
         </div>
+
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+          //console.log('Salam -- ',getRoomsList())
+          onUpdateTree(getRoomsList())
+
+          }}
+        >
+          اتصال
+        </Button>
+
         <Button
           variant="contained"
           color="secondary"
