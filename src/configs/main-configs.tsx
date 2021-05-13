@@ -88,18 +88,16 @@ const generateNewNode = (type: NodeTypes): SedrahNodeData => {
 /* ***                                        *** */
 
 // Deiffernt Node types. Do not remove DefaultNodeType
-export type NodeTypes = DefaultNodeType | 'project' | 'madreseh' ;
+export type NodeTypes = DefaultNodeType | 'project' | 'madreseh';
 
 // Add new field and its type in this interface
 export interface NodeFields extends DefaultFields {
-  username?: string;
-  birthYear?: number;
-  permissions?: Array<string>;
-  size?: string;
-  olderThanFifty?: boolean;
+  element_user?: string;
+  tags?: Array<string>;
+  admin?: string;
+  priority?: string;
+  element_user_admin?: string;
   color?: string;
-  date?: Moment;
-  time?: Moment;
   dateAndTime?: Moment;
 }
 
@@ -129,7 +127,7 @@ const mainFunctions: MainFunctionsInterface = {
 const mainConfigs: ConfigContextInterface = {
   treeNodes: {
     simple: {
-     fields: [
+      fields: [
         {
           name: 'name',
           initialValue: '',
@@ -137,7 +135,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام فرد',
           isRequired: true, // Field need to be validated or not
-          isSearchable: true
+          isSearchable: true,
         },
         {
           name: 'element_user',
@@ -146,7 +144,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام کاربری در المنت',
           isRequired: true, // Field need to be validated or not
-          isSearchable: true
+          isSearchable: true,
         },
         {
           name: 'tags',
@@ -158,11 +156,11 @@ const mainConfigs: ConfigContextInterface = {
             { value: 'فیلم‌سازی# ', label: 'فیلم‌سازی' },
             { value: 'معارف# ', label: 'معارف' },
             { value: 'معماری# ', label: 'معماری' },
-             { value: 'منظومه# ', label: 'منظومه' },
+            { value: 'منظومه# ', label: 'منظومه' },
           ],
           isRequired: false,
-          isSearchable: true
-        }
+          isSearchable: true,
+        },
       ],
       nodeView: function SimpleNodeView(node) {
         return (
@@ -174,8 +172,7 @@ const mainConfigs: ConfigContextInterface = {
       },
       onUpdateNode: (v) => console.log(v), // Callback when node updated
     },
-   madreseh:
-    {
+    madreseh: {
       fields: [
         {
           name: 'name',
@@ -184,6 +181,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام گروه',
           isRequired: true, // Field need to be validated or not
+          isSearchable: true,
         },
         {
           name: 'element_user',
@@ -192,6 +190,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام کاربری در المنت',
           isRequired: true, // Field need to be validated or not
+          isSearchable: true,
         },
         {
           name: 'admin',
@@ -200,6 +199,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام مسئول',
           isRequired: true, // Field need to be validated or not
+          isSearchable: true,
         },
         {
           name: 'element_user_admin',
@@ -208,6 +208,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام کاربری مسئول در المنت',
           isRequired: true, // Field need to be validated or not
+          isSearchable: true,
         },
         {
           name: 'tags',
@@ -221,7 +222,8 @@ const mainConfigs: ConfigContextInterface = {
             { value: 'معماری# ', label: 'معماری' },
           ],
           isRequired: false,
-        }
+          isSearchable: true,
+        },
       ],
       nodeView: function MadresehNodeView(node) {
         return (
@@ -242,6 +244,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام',
           isRequired: true, // Field is required or not
+          isSearchable: true,
         },
         {
           name: 'element_user',
@@ -250,6 +253,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'text', // Can be one of 'text' | 'number' | 'checkbox' | 'select' | 'color' | 'date' | 'time' | 'dateTime'
           label: 'نام کاربری در المنت',
           isRequired: true, // Field need to be validated or not
+          isSearchable: true,
         },
         {
           name: 'priority',
@@ -263,6 +267,7 @@ const mainConfigs: ConfigContextInterface = {
             { value: 'بسیار مهم', label: 'بسیار مهم' },
           ],
           isRequired: false,
+          isSearchable: true,
         },
         {
           name: 'color',
@@ -271,6 +276,7 @@ const mainConfigs: ConfigContextInterface = {
           type: 'color',
           label: 'رنگ',
           isRequired: false,
+          isSearchable: true,
         },
         {
           name: 'dateAndTime',
@@ -278,21 +284,243 @@ const mainConfigs: ConfigContextInterface = {
           type: 'dateTime',
           label: 'مهلت',
           isRequired: false,
+          isSearchable: true,
         },
       ],
       nodeView: function ProjectNodeView(node) {
-        return <div style={{ color: node.color }}><span>پروژه - </span>{node.priority}</div>;
+        return (
+          <div style={{ color: node.color }}>
+            <span>پروژه - </span>
+            {node.priority}
+          </div>
+        );
       },
       onUpdateNode: (v) => console.log(v), // Callback when node updated
     },
   },
   initialTree: [
-  {"name":"دستیار عربی","element_user":"!CpnaMFWBRQluWOdsBm:quranic.network","id":"!CpnaMFWBRQluWOdsBm:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"1234567","element_user":"!EWKhEruXVJszSEmRcp:quranic.network","id":"!EWKhEruXVJszSEmRcp:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"کیوان","element_user":"!EzvOJBYpFJpHHayYYU:quranic.network","id":"!EzvOJBYpFJpHHayYYU:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"سی","element_user":"!IVVkuStknRKZIJfYDZ:quranic.network","id":"!IVVkuStknRKZIJfYDZ:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"ahmademoon","element_user":"!LfkudOofhvoJUYCFyC:matrix.org","id":"!LfkudOofhvoJUYCFyC:matrix.org","tags":["معارف# "],"nodeType":"simple"},{"name":"احمدی - ناظر فنی","element_user":"!PvmIsaMLiYScDEntAm:quranic.network","id":"!PvmIsaMLiYScDEntAm:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"رسانه","element_user":"!QbkIuZYQzpoQlLcyxd:quranic.network","id":"!QbkIuZYQzpoQlLcyxd:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"mahdi.ahmadi.py","element_user":"!RYqGRbOGnNryPFnwSX:matrix.org","id":"!RYqGRbOGnNryPFnwSX:matrix.org","tags":["معارف# "],"nodeType":"simple"},{"name":"نیازهای نرم افزار","element_user":"!RpJmlelsytNWAzogOE:quranic.network","id":"!RpJmlelsytNWAzogOE:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"test","element_user":"!RrTfPdmqxIqnVdThGY:quranic.network","id":"!RrTfPdmqxIqnVdThGY:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"آموزش _ تحلیل و طراحی","element_user":"!TFRQzzIgaKaCzDhCmv:quranic.network","id":"!TFRQzzIgaKaCzDhCmv:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"salambot","element_user":"!UDYktaOLzDUIjCLBfL:quranic.network","id":"!UDYktaOLzDUIjCLBfL:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"داشبورد مديريت","element_user":"!VpbuAIJrGRTvdMTobB:quranic.network","id":"!VpbuAIJrGRTvdMTobB:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"آموزش نرم‌افزار","element_user":"!XbjdvrvfguVJiqSfkO:ebad.quranic.network","id":"!XbjdvrvfguVJiqSfkO:ebad.quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"‌تحلیل و بررسی ایجاد باتها","element_user":"!aOvNTazraJPIFAPqpS:quranic.network","id":"!aOvNTazraJPIFAPqpS:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"smghandi","element_user":"!almjlaWSwuPIdXdSdC:quranic.network","id":"!almjlaWSwuPIdXdSdC:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"مدیریت پروژه","element_user":"!bIrlqoPmNtZIbOCnai:quranic.network","id":"!bIrlqoPmNtZIbOCnai:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"پشتیبانی- ثبت‌نام المنت عباد","element_user":"!cBsHFGXTIVCQKUTxCy:quranic.network","id":"!cBsHFGXTIVCQKUTxCy:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"test","element_user":"!hRnCkDmtPHyscWLSBR:quranic.network","id":"!hRnCkDmtPHyscWLSBR:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"Empty room (was admin)","element_user":"!ipoyjovQubpXhMQfgM:ebad.quranic.network","id":"!ipoyjovQubpXhMQfgM:ebad.quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"haghi","element_user":"!iuzgySRZmDQjvxWQHK:quranic.network","id":"!iuzgySRZmDQjvxWQHK:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"درباره کلیت معماری نرم‌افزار","element_user":"!keplMYypLIhxWlLTzA:quranic.network","id":"!keplMYypLIhxWlLTzA:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"دستیار صدا و تصویر","element_user":"!lfFYiGzGOeDecrmqjL:quranic.network","id":"!lfFYiGzGOeDecrmqjL:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"mohammad.zahmatkesh","element_user":"!oesabyzWpsQoRiggrD:ebad.quranic.network","id":"!oesabyzWpsQoRiggrD:ebad.quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"me.ahmadi","element_user":"!qjdEYMGqdZRSlzuLcG:quranic.network","id":"!qjdEYMGqdZRSlzuLcG:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"معارف","element_user":"!reBTMrlGehLTzqWkTm:quranic.network","id":"!reBTMrlGehLTzqWkTm:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"طراحی و پیاده سازی داشبورد مدیریتی","element_user":"!vvOUezWTUaCMtTzlhx:quranic.network","id":"!vvOUezWTUaCMtTzlhx:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"دفتر آموزش خواهران","element_user":"!xJtgyHJLWdOYqaJhgN:quranic.network","id":"!xJtgyHJLWdOYqaJhgN:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"3","element_user":"!xTVPXBIeQkRRLdADcV:quranic.network","id":"!xTVPXBIeQkRRLdADcV:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"ایده‌پردازی آموزش نوجوانان","element_user":"!yvPkSbLfJXGcAgSYoX:quranic.network","id":"!yvPkSbLfJXGcAgSYoX:quranic.network","tags":["معارف# "],"nodeType":"simple"},{"name":"vahid_nadarkhani","element_user":"!zMzXEzukzdBXbMQtTy:quranic.network","id":"!zMzXEzukzdBXbMQtTy:quranic.network","tags":["معارف# "],"nodeType":"simple"}
+    {
+      name: 'دستیار عربی',
+      element_user: '!CpnaMFWBRQluWOdsBm:quranic.network',
+      id: '!CpnaMFWBRQluWOdsBm:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: '1234567',
+      element_user: '!EWKhEruXVJszSEmRcp:quranic.network',
+      id: '!EWKhEruXVJszSEmRcp:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'کیوان',
+      element_user: '!EzvOJBYpFJpHHayYYU:quranic.network',
+      id: '!EzvOJBYpFJpHHayYYU:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'سی',
+      element_user: '!IVVkuStknRKZIJfYDZ:quranic.network',
+      id: '!IVVkuStknRKZIJfYDZ:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'ahmademoon',
+      element_user: '!LfkudOofhvoJUYCFyC:matrix.org',
+      id: '!LfkudOofhvoJUYCFyC:matrix.org',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'احمدی - ناظر فنی',
+      element_user: '!PvmIsaMLiYScDEntAm:quranic.network',
+      id: '!PvmIsaMLiYScDEntAm:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'رسانه',
+      element_user: '!QbkIuZYQzpoQlLcyxd:quranic.network',
+      id: '!QbkIuZYQzpoQlLcyxd:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'mahdi.ahmadi.py',
+      element_user: '!RYqGRbOGnNryPFnwSX:matrix.org',
+      id: '!RYqGRbOGnNryPFnwSX:matrix.org',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'نیازهای نرم افزار',
+      element_user: '!RpJmlelsytNWAzogOE:quranic.network',
+      id: '!RpJmlelsytNWAzogOE:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'test',
+      element_user: '!RrTfPdmqxIqnVdThGY:quranic.network',
+      id: '!RrTfPdmqxIqnVdThGY:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'آموزش _ تحلیل و طراحی',
+      element_user: '!TFRQzzIgaKaCzDhCmv:quranic.network',
+      id: '!TFRQzzIgaKaCzDhCmv:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'salambot',
+      element_user: '!UDYktaOLzDUIjCLBfL:quranic.network',
+      id: '!UDYktaOLzDUIjCLBfL:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'داشبورد مديريت',
+      element_user: '!VpbuAIJrGRTvdMTobB:quranic.network',
+      id: '!VpbuAIJrGRTvdMTobB:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'آموزش نرم‌افزار',
+      element_user: '!XbjdvrvfguVJiqSfkO:ebad.quranic.network',
+      id: '!XbjdvrvfguVJiqSfkO:ebad.quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: '‌تحلیل و بررسی ایجاد باتها',
+      element_user: '!aOvNTazraJPIFAPqpS:quranic.network',
+      id: '!aOvNTazraJPIFAPqpS:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'smghandi',
+      element_user: '!almjlaWSwuPIdXdSdC:quranic.network',
+      id: '!almjlaWSwuPIdXdSdC:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'مدیریت پروژه',
+      element_user: '!bIrlqoPmNtZIbOCnai:quranic.network',
+      id: '!bIrlqoPmNtZIbOCnai:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'پشتیبانی- ثبت‌نام المنت عباد',
+      element_user: '!cBsHFGXTIVCQKUTxCy:quranic.network',
+      id: '!cBsHFGXTIVCQKUTxCy:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'test',
+      element_user: '!hRnCkDmtPHyscWLSBR:quranic.network',
+      id: '!hRnCkDmtPHyscWLSBR:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'Empty room (was admin)',
+      element_user: '!ipoyjovQubpXhMQfgM:ebad.quranic.network',
+      id: '!ipoyjovQubpXhMQfgM:ebad.quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'haghi',
+      element_user: '!iuzgySRZmDQjvxWQHK:quranic.network',
+      id: '!iuzgySRZmDQjvxWQHK:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'درباره کلیت معماری نرم‌افزار',
+      element_user: '!keplMYypLIhxWlLTzA:quranic.network',
+      id: '!keplMYypLIhxWlLTzA:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'دستیار صدا و تصویر',
+      element_user: '!lfFYiGzGOeDecrmqjL:quranic.network',
+      id: '!lfFYiGzGOeDecrmqjL:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'mohammad.zahmatkesh',
+      element_user: '!oesabyzWpsQoRiggrD:ebad.quranic.network',
+      id: '!oesabyzWpsQoRiggrD:ebad.quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'me.ahmadi',
+      element_user: '!qjdEYMGqdZRSlzuLcG:quranic.network',
+      id: '!qjdEYMGqdZRSlzuLcG:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'معارف',
+      element_user: '!reBTMrlGehLTzqWkTm:quranic.network',
+      id: '!reBTMrlGehLTzqWkTm:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'طراحی و پیاده سازی داشبورد مدیریتی',
+      element_user: '!vvOUezWTUaCMtTzlhx:quranic.network',
+      id: '!vvOUezWTUaCMtTzlhx:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'دفتر آموزش خواهران',
+      element_user: '!xJtgyHJLWdOYqaJhgN:quranic.network',
+      id: '!xJtgyHJLWdOYqaJhgN:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: '3',
+      element_user: '!xTVPXBIeQkRRLdADcV:quranic.network',
+      id: '!xTVPXBIeQkRRLdADcV:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'ایده‌پردازی آموزش نوجوانان',
+      element_user: '!yvPkSbLfJXGcAgSYoX:quranic.network',
+      id: '!yvPkSbLfJXGcAgSYoX:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
+    {
+      name: 'vahid_nadarkhani',
+      element_user: '!zMzXEzukzdBXbMQtTy:quranic.network',
+      id: '!zMzXEzukzdBXbMQtTy:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
   ],
   nodeTypes: [
     { value: 'simple', label: 'فرد' },
     { value: 'project', label: 'پروژه' },
-    { value: 'madreseh', label: 'گروه' }
+    { value: 'madreseh', label: 'گروه' },
   ],
   primaryField: 'name',
   mainFunctions,
