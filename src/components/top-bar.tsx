@@ -25,13 +25,13 @@ import RedoIcon from '@material-ui/icons/Redo';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import ImportInitialTree from '@components/import-tree';
+import AlertDialog from '@components/dialog-box';
+import LoginForm, { LoginFormFields } from '@components/login-form';
 import { useStyles } from '@components/styles';
 import { useConfigs } from '@configs/main-configs';
 
-import  '../../public/matrix-js-sdk.js';
+import '../../public/matrix-js-sdk.js';
 import { getRoomsList } from '../../public/widget_func.js';
-
-
 
 interface TopBarProps {
   treeData: Array<TreeItem>;
@@ -78,6 +78,7 @@ const TopBar: FC<TopBarProps> = (props) => {
   const classes = useStyles();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
 
   const { appTitle } = useConfigs();
 
@@ -160,6 +161,15 @@ const TopBar: FC<TopBarProps> = (props) => {
     setIsDrawerOpen((prevState) => !prevState);
   };
 
+  const toggleLoginFormAlert = () => {
+    setIsLoginFormVisible((prevState) => !prevState);
+  };
+
+  const handleLogin = (credentials: LoginFormFields) => {
+    const tree = getRoomsList(credentials.username, credentials.password);
+    onUpdateTree(tree);
+  };
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -195,19 +205,14 @@ const TopBar: FC<TopBarProps> = (props) => {
             {searchFoundCount || 0}
           </span>
         </div>
-
         <Button
           variant="contained"
           color="secondary"
-          onClick={() => {
-          //console.log('Salam -- ',getRoomsList())
-          onUpdateTree(getRoomsList())
-
-          }}
+          onClick={toggleLoginFormAlert}
         >
           اتصال
         </Button>
-
+        <Divider variant="middle" orientation="vertical" flexItem />
         <Button
           variant="contained"
           color="secondary"
@@ -285,6 +290,13 @@ const TopBar: FC<TopBarProps> = (props) => {
           </List>
         </Drawer>
       </Toolbar>
+      <AlertDialog
+        open={isLoginFormVisible}
+        title="ورود"
+        content={<LoginForm onSubmit={handleLogin} />}
+        cancelText="انصراف"
+        onCancel={toggleLoginFormAlert}
+      />
     </AppBar>
   );
 };
