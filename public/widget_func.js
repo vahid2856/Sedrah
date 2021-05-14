@@ -67,40 +67,41 @@ if (roomName != "") {
 }
 
 
-export async function send_message(roomIds, content_text) {
+export async function send_message(roomIds) {
 
     const tok = window.localStorage.getItem('access_token')
     const client = sdk.createClient({
                     baseUrl: BASEURL,
                    accessToken: window.localStorage.getItem('access_token'),
                    userId: "@"+window.localStorage.getItem('user_id')+":"+BASEURL});
-    client.startClient();
 
-    // start the client
-    client.once('async', function(state, prevState, res) {
-        // ============= send message function ===========================
-        var content = {
-          "body": content_text,
-          "msgtype": "m.text"
-        };
-        roomIds.forEach(roomId => {
-        client.sendEvent(roomId["element_user"], "m.room.message", content, "").then((res) => {
-         // message sent successfully
-        }).catch((err) => {
-          console.log(err);
-        });});
-    });
-};
-
-export function send_individual_message(rooms, content_text) {
+    const content_text = prompt("لطفا پیام خود را وارد نمایید", "متن پیام...");
 
     // ============= send message function ===========================
     var content = {
       "body": content_text,
       "msgtype": "m.text"
     };
+    roomIds.forEach(roomId => {
+    client.sendEvent(roomId["element_user"], "m.room.message", content, "").then((res) => {
+     // message sent successfully
+    }).catch((err) => {
+      console.log(err);
+    });});
+
+};
+
+export function send_individual_message(rooms) {
+
+    const content_text = prompt("لطفا پیام خود را وارد نمایید", "متن پیام...");
+    var content = {
+      "body": content_text,
+      "msgtype": "m.text"
+    };
+
     var final_users = new Array();
-    var selected_roomIds= rooms.forEach(roomId => {roomId["element_user"]});
+    const selected_roomIds= rooms.forEach(roomId => {roomId["element_user"]});
+    console.log('selected_roomIds',selected_roomIds)
     var existing_rooms = get_rooms_list();
     existing_rooms.forEach(roomObj => {
     if (selected_roomIds.includes(roomObj.roomId)){

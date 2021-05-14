@@ -111,14 +111,14 @@ const mainFunctions: MainFunctionsInterface = {
     label: 'ارسال پیام گروهی',
     cb: (selectedNodes) => {
       if (selectedNodes.length>0){
-      send_message(selectedNodes,'Salaam');}
+      send_message(selectedNodes);}
     },
   },
   send_individual_message: {
     label: 'ارسال پیام شخصی',
     cb: (selectedNodes) => {
       if (selectedNodes.length>0) {
-      send_individual_message(selectedNodes,'Salaam');}
+      send_individual_message(selectedNodes);}
     },
   },
   live_stream: {
