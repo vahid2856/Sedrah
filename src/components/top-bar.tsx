@@ -31,7 +31,7 @@ import { useStyles } from '@components/styles';
 import { useConfigs } from '@configs/main-configs';
 
 import '../../public/matrix-js-sdk.js';
-import { getRoomsList } from '../../public/widget_func.js';
+import { login_user, get_rooms_list } from '../../public/widget_func.js';
 
 interface TopBarProps {
   treeData: Array<TreeItem>;
@@ -166,8 +166,11 @@ const TopBar: FC<TopBarProps> = (props) => {
   };
 
   const handleLogin = (credentials: LoginFormFields) => {
-    const tree = getRoomsList(credentials.username, credentials.password);
-    onUpdateTree(tree);
+    const tree = get_rooms_list(credentials.username, credentials.password);
+    Promise.all([tree]).then((values) => {
+        onUpdateTree(values[0]);
+        setIsLoginFormVisible(false);
+    });
   };
 
   return (

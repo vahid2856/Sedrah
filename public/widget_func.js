@@ -1,58 +1,58 @@
-console.log("Start");
-console.log("--------------------------");
-
 const sdk = window.sdk;
-
-// ==========   Variables   ==========
 const BASEURL = "https://quranic.network";
 
-// ========== login with username and password for get access token ==========
-//const client = sdk.createClient(BASEURL);
+// login the user
+export function login_user(user, pass) {
 
-//client.login("m.login.password", {"user": USERID, "password": PASSWORD}).then((response) => {
-//	const accessToken = response.access_token;
-//	console.log(accessToken);
-//});
+        // set user_ID
+        window.localStorage.setItem('user_id', user);
+        // login with the username and the password to get access token
+        const client = sdk.createClient(BASEURL);
+        //
+        client.login("m.login.password", {"user": user, "password": pass}).then((response) => {
+            /// saving the access token
+            const access_token = response.access_token;
+            client.startClient();
+            // getting the access token
+            window.localStorage.setItem('access_token', access_token);
 
+            // start the client
+            client.once('sync', function(state, prevState, res) {
+                console.log('state ----> ', state);
+                getRooms();
+              });
 
-// ========== login with access token ==========
-const client = sdk.createClient({
-    baseUrl: BASEURL,
-    accessToken: ACCESSTOKEN,
-   userId: USERID
-});
+            // getting the room
+            function getRooms() {
+                var curr_tree = new Array();
+                const rooms = client.getRooms();
+                rooms.forEach(room => {
+                var myroom = {"name": room.name, "element_user": room.roomId, "id": room.roomId,"tags": ['معارف# '], "nodeType": 'simple'};
+                    curr_tree[curr_tree.length] = myroom;
+                 });
+                const all_rooms = curr_tree
+                window.localStorage.setItem('my_tree', JSON.stringify(all_rooms));
+                return true;
+            };
 
+    }).catch((err) => {
+                return false;
+                });
+    return true;
+}
 
-// ========== call start function ==========
-start_matrix_client();
+// TODO when the loigin does not work
+export async function get_rooms_list(user='def_user', pass='def_pass') {
 
+  var isLoggedIn = await login_user(user, pass)
+  const tree = JSON.parse(window.localStorage.getItem('my_tree'));
+  return tree;
 
-// ========== start function ==========
-export function start_matrix_client() {
-  client.startClient();
-  client.once('sync', function(state, prevState, res) {
-	console.log('state ----> ', state);
-  });
-};
-
-
-// ========== get rooms list function ==========
-export function getRoomsList() {
-  var tree = new Array();
-  var rooms = client.getRooms();
-  //console.log("rooms : ", rooms);
-  rooms.forEach(room => {
-    var myroom = {"name": room.name, "element_user": room.roomId, "id": room.roomId,"tags": ['معارف# '], "nodeType": 'simple'};
-  	//console.log(room.roomId, room.name, room.myUserId, room.members, room._displayNameToUserIds);
-  	tree[tree.length] = myroom;
- });
- alert(tree);
- return tree;
 };
 
 
 function getRoombyName(room_name){
-var rooms = getRoomsList()
+var rooms = get_rooms_list()
 var roomId = ""
 if (roomName != "") {
   for (var i=0; i <= rooms.length; i++){
@@ -67,25 +67,29 @@ if (roomName != "") {
 }
 
 
-export function send_message(roomIds, content_text) {
+export async function send_message(roomIds, content_text) {
 
-    // ============ get room users list ==============================
-    //  var members = room.getJoinedMembers();
-    //  members.forEach(member => {
-    //    console.log(member.name);
-    //   });
+    const tok = window.localStorage.getItem('access_token')
+    const client = sdk.createClient({
+                    baseUrl: BASEURL,
+                   accessToken: window.localStorage.getItem('access_token'),
+                   userId: "@"+window.localStorage.getItem('user_id')+":"+BASEURL});
+    client.startClient();
 
-    // ============= send message function ===========================
-    var content = {
-      "body": content_text,
-      "msgtype": "m.text"
-    };
-    roomIds.forEach(roomId => {
-    client.sendEvent(roomId["element_user"], "m.room.message", content, "").then((res) => {
-     // message sent successfully
-    }).catch((err) => {
-      console.log(err);
-    });});
+    // start the client
+    client.once('async', function(state, prevState, res) {
+        // ============= send message function ===========================
+        var content = {
+          "body": content_text,
+          "msgtype": "m.text"
+        };
+        roomIds.forEach(roomId => {
+        client.sendEvent(roomId["element_user"], "m.room.message", content, "").then((res) => {
+         // message sent successfully
+        }).catch((err) => {
+          console.log(err);
+        });});
+    });
 };
 
 export function send_individual_message(rooms, content_text) {
@@ -97,7 +101,7 @@ export function send_individual_message(rooms, content_text) {
     };
     var final_users = new Array();
     var selected_roomIds= rooms.forEach(roomId => {roomId["element_user"]});
-    var existing_rooms = getRoomsList();
+    var existing_rooms = get_rooms_list();
     existing_rooms.forEach(roomObj => {
     if (selected_roomIds.includes(roomObj.roomId)){
         var curr_members = roomObj.getJoinedMembers();
