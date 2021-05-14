@@ -26,7 +26,6 @@ import TopBar from '@components/top-bar';
 
 import MessageForm, { MessageFormFields } from '@components/message-form';
 
-
 export const getNodeKey: GetNodeKeyFunction = ({ node }) => node.id as string;
 
 export const generateID = (): string => {
@@ -71,26 +70,21 @@ const Tree: FC = () => {
   const [expandedNodeId, setExpandedNodeId] = useState(-1);
   const [latestNodeID, setLatestNodeID] = useState('');
 
-
-
   const [contextMenuPos, setContextMenuPos] = useState<{
     mouseX: null | number;
     mouseY: null | number;
   }>(initialContextMenuPos);
 
-const [isMessageFormVisible, setIsMessageFormVisible] = useState(false);
-const toggleMessageFormAlert = () => {
-setIsMessageFormVisible((prevState) => !prevState);
-};
+  const [isMessageFormVisible, setIsMessageFormVisible] = useState(false);
 
+  const toggleMessageFormAlert = () => {
+    setIsMessageFormVisible((prevState) => !prevState);
+  };
 
-
-
-    const handlesMessage = (message: MessageFormFields) => {
-        send_message(selectedNodes, message.message_content);
-        setIsMessageFormVisible(false);
-    };
-
+  const handlesMessage = (message: MessageFormFields) => {
+    send_message(selectedNodes, message.message_content);
+    toggleMessageFormAlert();
+  };
 
   const customSearchMethod = (data: SearchData): boolean => {
     const searchQuery = data.searchQuery as string;
@@ -123,9 +117,6 @@ setIsMessageFormVisible((prevState) => !prevState);
   const toggleEditForm = () => {
     setIsEditFormVisible((prevState) => !prevState);
   };
-
-
-
 
   const updateTree = (newTreeData: Array<TreeItem>) => {
     setTreeData(() => {
@@ -320,7 +311,12 @@ setIsMessageFormVisible((prevState) => !prevState);
                 {Object.keys(mainFunctions).map((func) => (
                   <MenuItem
                     key={func}
-                    onClick={() => mainFunctions[func].cb(selectedNodes)}
+                    onClick={() => {
+                      mainFunctions[func].cb(selectedNodes, {
+                        toggleMessageFormAlert,
+                      });
+                      handleCloseContextMenu();
+                    }}
                   >
                     {mainFunctions[func].label}
                   </MenuItem>
@@ -336,7 +332,7 @@ setIsMessageFormVisible((prevState) => !prevState);
         content={<MessageForm onSubmit={handlesMessage} />}
         cancelText="انصراف"
         onCancel={toggleMessageFormAlert}
-     />
+      />
       <AlertDialog
         open={isRemoveAlertVisible}
         title="حذف گره"

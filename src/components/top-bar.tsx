@@ -32,7 +32,7 @@ import { useConfigs } from '@configs/main-configs';
 import { useLocalStorage } from '@helpers/hooks-helper';
 
 import '../../public/matrix-js-sdk.js';
-import { login_user, get_rooms_list } from '../../public/widget_func.js';
+import { get_rooms_list } from '../../public/widget_func.js';
 
 interface TopBarProps {
   treeData: Array<TreeItem>;
@@ -175,6 +175,7 @@ const TopBar: FC<TopBarProps> = (props) => {
     onUpdateTree(tree);
     toggleLoginFormAlert();
     setToken('');
+    console.log(token);
   };
 
   return (

@@ -1,12 +1,10 @@
-import { createContext, FC, useContext, useState, ReactNode } from 'react';
+import { createContext, FC, useContext, ReactNode } from 'react';
 
-import { generateID , changeMessageForm} from '@components/tree';
+import { generateID } from '@components/tree';
 import jMoment, { Moment } from 'moment-jalaali';
 
-import  '../../public/widget_api_func.js';
+import '../../public/widget_api_func.js';
 import { navigateLink } from '../../public/widget_api_func.js';
-
-
 
 interface FieldDefaultProperties<R, F extends keyof R = keyof R> {
   name: F;
@@ -70,7 +68,10 @@ interface ConfigContextInterface {
 interface MainFunctionsInterface {
   [func: string]: {
     label: string;
-    cb: (selectedNodes: Array<SedrahNodeData>) => void;
+    cb: (
+      selectedNodes: Array<SedrahNodeData>,
+      options?: { [key: string]: unknown },
+    ) => void;
   };
 }
 
@@ -110,17 +111,18 @@ export interface NodeFields extends DefaultFields {
 const mainFunctions: MainFunctionsInterface = {
   send_message: {
     label: 'ارسال پیام گروهی',
-    cb: (selectedNodes) => {
-      if (selectedNodes.length>0){
-        changeMessageForm();
+    cb: (selectedNodes, { toggleMessageFormAlert }) => {
+      if (selectedNodes.length > 0) {
+        toggleMessageFormAlert();
       }
     },
   },
   send_individual_message: {
     label: 'ارسال پیام شخصی',
     cb: (selectedNodes) => {
-      if (selectedNodes.length>0) {
-      send_individual_message(selectedNodes);}
+      if (selectedNodes.length > 0) {
+        send_individual_message(selectedNodes);
+      }
     },
   },
   live_stream: {
@@ -181,8 +183,15 @@ const mainConfigs: ConfigContextInterface = {
           <div>
             <span>گروهها - </span>
             <span>{node.tags}</span>
-            <button onClick={() => navigateLink('https://matrix.to/#/#livestream:quranic.network?via=quranic.network')} >
-            ورود</button>
+            <button
+              onClick={() =>
+                navigateLink(
+                  'https://matrix.to/#/#livestream:quranic.network?via=quranic.network',
+                )
+              }
+            >
+              ورود
+            </button>
           </div>
         );
       },
@@ -315,7 +324,13 @@ const mainConfigs: ConfigContextInterface = {
     },
   },
   initialTree: [
-  {"name":"عبد","element_user":"!CpnaMFWBRQluWOdsBm:quranic.network","id":"!test:quranic.network","tags":["معارف# "],"nodeType":"simple"}
+    {
+      name: 'عبد',
+      element_user: '!CpnaMFWBRQluWOdsBm:quranic.network',
+      id: '!test:quranic.network',
+      tags: ['معارف# '],
+      nodeType: 'simple',
+    },
   ],
   nodeTypes: [
     { value: 'simple', label: 'فرد' },

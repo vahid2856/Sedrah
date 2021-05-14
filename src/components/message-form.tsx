@@ -15,7 +15,7 @@ interface AddNodeFormProps {
 const MessageForm: FC<AddNodeFormProps> = (props) => {
   const { onSubmit } = props;
 
-  const [formValues, setFormValues] = useState({ message_content: ''});
+  const [formValues, setFormValues] = useState({ message_content: '' });
 
   const handleFieldChange = (
     fieldName: keyof MessageFormFields,
@@ -32,18 +32,20 @@ const MessageForm: FC<AddNodeFormProps> = (props) => {
   return (
     <form onSubmit={handleFormSubmit} noValidate autoComplete="off">
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12}>
           <TextField
             fullWidth
             required
             multiline
-            rows = {3}
+            rows={3}
             type="text"
             label="متن پیام"
             variant="outlined"
             size="medium"
             value={formValues.message_content}
-            onChange={(e) => handleFieldChange('message_content', e.target.value)}
+            onChange={(e) =>
+              handleFieldChange('message_content', e.target.value)
+            }
           />
         </Grid>
       </Grid>
@@ -59,6 +61,3 @@ const MessageForm: FC<AddNodeFormProps> = (props) => {
 };
 
 export default MessageForm;
-
-
-
