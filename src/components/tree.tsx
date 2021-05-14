@@ -77,13 +77,12 @@ const Tree: FC = () => {
     mouseX: null | number;
     mouseY: null | number;
   }>(initialContextMenuPos);
-const [isMessageFormVisible, setIsMessageFormVisible] = useState(false);
 
+const [isMessageFormVisible, setIsMessageFormVisible] = useState(false);
 const toggleMessageFormAlert = () => {
 setIsMessageFormVisible((prevState) => !prevState);
 };
 
-export const changeMessageForm = () => {toggleMessageFormAlert;}
 
 
 
