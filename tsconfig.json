@@ -25,7 +25,8 @@
     "importHelpers": true,
     "paths": {
       "@components/*": ["components/*"],
-      "@configs/*": ["configs/*"]
+      "@configs/*": ["configs/*"],
+      "@helpers/*": ["helpers/*"]
     }
   },
   "include": [

@@ -29,7 +29,7 @@ import AlertDialog from '@components/dialog-box';
 import LoginForm, { LoginFormFields } from '@components/login-form';
 import { useStyles } from '@components/styles';
 import { useConfigs } from '@configs/main-configs';
-import { useLocalStorage } from 'helpers/hooks-helper.js';
+import { useLocalStorage } from '@helpers/hooks-helper';
 
 import '../../public/matrix-js-sdk.js';
 import { login_user, get_rooms_list } from '../../public/widget_func.js';
@@ -167,23 +167,15 @@ const TopBar: FC<TopBarProps> = (props) => {
     setIsLoginFormVisible((prevState) => !prevState);
   };
 
-  const handleLogin = (credentials: LoginFormFields) => {
-    const tree = get_rooms_list(credentials.username, credentials.password);
-    Promise.all([tree]).then((values) => {
-        onUpdateTree(values[0]);
-        setIsLoginFormVisible(false);
-    });
+  const handleLogin = async (credentials: LoginFormFields) => {
+    const tree = await get_rooms_list(
+      credentials.username,
+      credentials.password,
+    );
+    onUpdateTree(tree);
+    toggleLoginFormAlert();
+    setToken('');
   };
-
-   ///const handleLogin = async (credentials: LoginFormFields) => {
-    //const tree = await get_rooms_list(
-      //credentials.username,
-     /// credentials.password,
-    //);
-    //onUpdateTree(tree);
-    //toggleLoginFormAlert;
-   // setToken('');
-  //};
 
   return (
     <AppBar position="static">
@@ -223,7 +215,7 @@ const TopBar: FC<TopBarProps> = (props) => {
         <Button
           variant="contained"
           color="secondary"
-         // disabled={Boolean(token)}
+          // disabled={Boolean(token)}
           onClick={toggleLoginFormAlert}
         >
           اتصال
