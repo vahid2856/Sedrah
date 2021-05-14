@@ -23,8 +23,8 @@ import NodeTitle from '@components/node-components/node-title';
 import NodeButtons from '@components/node-components/node-buttons';
 import { useStyles } from '@components/styles';
 import TopBar from '@components/top-bar';
-
 import MessageForm, { MessageFormFields } from '@components/message-form';
+import { send_message} from '../../public/widget_func.js'
 
 export const getNodeKey: GetNodeKeyFunction = ({ node }) => node.id as string;
 
