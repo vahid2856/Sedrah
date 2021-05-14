@@ -1,10 +1,11 @@
-import { createContext, FC, useContext, ReactNode } from 'react';
+import { createContext, FC, useContext, useState, ReactNode } from 'react';
 
-import { generateID } from '@components/tree';
+import { generateID , changeMessageForm} from '@components/tree';
 import jMoment, { Moment } from 'moment-jalaali';
 
-import  '../../public/matrix-js-sdk.js';
-import { send_message, send_individual_message } from '../../public/widget_func.js';
+import  '../../public/widget_api_func.js';
+import { navigateLink } from '../../public/widget_api_func.js';
+
 
 
 interface FieldDefaultProperties<R, F extends keyof R = keyof R> {
@@ -111,7 +112,8 @@ const mainFunctions: MainFunctionsInterface = {
     label: 'ارسال پیام گروهی',
     cb: (selectedNodes) => {
       if (selectedNodes.length>0){
-      send_message(selectedNodes);}
+        changeMessageForm();
+      }
     },
   },
   send_individual_message: {
@@ -179,6 +181,8 @@ const mainConfigs: ConfigContextInterface = {
           <div>
             <span>گروهها - </span>
             <span>{node.tags}</span>
+            <button onClick={() => navigateLink('https://matrix.to/#/#livestream:quranic.network?via=quranic.network')} >
+            ورود</button>
           </div>
         );
       },

@@ -27,6 +27,7 @@ export function login_user(user, pass) {
                 var curr_tree = new Array();
                 const rooms = client.getRooms();
                 rooms.forEach(room => {
+                //console.log(room)
                 var myroom = {"name": room.name, "element_user": room.roomId, "id": room.roomId,"tags": ['معارف# '], "nodeType": 'simple'};
                     curr_tree[curr_tree.length] = myroom;
                  });
@@ -67,7 +68,7 @@ if (roomName != "") {
 }
 
 
-export async function send_message(roomIds) {
+export async function send_message(roomIds, content_text) {
 
     const tok = window.localStorage.getItem('access_token')
     const client = sdk.createClient({
@@ -75,7 +76,7 @@ export async function send_message(roomIds) {
                    accessToken: window.localStorage.getItem('access_token'),
                    userId: "@"+window.localStorage.getItem('user_id')+":"+BASEURL});
 
-    const content_text = prompt("لطفا پیام خود را وارد نمایید", "متن پیام...");
+    //const content_text = prompt("لطفا پیام خود را وارد نمایید", "متن پیام...");
 
     // ============= send message function ===========================
     var content = {

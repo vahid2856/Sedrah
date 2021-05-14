@@ -27,11 +27,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ImportInitialTree from '@components/import-tree';
 import AlertDialog from '@components/dialog-box';
 import LoginForm, { LoginFormFields } from '@components/login-form';
+
 import { useStyles } from '@components/styles';
 import { useConfigs } from '@configs/main-configs';
 
 import '../../public/matrix-js-sdk.js';
 import { login_user, get_rooms_list } from '../../public/widget_func.js';
+
 
 interface TopBarProps {
   treeData: Array<TreeItem>;
@@ -165,6 +167,8 @@ const TopBar: FC<TopBarProps> = (props) => {
     setIsLoginFormVisible((prevState) => !prevState);
   };
 
+
+
   const handleLogin = (credentials: LoginFormFields) => {
     const tree = get_rooms_list(credentials.username, credentials.password);
     Promise.all([tree]).then((values) => {
@@ -172,6 +176,7 @@ const TopBar: FC<TopBarProps> = (props) => {
         setIsLoginFormVisible(false);
     });
   };
+
 
   return (
     <AppBar position="static">
@@ -300,6 +305,7 @@ const TopBar: FC<TopBarProps> = (props) => {
         cancelText="انصراف"
         onCancel={toggleLoginFormAlert}
       />
+
     </AppBar>
   );
 };

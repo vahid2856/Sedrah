@@ -24,6 +24,9 @@ import NodeButtons from '@components/node-components/node-buttons';
 import { useStyles } from '@components/styles';
 import TopBar from '@components/top-bar';
 
+import MessageForm, { MessageFormFields } from '@components/message-form';
+
+
 export const getNodeKey: GetNodeKeyFunction = ({ node }) => node.id as string;
 
 export const generateID = (): string => {
@@ -68,10 +71,27 @@ const Tree: FC = () => {
   const [expandedNodeId, setExpandedNodeId] = useState(-1);
   const [latestNodeID, setLatestNodeID] = useState('');
 
+
+
   const [contextMenuPos, setContextMenuPos] = useState<{
     mouseX: null | number;
     mouseY: null | number;
   }>(initialContextMenuPos);
+const [isMessageFormVisible, setIsMessageFormVisible] = useState(false);
+
+const toggleMessageFormAlert = () => {
+setIsMessageFormVisible((prevState) => !prevState);
+};
+
+export const changeMessageForm = () => {toggleMessageFormAlert;}
+
+
+
+    const handlesMessage = (message: MessageFormFields) => {
+        send_message(selectedNodes, message.message_content);
+        setIsMessageFormVisible(false);
+    };
+
 
   const customSearchMethod = (data: SearchData): boolean => {
     const searchQuery = data.searchQuery as string;
@@ -104,6 +124,9 @@ const Tree: FC = () => {
   const toggleEditForm = () => {
     setIsEditFormVisible((prevState) => !prevState);
   };
+
+
+
 
   const updateTree = (newTreeData: Array<TreeItem>) => {
     setTreeData(() => {
@@ -308,6 +331,13 @@ const Tree: FC = () => {
           </Grid>
         </Grid>
       </Paper>
+      <AlertDialog
+        open={isMessageFormVisible}
+        title="ارسال پیام"
+        content={<MessageForm onSubmit={handlesMessage} />}
+        cancelText="انصراف"
+        onCancel={toggleMessageFormAlert}
+     />
       <AlertDialog
         open={isRemoveAlertVisible}
         title="حذف گره"

@@ -4,23 +4,22 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 
-export interface LoginFormFields {
-  username: string;
-  password: string;
+export interface MessageFormFields {
+  message_content: string;
 }
 
 interface AddNodeFormProps {
-  onSubmit: (formValues: LoginFormFields) => void;
+  onSubmit: (formValues: MessageFormFields) => void;
 }
 
-const LoginForm: FC<AddNodeFormProps> = (props) => {
+const MessageForm: FC<AddNodeFormProps> = (props) => {
   const { onSubmit } = props;
 
-  const [formValues, setFormValues] = useState({ username: '', password: '' });
+  const [formValues, setFormValues] = useState({ message_content: ''});
 
   const handleFieldChange = (
-    fieldName: keyof LoginFormFields,
-    fieldValue: LoginFormFields[keyof LoginFormFields],
+    fieldName: keyof MessageFormFields,
+    fieldValue: MessageFormFields[keyof MessageFormFields],
   ) => {
     setFormValues((prevState) => ({ ...prevState, [fieldName]: fieldValue }));
   };
@@ -37,31 +36,21 @@ const LoginForm: FC<AddNodeFormProps> = (props) => {
           <TextField
             fullWidth
             required
+            multiline
+            rows = {3}
             type="text"
-            label="نام کاربری"
+            label="متن پیام"
             variant="outlined"
-            size="small"
-            value={formValues.username}
-            onChange={(e) => handleFieldChange('username', e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            required
-            type="password"
-            label="گذرواژه"
-            variant="outlined"
-            size="small"
-            value={formValues.password}
-            onChange={(e) => handleFieldChange('password', e.target.value)}
+            size="medium"
+            value={formValues.message_content}
+            onChange={(e) => handleFieldChange('message_content', e.target.value)}
           />
         </Grid>
       </Grid>
       <Grid container spacing={2} justify="flex-end">
         <Grid item>
           <Button type="submit" color="primary" variant="contained">
-            ورود
+            ارسال
           </Button>
         </Grid>
       </Grid>
@@ -69,7 +58,7 @@ const LoginForm: FC<AddNodeFormProps> = (props) => {
   );
 };
 
-export default LoginForm;
+export default MessageForm;
 
 
 
