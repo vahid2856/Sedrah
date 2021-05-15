@@ -167,16 +167,15 @@ const TopBar: FC<TopBarProps> = (props) => {
     setIsLoginFormVisible((prevState) => !prevState);
   };
 
-  const handleLogin =  async (credentials: LoginFormFields) => {
-    const tree =  await get_rooms_list(
+  const handleLogin = async (credentials: LoginFormFields) => {
+    const tree = await get_rooms_list(
       credentials.username,
-      credentials.password);
+      credentials.password,
+    );
 
-    Promise.all([tree]).then((values) => {
-    onUpdateTree(values[0]);
+    onUpdateTree(tree);
     setIsLoginFormVisible(false);
-    });
-    setToken(window.localStorage.getItem('access_token'));
+    setToken('');
     console.log(token);
   };
 
@@ -273,7 +272,7 @@ const TopBar: FC<TopBarProps> = (props) => {
                 variant="contained"
                 color="secondary"
                 onClick={handleExportToFile}
-                disabled={(treeData===null) ? true : (treeData.length === 0)}
+                disabled={treeData === null ? true : treeData.length === 0}
                 startIcon={<OpenInNewIcon />}
               >
                 خروجی نهایی
