@@ -3,8 +3,9 @@ import { createContext, FC, useContext, ReactNode } from 'react';
 import { generateID } from '@components/tree';
 import jMoment, { Moment } from 'moment-jalaali';
 
-import '../../public/widget_api_func.js';
-import { navigateLink } from '../../public/widget_api_func.js';
+//import '../../public/widget_api_func.js';
+//import { navigateLink } from '../../public/widget_api_func.js';
+
 
 interface FieldDefaultProperties<R, F extends keyof R = keyof R> {
   name: F;
